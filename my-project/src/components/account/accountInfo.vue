@@ -4,35 +4,39 @@
             <div class="perInfoTop">
                 <h2 class="perInfoTitle">个人信息</h2>
                 <div class="perInfoEdit">
-                    <router-link class='perInfoEditBtn' to='/acc/accInfoEdit'>编辑</router-link>
+                    <router-link class='perInfoEditBtn' to='/acc/set/accInfo/accInfoEdit'>编辑</router-link>
                 </div>
             </div>
             <ul class="perInfoList">
                 <li class="perInfoItem">
                     <div class="perInfoItem_label">昵称：</div>
-                    <div class="perInfoItem_text">
-                        156712889590
-                    </div>
-                </li>
-                <li class="perInfoItem">
-                    <div class="perInfoItem_label">联系人：</div>
-                    <div class="perInfoItem_text">
-                        156712889590
-                    </div>
+                    <div class="perInfoItem_text" v-text="userName"></div>
                     <div class="perInfoItem_des">
                         （默认为手机号）
                     </div>
                 </li>
                 <li class="perInfoItem">
-                    <div class="perInfoItem_label">联系电话：</div>
-                    <div class="perInfoItem_text">
-                        156712889590
+                    <div class="perInfoItem_label">姓名：</div>
+                    <div class="perInfoItem_text" v-if="realName!=''">
+                        {{realName}}
+                    </div>
+                    <div class="perInfoItem_text" style="fontsize:12px;color:#878787;" v-if="realName==''">
+                       未填写
                     </div>
                 </li>
                 <li class="perInfoItem">
-                    <div class="perInfoItem_label">联系邮箱：</div>
-                    <div class="perInfoItem_text">
-                        156712889590
+                    <div class="perInfoItem_label">电话：</div>
+                    <div class="perInfoItem_text" v-text="userPhone">
+                        
+                    </div>
+                </li>
+                <li class="perInfoItem">
+                    <div class="perInfoItem_label">邮箱：</div>
+                    <div class="perInfoItem_text" v-if="userEmail!=''">
+                        {{userEmail}}
+                    </div>
+                    <div class="perInfoItem_text" style="fontsize:12px;color:#878787;" v-if="userEmail==''||userEmail==null">
+                        未填写
                     </div>
                 </li>
             </ul>
@@ -44,20 +48,60 @@
             <ul class="identInfoList">
                 <li class="identInfoItem">
                     <div class="identInfoItem_label">个人认证：</div>
-                    <div class="identInfoItem_text">
-                        未认证
+                    <div v-if="userAuth ==''||userAuth ==null">
+                        <div class="identInfoItem_text">
+                            未认证
+                        </div>
+                        <div class="identInfoItem_ident">
+                            <router-link class='identInfoItem_identBtn' to='/acc/set/accInfo/accInfoIdent'>[去认证]</router-link>
+                        </div>
                     </div>
-                    <div class="identInfoItem_ident">
-                        <router-link class='identInfoItem_identBtn' to='/acc/accInfoIdent'>[去认证]</router-link>
+                    <div v-if="userAuth =='authing'">
+                        <div class="identInfoItem_text">
+                            审核中
+                        </div>
+                    </div>
+                    <div v-if="userAuth =='success'">
+                        <div class="identInfoItem_text">
+                            已认证
+                        </div>
+                    </div>
+                    <div v-if="userAuth =='failure'">
+                        <div class="identInfoItem_text">
+                            认证失败
+                        </div>
+                        <div class="identInfoItem_ident">
+                            <router-link class='identInfoItem_identBtn' to='/acc/set/accInfo/accInfoIdent'>[重新认证]</router-link>
+                        </div>
                     </div>
                 </li>
                 <li class="identInfoItem">
                     <div class="identInfoItem_label">企业认证：</div>
-                    <div class="identInfoItem_text">
-                        未认证
+                    <div v-if="companyAuth ==''">
+                        <div class="identInfoItem_text">
+                            未认证
+                        </div>
+                        <div class="identInfoItem_ident">
+                            <router-link class='identInfoItem_identBtn' to='/acc/set/accInfo/accComIdent'>[去认证]</router-link>
+                        </div>
                     </div>
-                    <div class="identInfoItem_ident">
-                        <router-link class='identInfoItem_identBtn' to='/acc/accComIdent'>[去认证]</router-link>
+                    <div v-if="companyAuth =='authing'">
+                        <div class="identInfoItem_text">
+                            审核中
+                        </div>
+                    </div>
+                    <div v-if="companyAuth =='success'">
+                        <div class="identInfoItem_text">
+                            已认证
+                        </div>
+                    </div>
+                    <div v-if="companyAuth =='failure'">
+                        <div class="identInfoItem_text">
+                            认证失败
+                        </div>
+                        <div class="identInfoItem_ident">
+                            <router-link class='identInfoItem_identBtn' to='/acc/set/accInfo/accInfoIdent'>[重新认证]</router-link>
+                        </div>
                     </div>
                 </li>
             </ul>
@@ -66,13 +110,50 @@
 </template>
 
 <script>
+import globalData from '../globalData'
+
+
 export default {
-  name: 'AccountInfo',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+    name: 'AccountInfo',
+    data () {
+        return {
+            realName:'',
+            userName:'',
+            userPhone:'',
+            userEmail:'',
+            blCompanyName:'',
+            companyAuth:'',
+            userAuth:''
+        }
+    },
+    created:function(){
+        this.getUserInfo();
+    },
+    methods:{
+        //   调取接口，获取用户信息
+        getUserInfo:function(){
+            var self = this;
+            self.$http.get(globalData.data.Ip+'/user/info',{credentials:true}).then(function(res){ 
+                console.log(res);   
+                if(res.data.data=='用户未登录'){
+                    self.$Modal.warning({
+                        title: '提示',
+                        content: '您还未登录，请您登录后再查看，谢谢！',
+                        onOk: function(){
+                            self.$router.push('/login');
+                        },
+                    })
+                }
+                self.userName = res.data.data.userName;                          
+                self.userPhone = res.data.data.userPhone;                          
+                self.userEmail = res.data.data.userEmail;         
+                self.realName = res.data.data.realName;                 
+                self.companyAuth = res.data.data.companyAuth;         
+                self.userAuth = res.data.data.userAuth;                 
+                self.blCompanyName = res.data.data.blCompanyName;                 
+            })
+        }
     }
-  }
 }
 </script>
 
@@ -103,7 +184,7 @@ export default {
         font-weight: 500;
         text-indent: 10px;
         float: left;
-        border-left: 5px solid #ff8000;
+        border-left: 5px solid #f71327;
     }
 
     .accountInfo .personInfo .perInfoTop .perInfoEdit {
@@ -111,7 +192,7 @@ export default {
     }
 
     .accountInfo .personInfo .perInfoTop .perInfoEdit .perInfoEditBtn {
-        color: #ff8000;
+        color: #f71327;
     }
 
     .accountInfo .personInfo .perInfoList {
@@ -160,7 +241,7 @@ export default {
         font-size: 16px;
         font-weight: 500;
         text-indent: 10px;
-        border-left: 5px solid #ff8000;
+        border-left: 5px solid #f71327;
     }
 
     .accountInfo .identInfo .identInfoList {
@@ -191,6 +272,6 @@ export default {
     }
 
     .accountInfo .identInfo .identInfoList .identInfoItem .identInfoItem_ident .identInfoItem_identBtn {
-        color: #ff8000;
+        color: #f71327;
     }
 </style>

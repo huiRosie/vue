@@ -2,7 +2,7 @@
     <div class="helpIn">
         <div class="helpInContent">
             <h2 class="helpInTitle">
-                <router-link  to="/helper">帮助中心</router-link>  >
+                <router-link  to="/hel">帮助中心</router-link>  >
                 <span>买家操作流程</span>
             </h2>
             <div class="helpInMain">
@@ -62,7 +62,7 @@ export default {
     }
 
     .helpIn .helpInContent .helpInTitle {
-        width: 1240px;
+        width: 1280px;
         height: 50px;
         line-height: 50px;
         padding: 0 20px;

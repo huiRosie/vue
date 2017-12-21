@@ -3,7 +3,7 @@
         <h2 class="accountMesTitle">消息中心</h2>
         <div class="accMesMain">
             <div class="accMesList">
-                <router-link class="accMesItem"  to="/acc/accMesDet">
+                <router-link class="accMesItem"  to="/acc/set/accMes/accMesDet">
                     <div class="accMesItem_dot"></div>
                     <div class="accMesItem_text">
                         您有新的交易请求！请尽快到“我收到的交易请求”中查看卖家的联系方式与卖家进行交易协商。
@@ -12,7 +12,7 @@
                         2017.11.24 13:53:59
                     </div>
                 </router-link>
-                <router-link class="accMesItem accMesItemRead"  to="/acc/accMesDet">
+                <router-link class="accMesItem accMesItemRead"  to="/acc/set/accMes/accMesDet">
                     <div class="accMesItem_dot"></div>
                     <div class="accMesItem_text">
                         您有新的交易请求！请尽快到“我收到的交易请求”中查看卖家的联系方式与卖家进行交易协商。
@@ -27,13 +27,28 @@
 </template>
 
 <script>
+import globalData from '../globalData'
+
 export default {
-  name: 'AccountMes',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+    name: 'AccountMes',
+    data () {
+        return {
+            mesList:[]
+        }
+    },
+    created:function(){
+        this.getMesList()
+    },
+    methods:{
+        // 调取接口，获取消息列表
+        getMesList(){
+            var self = this;
+            self.$http.get(globalData.data.Ip+'/user/message/page',{credentials:true}).then(function(res){ 
+                console.log(res);   
+                self.mesList = res.data.data;                     
+            })
+        }
     }
-  }
 }
 </script>
 
@@ -79,7 +94,7 @@ export default {
         float: left;
         margin: 26px 5px 26px 0;
         border-radius: 3px;
-        background: #ff8000;
+        background: #f71327;
     }
 
     .accountMes .accMesMain .accMesList .accMesItem .accMesItem_text {

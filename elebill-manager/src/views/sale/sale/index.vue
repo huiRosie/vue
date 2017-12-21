@@ -1,9 +1,9 @@
 <template>
     <div class="sale">
-        <Breadcrumb class="Breadcrumb" separator=">">
-            <BreadcrumbItem to="/">出票中心</BreadcrumbItem>
-            <BreadcrumbItem>出售中的汇票</BreadcrumbItem>
-        </Breadcrumb>
+        <div class="topNav">
+            <router-link class="topNavLink" to='/'>出票中心</router-link> > 
+            <span>出售中的汇票</span>
+        </div>
         <ul class="saleMain">
             <li class="saleItem saleTitle">
                 <div class="saleItemNav saleItemType">汇票类型</div>
@@ -15,15 +15,15 @@
                 <div class="saleItemNav saleItemOperate">操作</div>
             </li>
             <li class="saleItem">
-                <div class="saleItemNav saleItemType">汇票类型</div>
-                <div class="saleItemNav saleItemTerm">交易方式</div>
-                <div class="saleItemNav saleItemIsti">承兑机构</div>
-                <div class="saleItemNav saleItemMoney">票面金额</div>
+                <div class="saleItemNav saleItemType">电票</div>
+                <div class="saleItemNav saleItemTerm">卖断</div>
+                <div class="saleItemNav saleItemIsti">中国建设银行</div>
+                <div class="saleItemNav saleItemMoney">1000万</div>
                 <div class="saleItemNav saleItemDeadilne">2017/12/1</div>
                 <div class="saleItemNav saleItemNum">3</div>
                 <div class="saleItemNav saleItemOperate">
-                    <router-link class="saleItem_scan" to='/acc/myBillDet'>汇票详情</router-link>
-                    <router-link class="saleItem_offer" to='/acc/myBillDet'>报价详情</router-link>
+                    <router-link class="saleItem_scan" to='/saleDet'>汇票详情</router-link>
+                    <router-link class="saleItem_offer" to='/saleODet'>报价详情</router-link>
                 </div>
             </li>
         </ul>
@@ -48,17 +48,12 @@ export default {
         height: auto;
     }
 
-    .Breadcrumb{
+    .topNav{
         width: 100%;
         height: 58px;
         line-height: 30px;
         padding: 14px 30px;
         background: white;
-    }
-
-    .ivu-breadcrumb > span:last-child{
-        font-weight: 100;
-        color: #555;
     }
 
     .sale .saleMain {
@@ -89,6 +84,11 @@ export default {
         width: 176px;
     }
 
+    .sale .saleMain .saleItem .saleItemOperate a:hover {
+        color: #ff8000;
+        border: 1px solid #ff8000;
+    }
+
     .sale .saleMain .saleItem .saleItemNav .saleItem_scan {
         display: block;
         width: 82px;
@@ -108,15 +108,8 @@ export default {
         border-radius: 3px;
     }
 
-    /* .sale .saleMain .saleItem .saleItemNav:nth-child(4) {
-        width: 162px;
-    }
-
-    .sale .saleMain .saleItem .saleItemNav:last-child {
-        width: 140px;
-    } */
-
     .sale .saleMain .saleTitle {
-        background: #ffeedd;
+        font-size: 16px;
+        background: #fdeaea;
     }
 </style>

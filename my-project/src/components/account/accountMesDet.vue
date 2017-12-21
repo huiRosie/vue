@@ -1,7 +1,7 @@
 <template>
     <div class="accountMesDet">
         <h2 class="accMesDetTitle">
-            <router-link to="/acc/accMes" >消息中心</router-link> >
+            <router-link to="/acc/set/accMes" >消息中心</router-link> >
             <span >消息详情</span>
         </h2>
         <div class="accMesDetMain">
@@ -69,7 +69,7 @@ export default {
         float: left;
         margin: 26px 5px 26px 0;
         border-radius: 3px;
-        background: #ff8000;
+        background: #f71327;
     }
 
     .accountMesDet .accMesDetMain .accMesDetMainTitle .accMesDetItem_text {

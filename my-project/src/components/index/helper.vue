@@ -4,7 +4,7 @@
             <h2 class="helperTitle">消息中心</h2>
             <div class="helperMain">
                 <div class="helperList">
-                    <router-link class="helperItem"  to="/helpLogin">
+                    <router-link class="helperItem"  to="/helog">
                         <div class="helperItemTitle">
                             <div class="helperItem_dot"></div>
                             <div class="helperItem_text">
@@ -15,7 +15,7 @@
                             一笔银票网注册、登录流程，教您如何加入一笔银票网。
                         </div>
                     </router-link>
-                    <router-link class="helperItem"  to="/helpIdent">
+                    <router-link class="helperItem"  to="/helide">
                         <div class="helperItemTitle">
                             <div class="helperItem_dot"></div>
                             <div class="helperItem_text">
@@ -26,7 +26,7 @@
                             一笔银票网认证流程，让交易彼此多一份信任。
                         </div>
                     </router-link> 
-                    <router-link class="helperItem"  to="/helpIn">
+                    <router-link class="helperItem"  to="/helin">
                         <div class="helperItemTitle">
                             <div class="helperItem_dot"></div>
                             <div class="helperItem_text">
@@ -37,7 +37,7 @@
                             一笔银票网买家操作详细流程
                         </div>
                     </router-link>
-                    <router-link class="helperItem"  to="/helpOut">
+                    <router-link class="helperItem"  to="/helout">
                         <div class="helperItemTitle">
                             <div class="helperItem_dot"></div>
                             <div class="helperItem_text">
@@ -80,7 +80,7 @@ export default {
     }
 
     .helper .helperContent .helperTitle {
-        width: 1240px;
+        width: 1280px;
         height: 50px;
         line-height: 50px;
         padding: 0 20px;
@@ -89,7 +89,7 @@ export default {
     }
 
     .helper .helperContent .helperMain {
-        width: 1190px;
+        width: 1280px;
         height: auto;
         padding: 0 45px;
         background: white;
@@ -102,8 +102,8 @@ export default {
 
     .helper .helperContent .helperMain .helperList .helperItem {
         display: block;
-        width: 1190px;
-        height: 40px;
+        width: 1230px;
+        height: 89px;
         padding: 24px 20px;
         border-bottom: 1px dashed #e1e1e1;
     }
@@ -115,12 +115,12 @@ export default {
     }
 
     .helper .helperContent .helperMain .helperList .helperItem .helperItemTitle .helperItem_dot {
-        width: 6px;
-        height: 6px;
+        width: 8px;
+        height: 8px;
         float: left;
-        margin: 8px 5px 6px 0;
-        border-radius: 3px;
-        background: #ff8000;
+        margin: 6px 5px 8px 0;
+        border-radius: 4px;
+        background: #f71327;
     }
 
     .helper .helperContent .helperMain .helperList .helperItem .helperItemTitle .helperItem_text {

@@ -2,8 +2,8 @@
     <div class="myBillDet">
         <div class="myBillDetContent">
             <h2 class="myBillDetTitle">
-                <router-link class="accountSubNav" to="/acc/accAnn">我的发布</router-link> >
-                <router-link class="accountSubNav" to="/acc/accAnn">交易中</router-link> >
+                <router-link class="accountSubNav" to="/acc/mypub/accAnn/'trading'">我的发布</router-link> >
+                <router-link class="accountSubNav" to="/acc/mypub/accAnn/'trading'">交易中</router-link> >
                 <span>汇票详情</span>
             </h2>
             <div class="myBillDetMain">
@@ -17,7 +17,7 @@
                                     票据号：
                                 </div>
                                 <div class="myBillDetBillInfoItem_text">
-                                    1315246868985
+                                    {{billData.billNo}}
                                 </div>
                             </li>
                             <li class="myBillDetBillInfoItem">
@@ -25,7 +25,7 @@
                                     承兑人全称：
                                 </div>
                                 <div class="myBillDetBillInfoItem_text">
-                                    1315246868985
+                                    {{billData.billUserName}}
                                 </div>
                             </li>
                             <li class="myBillDetBillInfoItem">
@@ -33,7 +33,7 @@
                                     票据类型：
                                 </div>
                                 <div class="myBillDetBillInfoItem_text">
-                                    1315246868985
+                                    {{billData.billClassify}}
                                 </div>
                             </li>
                             <li class="myBillDetBillInfoItem">
@@ -41,7 +41,7 @@
                                     票面金额(元)：
                                 </div>
                                 <div class="myBillDetBillInfoItem_text">
-                                    1315246868985
+                                    {{billData.billMoney}}
                                 </div>
                             </li>
                             <li class="myBillDetBillInfoItem">
@@ -49,7 +49,7 @@
                                     汇票到期日：
                                 </div>
                                 <div class="myBillDetBillInfoItem_text">
-                                    1315246868985
+                                    {{billData.billExpire}}
                                 </div>
                             </li>
                             <li class="myBillDetBillInfoItem">
@@ -57,7 +57,7 @@
                                     背书次数：
                                 </div>
                                 <div class="myBillDetBillInfoItem_text">
-                                    1315246868985
+                                    {{billData.billEndorse}}
                                 </div>
                             </li>
                             <li class="myBillDetBillInfoItem">
@@ -65,12 +65,13 @@
                                     汇票瑕疵：
                                 </div>
                                 <div class="myBillDetBillInfoItem_text">
-                                    1315246868985
+                                    {{billData.billImgHealth}}
                                 </div>
                             </li>
                         </ul>
                         <div class="myBillDetBillInfoRight">
-                            <img src="../../assets/bill.png"/>
+                            <img v-if="billData.billImg.indexOf('http://')!=-1||billData.billImg.indexOf('https://')!=-1" :src="billData.billImg"/>
+                            <img v-else :src="'http://'+billData.billImg"/>
                         </div>
                     </div>
                 </div>
@@ -78,14 +79,15 @@
                 <div class="myBillDetAttach">
                     <h3 class="myBillDetAttachTitle">背书及附件</h3>
                     <div class="myBillDetAttachInfo">
-                        <img src="../../assets/jpg.png"/>
+                        <img v-if="billData.billEvidence.indexOf('http://')!=-1||billData.billEvidence.indexOf('https://')!=-1" :src="billData.billImg"/>
+                        <img v-else :src="'http://'+billData.billEvidence"/>
                         <p class="myBillDetAttachDes">背书.jpg</p>
                     </div>
                 </div>
                 <!--我要竞价-->
-                <div class="myBillDetBtn">
-                    <a class="myBillDetBtnBack">撤回汇票</a>
-                    <a class="myBillDetBtnFinish">完成交易</a>
+                <div class="myBillDetBtn" v-if="billData.billStatus==null||billData.billStatus=='交易中'">
+                    <a class="myBillDetBtnBack" @click="giveUp">撤回汇票</a>
+                    <a class="myBillDetBtnFinish" @click="finish">完成交易</a>
                 </div>
             </div>
         </div>
@@ -93,13 +95,79 @@
 </template>
 
 <script>
+import globalData from '../globalData'
+
 export default {
-  name: 'MyBillDet',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+    name: 'MyBillDet',
+    data () {
+        return {
+            billId:'',
+            billData:''
+        }
+    },
+    created:function(){
+        this.getBillDet();
+    },
+    methods:{
+        getBillDet:function(){
+            //调用接口  获取汇票详情
+            var self = this;
+            self.billId = self.$route.params.billId;
+            console.log(self.billId);      
+            self.$http.get(globalData.data.Ip+'/bill/info',{params:{
+                billId:self.billId
+            }},{emulateJSON:true}).then(function(res){ 
+                self.billData = res.data.data;
+                console.log(self.billData);                             
+            },function(error){
+                console.log(error);  
+            })
+        },
+        giveUp:function(){
+            var self = this;
+            self.$Modal.confirm({
+                title:'提示',
+                content:'你确定要撤回汇票吗？',
+                onOk:function(){
+                    //调用接口   撤回汇票
+                    self.$http.get(globalData.data.Ip+'/bill/revoke',{params:
+                        {
+                            billId:self.billId
+                        },emulateJSON:true,withCredentials:true}).then(function(res){ 
+                            console.log(res)
+                            if(res.data.code==200){
+                                self.modal1 = false;
+                                self.$Message.success('操作成功');
+                                self.$router.push("/acc/pub/accAnn/'交易中'");
+                            }                         
+                        },function(error){
+                            console.log(error);  
+                    })
+                }
+            })
+        },
+        finish:function(){
+            var self = this;
+            self.$Modal.confirm({
+                title:'提示',
+                content:'你确定交易已完成吗？',
+                onOk:function(){
+                    //调用接口   交易完成
+                    // self.$http.post(globalData.data.Ip+'/bill/quote/refuse',
+                    //     {
+                    //         quoteId:self.billId
+                    //     },{emulateJSON:true,withCredentials:true}).then(function(res){ 
+                    //         if(res.data.code==200){
+                    //             self.modal1 = false;
+                    //             self.$Message.success('操作成功');
+                    //         }                         
+                    //     },function(error){
+                    //         console.log(error);  
+                    // })
+                }
+            })
+        }
     }
-  }
 }
 </script>
 
@@ -126,7 +194,7 @@ export default {
     }
 
     .myBillDet .myBillDetContent .myBillDetTitle a:hover {
-        color: #ff8000;
+        color: #f71327;
     }
 
     .myBillDet .myBillDetContent .myBillDetMain {
@@ -151,7 +219,7 @@ export default {
         text-indent: 10px;
         font-weight: 600;
         margin-bottom: 35px;
-        border-left: 5px solid #ff8000;
+        border-left: 5px solid #f71327;
     }
 
     .myBillDet .myBillDetContent .myBillDetMain .myBillDetBill .myBillDetBillInfo {
@@ -216,7 +284,7 @@ export default {
         text-indent: 10px;
         font-weight: 600;
         margin-bottom: 35px;
-        border-left: 5px solid #ff8000;
+        border-left: 5px solid #f71327;
     }
 
     .myBillDet .myBillDetContent .myBillDetMain .myBillDetAttach .myBillDetAttachInfo {
@@ -239,7 +307,7 @@ export default {
 
     .myBillDet .myBillDetContent .myBillDetMain .myBillDetBtn {
         width: 520px;
-        height: 58px;
+        height: 108px;
         margin: 0 auto;
         padding-bottom: 50px;
     }
@@ -251,7 +319,7 @@ export default {
         line-height: 58px;
         text-align: center;
         color: white;
-        background: #ff8000;
+        background: #f71327;
         font-size: 16px;
         float: left;
         margin-right: 40px;

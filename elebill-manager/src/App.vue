@@ -1,102 +1,12 @@
 <template>
-  <div id="app" class="wrap">
-    <div class="top">
-        <div class="topB">
-            <div class="topBBox">
-                <h1 class="topBLogo"><img class="logoImg" src="./assets/elebill-com-logo.png"/></h1>
-                <div class="topSear">
-                  <div class="topSearBox">
-                    <input type="text" placeholder="请输入汇票信息">
-                    <Icon class="topSearBtn" type="search"></Icon>
-                  </div>
-                  <router-link class="topSearOut topSearItem" to="/index">出票中心</router-link>
-                  <router-link class="topSearIn topSearItem" to="/index">收票中心</router-link>
-                </div>
-                <div class="topBNav">
-                    <router-link class="topBNav_mes topBNav_item" to="/index">
-                      <Icon class="topBNavMes" type="chatbubble-working"></Icon>
-                    </router-link>
-                    <router-link class="topBNav_name topBNav_item" to="/out">黑不溜秋</router-link>
-                    <router-link class="topBNav_pass topBNav_item" to="/in">修改登录密码</router-link>
-                    <router-link class="topBNav_loginout topBNav_item" to="/us">退出登录</router-link>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- 路由出口 -->
-			<!-- 路由匹配到的组件将渲染在这里 -->
-			<div class="container">
-				<div class="index">
-          <div class="indexMain">
-              <div class="indexLeft">
-                  <div class="indexSubBox">
-                      <div class="indexSub" onclick="disabled">
-                          <h2 class="indexSubTitle">出票中心</h2>
-                      </div>
-                      <router-link class="indexSubNav" to="/acc/accAnn">· 出售中的汇票</router-link>
-                      <router-link class="indexSubNav" to="/acc/accAnn">· 我预选的报价</router-link>
-                      <router-link class="indexSubNav" to="/acc/accAnn">· 已完成的汇票</router-link>
-                  </div>
-                  <div class="indexSubBox">
-                      <div class="indexSub">
-                          <h2 class="indexSubTitle">收票中心</h2>
-                      </div>
-                      <router-link class="indexSubNav" to="/acc/accOffer">· 待审核</router-link>
-                      <router-link class="indexSubNav" to="/acc/accBuy">· 待处理</router-link>	
-                      <router-link class="indexSubNav" to="/acc/accBuy">· 交易成功</router-link>	
-                      <router-link class="indexSubNav" to="/acc/accBuy">· 交易失败</router-link>	
-                  </div>
-                  <div class="indexSubBox">
-                      <div class="indexSub indexSubActive">
-                          <h2 class="indexSubTitle">认证审核</h2>
-                      </div>
-                      <router-link class="indexSubNav" to="/acc/accInfo">· 用户认证信息</router-link>
-                      <router-link class="indexSubNav" to="/acc/accMes">· 企业认证信息</router-link>
-                  </div>
-              </div>
-              <div class="indexRight">
-                  <router-view></router-view>
-              </div>
-          </div>
-      </div>
-			</div>
-			<!--公共底部-->
-			<div class="bottom">
-				<div class="bottomBox">
-					<div class="bottomLeft">
-						<ul class="bottomLeftNav">
-							<li class="bottomLeftNavItem">
-								<router-link class="bottomNavItem_link" to="/us">联系我们</router-link>
-							</li>
-							<li class="bottomLeftNavItem">
-								<router-link class="bottomNavItem_link" to="/helper">帮助中心</router-link>
-							</li>
-							<li class="bottomLeftNavItem">
-								<router-link class="bottomNavItem_link" to="/aide">汇票助手</router-link>
-							</li>
-						</ul>
-						<p class="bottomLeftCopyright">Copyright © 2002-2011. 武汉华四投资顾问有限公司 版权所有 Power by Mereca 鄂ICP备14007080号-1</p>
-					</div>
-					<div class="bottomRight">
-						<p class="bottomRightTel">客服热线（工作日9:00~17:30）</p>
-						<p class="bottomRightNum">400-9929-272</p>
-					</div>
-				</div>
-			</div>
+  <div id="app">
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'app',
-    data(){
-      return {
-        oheight:' ' 
-      }
-    },
-    methods: {
-　　   
-    }
+    name: 'app'
   }
 </script>
 
@@ -124,12 +34,12 @@
 
   .wrap .top .topB .topBBox .topBLogo {
     float: left;
-    margin-right: 168px;
+    margin-right: 76px;
   }
 
   .wrap .top .topB .topBBox .topBLogo .logoImg {
     display: block;
-    width: 132px;
+    width: 284px;
     height: 43px;
     margin: 16px 0;
   }
@@ -148,7 +58,7 @@
     height: 46px;
     margin-right: 12px;
     border-radius: 100px;
-    border: 1px solid #ff8000;
+    border: 1px solid #f71327;
   }
 
   .wrap .top .topB .topBBox .topSear .topSearBox input{
@@ -165,7 +75,7 @@
     height: 30px;
     font-size: 26px;
     font-weight: 100;
-    color: #ff8000;
+    color: #f71327;
     margin: 8px;
     cursor: pointer;
   }
@@ -202,7 +112,7 @@
   }
 
   .wrap .top .topB .topBBox .topBNav .topBNav_mes {
-    color: #ff8000;
+    color: #f71327;
     display: block;
     float: left;
     width: 34;
@@ -214,16 +124,16 @@
   }
 
   .wrap .top .topB .topBBox .topBNav .topBNav_item:hover {
-    color: #ff8000;
+    color: #f71327;
   }
 
   .wrap .top .topB .topBBox .topBNav .router-link-active {
-    color: #ff8000;
+    color: #f71327;
   }
 
   .wrap .container {
     width: 100%;
-    min-height: 743px;
+    height: 743px;
     background: #f1f1f1;
   }
 
@@ -287,7 +197,7 @@
   }
 
   .wrap .bottom .bottomBox .bottomRight .bottomRightNum {
-    color: #ff8000;
+    color: #f71327;
     font-size: 20px;
     height: 36px;
     line-height: 36px;
@@ -295,7 +205,7 @@
 
   .index {
         width: 100%;
-        height: auto;
+        height: 743px;
         background: #f1f1f1;
         padding: 20px 0;
     }
@@ -303,7 +213,7 @@
     .index .indexMain {
         width: 1280px;
         margin: 0 auto;
-        height: auto;
+        height: 696px;
         overflow: hidden;
     }
 
@@ -319,7 +229,7 @@
         width: 280px;
         height: 58px;
         padding: 18px 20px;
-        background: #ffefdd;
+        background: #fdeaea;
     }
 
     .index .indexMain .indexLeft .indexSub .indexSubTitle {
@@ -329,17 +239,17 @@
         font-size: 16px;
         font-weight: 500;
         text-indent: 10px;
-        border-left: 5px solid #ff8000;
+        border-left: 5px solid #f71327;
     }
 
     .index .indexMain .indexLeft .indexSub:hover {
         color: #fff;
-        background: #ff8000;
+        background: #f71327;
     }
 
     .index .indexMain .indexLeft .indexSubActive {
         color: #fff;
-        background: #ff8000;
+        background: #f71327;
     }
 
     .index .indexMain .indexLeft .indexSubNav {
@@ -350,13 +260,7 @@
     }
 
     .index .indexMain .indexLeft .router-link-active {
-        color: #ff8000;
-    }
-
-    .index .indexMain .indexRight {
-        width: 982px;
-        min-height: 357px;
-        float: left;
+        color: #f71327;
     }
 
 
@@ -443,7 +347,7 @@
   }
 
   a:hover {
-    color: #ff8000;
+    color: #f71327;
     text-decoration: none;
   }
 

@@ -33,7 +33,6 @@
                     <h3 class="usMainRightTitle">公司地址：武汉市洪山区光谷大道现代世贸中心A座1108</h3>
                     <div class="usMainRightMap">
                         <router-view></router-view>
-                        <!-- <iframe width="1055px" height="552" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="./map.html"></iframe> -->
                     </div>
                 </div>
             </div>
@@ -46,7 +45,7 @@ export default {
   name: 'Us',
   data () {
     return {
-      msg7: 'Welcome to Your Vue.js App'
+      
     }
   }
 }
@@ -87,7 +86,7 @@ export default {
         color: white;
         padding: 16px 20px;
         margin-right: 16px;
-        background-image: linear-gradient(134deg, rgba(253, 189, 21, 0.5), rgba(244, 38, 38, 0.5)), linear-gradient(#ff8000, #ff8000);
+        background-image: linear-gradient(134deg, rgba(253, 189, 21, 0.5), rgba(244, 38, 38, 0.5)), linear-gradient(#f71327, #f71327);
     }
 
     .us .usContent .usMain .usMainLeft .usMainLeftItem {

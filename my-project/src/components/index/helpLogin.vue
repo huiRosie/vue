@@ -2,7 +2,7 @@
     <div class="helpLogin">
         <div class="helpLoginContent">
             <h2 class="helpLoginTitle">
-                <router-link class="helperItem"  to="/helper">帮助中心</router-link>  >
+                <router-link class="helperItem"  to="/hel">帮助中心</router-link>  >
                 <span>一笔银票网注册/登录</span>
             </h2>
             <div class="helpLoginMain">
@@ -57,7 +57,7 @@ export default {
     }
 
     .helpLogin .helpLoginContent .helpLoginTitle {
-        width: 1240px;
+        width: 1280px;
         height: 50px;
         line-height: 50px;
         padding: 0 20px;

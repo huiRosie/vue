@@ -2,7 +2,7 @@
     <div class="helpOut">
         <div class="helpOutContent">
             <h2 class="helpOutTitle">
-                <router-link  to="/helper">帮助中心</router-link>  >
+                <router-link  to="/hel">帮助中心</router-link>  >
                 <span>卖家操作流程</span>
             </h2>
             <div class="helpOutMain">
@@ -28,7 +28,7 @@ export default {
   name: 'HelpOut',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      
     }
   }
 }
@@ -49,7 +49,7 @@ export default {
     }
 
     .helpOut .helpOutContent .helpOutTitle {
-        width: 1240px;
+        width: 1280px;
         height: 50px;
         line-height: 50px;
         padding: 0 20px;

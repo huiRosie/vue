@@ -1,7 +1,7 @@
 <template>
     <div class="accInfoEdit">
         <h2 class="accInfoEditTitle">
-            <router-link to="/acc/accInfo" >账户信息</router-link> >
+            <router-link to="/acc/set/accInfo" >账户信息</router-link> >
             <span >个人信息编辑</span>
         </h2>
         <div class="accInfoEditMain">
@@ -14,7 +14,7 @@
                         昵称：
                     </div>
                     <div class="accInfoEditItem_text">
-                        <input type="text" name="" id="" value="" />
+                        <input type="text" v-model="userName" value="" />
                     </div>
                 </li>
                 <li class="accInfoEditItem">
@@ -22,7 +22,7 @@
                         姓名：
                     </div>
                     <div class="accInfoEditItem_text">
-                        <input type="text" name="" id="" value="" />
+                        <input type="text" v-model="realName" value="" />
                     </div>
                 </li>
                 <li class="accInfoEditItem">
@@ -30,7 +30,7 @@
                         联系电话：
                     </div>
                     <div class="accInfoEditItem_text">
-                        <input type="tel" name="" id="" value="" />
+                        <input type="tel" disabled v-model="userPhone" value="" />
                     </div>
                 </li>
                 <li class="accInfoEditItem">
@@ -38,25 +38,65 @@
                         Email：
                     </div>
                     <div class="accInfoEditItem_text">
-                        <input type="email" name="" id="" value="" />
+                        <input type="email" v-model="userEmail" value="" />
                     </div>
                 </li>
             </ul>
             <div class="accInfoEditBtn">
-                <a class="accInfoEditEnsure">确认修改</a>
+                <a class="accInfoEditEnsure" @click="editUserInfo">确认修改</a>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import globalData from '../globalData'
+
 export default {
-  name: 'AccInfoEdit',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+    name: 'AccInfoEdit',
+    data () {
+        return {
+            realName:'',
+            userName:'',
+            userPhone:'',
+            userEmail:'',
+        }
+    },
+    created:function(){
+        this.getUserInfo();
+    },
+    methods:{
+        //   调取接口，获取用户信息
+        getUserInfo:function(){
+            var self = this;
+            self.$http.get(globalData.data.Ip+'/user/info',{credentials:true}).then(function(res){ 
+                console.log(res);   
+                self.realName = res.data.data.realName;                          
+                self.userName = res.data.data.userName;                          
+                self.userPhone = res.data.data.userPhone;                          
+                self.userEmail = res.data.data.userEmail;                          
+            })
+        },
+        // 调取接口，修改个人信息
+        editUserInfo:function(){
+            var self = this;
+            self.$http.post(globalData.data.Ip+'/user/info/edit',
+                {
+                    userName:self.userName,
+                    realName:self.realName,
+                    userPhone:self.userPhone,
+                    userEmail:self.userEmail
+                },{emulateJSON:true,credentials:true}).then(function(res){ 
+                    console.log(res)
+                    if(res.data.code==200){
+                        self.$Message.success('个人信息编辑成功');
+                        self.$router.push('/acc/set/accInfo');
+                    }                         
+                },function(error){
+                    console.log(error);  
+            })
+        }
     }
-  }
 }
 </script>
 
@@ -87,7 +127,7 @@ export default {
         height: 76px;
         font-size: 18px;
         text-align: center;
-        color: #ff8000;
+        color: #f71327;
         padding-top: 50px;
         margin: 0 auto 26px;
     }
@@ -149,7 +189,7 @@ export default {
         line-height: 58px;
         text-align: center;
         color: white;
-        background: #ff8000;
+        background: #f71327;
         font-size: 16px;
         border-radius: 4px;
     }

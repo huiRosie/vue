@@ -10,6 +10,7 @@ import Regist from '@/components/index/regist'
 import Login from '@/components/index/login'
 import Helper from '@/components/index/helper'
 import HelpLogin from '@/components/index/helpLogin'
+import HelpIdent from '@/components/index/helpIdent'
 import HelpIn from '@/components/index/helpIn'
 import HelpOut from '@/components/index/helpOut'
 import Aide from '@/components/index/aide'
@@ -19,6 +20,7 @@ import MyBillDet from '@/components/account/myBillDet'
 import AccountOffer from '@/components/account/accountOffer'
 import MyOfferDet from '@/components/account/myOfferDet'
 import AccountBuy from '@/components/account/accountBuy'
+import MyBuyDet from '@/components/account/myBuyDet'
 import AccountInfo from '@/components/account/accountInfo'
 import AccInfoEdit from '@/components/account/accInfoEdit'
 import AccInfoIdent from '@/components/account/accInfoIdent'
@@ -26,6 +28,8 @@ import AccComIdent from '@/components/account/accComIdent'
 import AccountMes from '@/components/account/accountMes'
 import AccountMesDet from '@/components/account/accountMesDet'
 import ChangePass from '@/components/account/changePass'
+
+import globalData from '../components/globalData'
 
 Vue.use(Router)
 
@@ -42,17 +46,35 @@ export default new Router({
       component: Index1
     },
     {
-      path: '/out',
+      path: '/bill/out',
       name: 'Out',
-      component: Out
+      component: Out,
+      beforeEnter: function(to,from,next){
+        // console.log(to)
+        // console.log(from)
+        var data = localStorage.getItem('loginStatus');
+        var dataObj = JSON.parse(data);
+        if(data==null){
+          next('/login')
+          return;
+        }
+        var dataObiTime = ((new Date().getTime() - dataObj.time)/1000/60).toFixed(2);//分钟
+        if (dataObiTime>120) {
+          next('/login')
+          return;
+        }else{
+          next()
+        }
+        // console.log(dataObj)
+      }
     },
     {
-      path: '/in',
+      path: '/bill/in',
       name: 'In',
       component: In
     },
     {
-      path: '/inDet',
+      path: '/inDet/:billId',
       name: 'InDetail',
       component: InDetail
     },
@@ -89,6 +111,11 @@ export default new Router({
       component: HelpLogin
     },
     {
+      path: '/helide',
+      name: 'HelIdent',
+      component: HelpIdent
+    },
+    {
       path: '/helin',
       name: 'HelpIn',
       component: HelpIn
@@ -110,70 +137,93 @@ export default new Router({
         children:[
           {
             path: '',
-            name: 'AccountAnnounce',
-            component: AccountAnnounce
-          },
-          {
-            path: 'accAnn',
-            name: 'AccountAnnounce',
-            component: AccountAnnounce
-          },
-          {
-            path: 'myBillDet',
-            name: 'MyBillDet',
-            component: MyBillDet
-          },
-          {
-            path: 'accOffer',
-            name: 'AccountOffer',
-            component: AccountOffer
-          },
-          {
-            path: 'myOfferDet',
-            name: 'MyOfferDet',
-            component: MyOfferDet
-          },
-          {
-            path: 'accBuy',
-            name: 'AccountBuy',
-            component: AccountBuy
-          },
-          {
-            path: 'accInfo',
             name: 'AccountInfo',
             component: AccountInfo
           },
           {
-            path: 'accInfoEdit',
+            path: 'mypub/accAnn/:status',
+            name: 'AccountAnnounce',
+            component: AccountAnnounce
+          },
+          {
+            path: 'mypub/accAnn/myBillDet/:billId',
+            name: 'MyBillDet',
+            component: MyBillDet
+          },
+          {
+            path: 'buy/accOffer/:status',
+            name: 'AccountOffer',
+            component: AccountOffer
+          },
+          {
+            path: 'buy/accOffer/myOfferDet/:billId',
+            name: 'MyOfferDet',
+            component: MyOfferDet
+          },
+          {
+            path: 'buy/accBuy/:status',
+            name: 'AccountBuy',
+            component: AccountBuy
+          },
+          {
+            path: 'buy/accBuy/myBuyDet/:billId',
+            name: 'MyBuyDet',
+            component: MyBuyDet
+          },
+          {
+            path: 'set/accInfo',
+            name: 'AccountInfo',
+            component: AccountInfo
+          },
+          {
+            path: 'set/accInfo/accInfoEdit',
             name: 'AccInfoEdit',
             component: AccInfoEdit
           },
           {
-            path: 'accInfoIdent',
+            path: 'set/accInfo/accInfoIdent',
             name: 'AccInfoIdent',
             component: AccInfoIdent
           },
           {
-            path: 'accComIdent',
+            path: 'set/accInfo/accComIdent',
             name: 'AccComIdent',
             component: AccComIdent
           },
           {
-            path: 'accMes',
+            path: 'set/accMes',
             name: 'AccountMes',
             component: AccountMes
           },
           {
-            path: 'accMesDet',
+            path: 'set/accMes/accMesDet',
             name: 'AccountMesDet',
             component: AccountMesDet
           },
           {
-            path: 'changePass',
+            path: 'set/changePass',
             name: 'ChangePass',
             component: ChangePass
           }
-        ]
+        ],
+        beforeEnter: function(to,from,next){
+          // console.log(to)
+          // console.log(from)
+          var data = localStorage.getItem('loginStatus');
+          var dataObj = JSON.parse(data);
+          if(data==null){
+            next('/login')
+            return;
+          }
+          var dataObiTime = ((new Date().getTime() - dataObj.time)/1000/60).toFixed(2);//分钟
+          if (dataObiTime>120) {
+            next('/login')
+            return;
+          }else{
+            next()
+          }
+          // console.log(dataObj)
+        }
     }
   ]
 })

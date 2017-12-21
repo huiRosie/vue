@@ -8,11 +8,24 @@ export default {
   name: 'Mymap',
   data () {
     return {
-      
+      markerArr : [{
+                title:'武汉小墨科技有限公司',
+                content: '现代光谷世贸中心A座1108',
+                point: 114.428188 + '|' + 30.478188,
+                isOpen: 0,
+                icon: {
+                    w: 23,
+                    h: 25,
+                    l: 46,
+                    t: 21,
+                    x: 9,
+                    lb: 12
+                }
+            }]
     }
   },
   mounted(){
-      this.initMap()
+      this.initMap();
   },
   methods:{
       //创建和初始化地图函数：
@@ -42,51 +55,38 @@ export default {
 		//地图控件添加函数：
 		addMapControl(){
 			//向地图中添加缩放控件
-			var ctrl_nav = new BMap.NavigationControl({
-				anchor: BMAP_ANCHOR_TOP_LEFT,
-				type: BMAP_NAVIGATION_CONTROL_LARGE
-			});
-			map.addControl(ctrl_nav);
-			//向地图中添加缩略图控件
-			var ctrl_ove = new BMap.OverviewMapControl({
-				anchor: BMAP_ANCHOR_BOTTOM_RIGHT,
-				isOpen: 1
-			});
-			map.addControl(ctrl_ove);
-			//向地图中添加比例尺控件
-			var ctrl_sca = new BMap.ScaleControl({
-				anchor: BMAP_ANCHOR_BOTTOM_LEFT
-			});
-			map.addControl(ctrl_sca);
+			// var ctrl_nav = new BMap.NavigationControl({
+			// 	anchor: BMAP_ANCHOR_TOP_LEFT,
+			// 	type: BMAP_NAVIGATION_CONTROL_LARGE
+			// });
+			// map.addControl(ctrl_nav);
+			// //向地图中添加缩略图控件
+			// var ctrl_ove = new BMap.OverviewMapControl({
+			// 	anchor: BMAP_ANCHOR_BOTTOM_RIGHT,
+			// 	isOpen: 1
+			// });
+			// map.addControl(ctrl_ove);
+			// //向地图中添加比例尺控件
+			// var ctrl_sca = new BMap.ScaleControl({
+			// 	anchor: BMAP_ANCHOR_BOTTOM_LEFT
+			// });
+			// map.addControl(ctrl_sca);
 		},
 
 		//标注点数组
 		//创建marker
 		addMarker() {
-            var markerArr = [{
-                title:'武汉小墨科技有限公司',
-                content: '现代光谷世贸中心A座1108',
-                point: 114.428188 + '|' + 30.478188,
-                isOpen: 0,
-                icon: {
-                    w: 23,
-                    h: 25,
-                    l: 46,
-                    t: 21,
-                    x: 9,
-                    lb: 12
-                }
-            }];
+            var markerArr = this.markerArr;
 			for(var i = 0; i < markerArr.length; i++) {
 				var json = markerArr[i];
 				var p0 = json.point.split("|")[0];
 				var p1 = json.point.split("|")[1];
 				var point = new BMap.Point(p0, p1);
-				var iconImg = createIcon(json.icon);
+				var iconImg = this.createIcon(json.icon);
 				var marker = new BMap.Marker(point, {
 					icon: iconImg
 				});
-				var iw = createInfoWindow(i);
+				var iw = this.createInfoWindow(i);
 				var label = new BMap.Label(json.title, {
 					"offset": new BMap.Size(json.icon.lb - json.icon.x + 10, -20)
 				});
@@ -97,10 +97,10 @@ export default {
 					color: "#333",
 					cursor: "pointer"
 				});
-
+				var self = this;
 				(function() {
 					var index = i;
-					var _iw = createInfoWindow(i);
+					var _iw = self.createInfoWindow(i);
 					var _marker = marker;
 					_marker.addEventListener("click", function() {
 						this.openInfoWindow(_iw);
@@ -123,7 +123,7 @@ export default {
 		},
 		//创建InfoWindow
 		createInfoWindow(i) {
-			var json = markerArr[i];
+			var json = this.markerArr[i];
 			var iw = new BMap.InfoWindow("<b class='iw_poi_title' title='" + json.title + "'>" + json.title + "</b><div class='iw_poi_content'>" + json.content + "</div>");
 			return iw;
 		},

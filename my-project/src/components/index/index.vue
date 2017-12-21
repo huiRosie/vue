@@ -3,7 +3,7 @@
         <!--banner-->
         <div class="banner swiper-container">
             <div class="bannerList swiper-wrapper" id="bannerList">
-                <a class="bannerItem swiper-slide"  >
+                <a class="bannerItem swiper-slide" >
                     <img src="../../assets/banner2.png" class="swiper-lazy"/>
                 </a>
             </div>
@@ -56,7 +56,7 @@
                         <img src="../../assets/3.png"/>
                         <div class="flowDes">
                             <h3 class="flowItemTitle">买方付款</h3>
-                            <p class="flowItemDes">买方付款至银行监管账户</p>
+                            <p class="flowItemDes">买方完成线下付款</p>
                         </div>
                     </li>
                     <li class="flowItem">
@@ -79,96 +79,30 @@
         <!--在售银票列表-->
         <div class="bill">
             <div class="billBox">
+                <!-- 银票title -->
+                <h2 class="billTitle">优质汇票 · 买到即是赚到</h2>
                 <ul class="billList">
-                    <li class="billItem">
-                        <div class="billItemPrice">
-                            <span>5000</span>万元
+                    <li class="billItem" v-for="bill in billLists" >
+                        <div class="billItemPrice" v-if="bill.billMoney<=10000">
+                            <span>{{bill.billMoney}}</span>元
+                        </div>
+                        <div class="billItemPrice" v-if="bill.billMoney>10000">
+                            <span>{{bill.billMoney/10000}}</span>万元
                         </div>
                         <div class="billItemDeadline">
-                            到期倒计时：<span>60天</span>
+                            到期倒计时：<span>{{bill.billTimeout}}天</span>
                         </div>
                         <div class="billItemDate">
-                            汇票到期日：<span>2018年1月20日</span>
+                            汇票到期日：<span>{{bill.billExpire}}</span>
                         </div>
                         <div class="billItemDate">
-                            出票人全称：<span>中铁建设集团有限公司</span>
+                            出票人全称：<span>{{bill.billUserName}}</span>
                         </div>
                         <div class="billItemDate">
-                            付款行全称：<span>中国建设银行硚口支行</span>
+                            付款行全称：<span>{{bill.billBank}}</span>
                         </div>
-                        <router-link class="billItemBid" to="/inDet">参与竞价</router-link>
-                    </li>
-                    <li class="billItem">
-                        <div class="billItemPrice">
-                            <span>5000</span>万元
-                        </div>
-                        <div class="billItemDeadline">
-                            到期倒计时：<span>60天</span>
-                        </div>
-                        <div class="billItemDate">
-                            汇票到期日：<span>2018年1月20日</span>
-                        </div>
-                        <div class="billItemDate">
-                            出票人全称：<span>中铁建设集团有限公司</span>
-                        </div>
-                        <div class="billItemDate">
-                            付款行全称：<span>中国建设银行硚口支行</span>
-                        </div>
-                        <router-link class="billItemBid" to="/inDet">参与竞价</router-link>
-                    </li>
-                    <li class="billItem">
-                        <div class="billItemPrice">
-                            <span>5000</span>万元
-                        </div>
-                        <div class="billItemDeadline">
-                            到期倒计时：<span>60天</span>
-                        </div>
-                        <div class="billItemDate">
-                            汇票到期日：<span>2018年1月20日</span>
-                        </div>
-                        <div class="billItemDate">
-                            出票人全称：<span>中铁建设集团有限公司</span>
-                        </div>
-                        <div class="billItemDate">
-                            付款行全称：<span>中国建设银行硚口支行</span>
-                        </div>
-                        <router-link class="billItemBid" to="/inDet">参与竞价</router-link>
-                    </li>
-                    <li class="billItem">
-                        <div class="billItemPrice">
-                            <span>5000</span>万元
-                        </div>
-                        <div class="billItemDeadline">
-                            到期倒计时：<span>60天</span>
-                        </div>
-                        <div class="billItemDate">
-                            汇票到期日：<span>2018年1月20日</span>
-                        </div>
-                        <div class="billItemDate">
-                            出票人全称：<span>中铁建设集团有限公司</span>
-                        </div>
-                        <div class="billItemDate">
-                            付款行全称：<span>中国建设银行硚口支行</span>
-                        </div>
-                        <router-link class="billItemBid" to="/inDet">参与竞价</router-link>
-                    </li>
-                    <li class="billItem">
-                        <div class="billItemPrice">
-                            <span>5000</span>万元
-                        </div>
-                        <div class="billItemDeadline">
-                            到期倒计时：<span>60天</span>
-                        </div>
-                        <div class="billItemDate">
-                            汇票到期日：<span>2018年1月20日</span>
-                        </div>
-                        <div class="billItemDrawer">
-                            出票人全称：<span>中铁建设集团有限公司</span>
-                        </div>
-                        <div class="billItemBank">
-                            付款行全称：<span>中国建设银行硚口支行</span>
-                        </div>
-                        <router-link class="billItemBid" to="/inDet">参与竞价</router-link>
+                        <a class="billItemBid" @click="bidBill(bill.billId)">参与竞价</a>
+                        <!-- <router-link class="billItemBid" to="{path:'inDetail',params:{billId:bill.billId}}">参与竞价</router-link> -->
                     </li>
                 </ul>
                 <div class="pageBox">
@@ -208,11 +142,47 @@
 </template>
 
 <script>
+    import globalData from '../globalData'
+
     export default {
         name: 'Index1',
         data () {
             return {
-            msg1: 'Welcome to Your Vue.js App'
+                billLists:'',
+                loginStatus:''
+            }
+        },
+        created:function(){
+            this.getBillList();
+        },
+        methods:{
+            getBillList:function(){
+                //调用接口
+                this.$http.get(globalData.data.Ip+'/index/main'
+                ).then(function(res){  
+                    this.billLists = res.data.data.bills;
+                    console.log(res);                                
+                },function(error){
+                    console.log(error);  
+                })
+            },
+            bidBill:function(billId){
+                // console.log(billId)
+                this.$router.push({ name:'InDetail', params: { billId: billId }})
+            },
+            //   调取接口，获取用户信息
+            getUserInfo:function(){
+                var self = this;
+                self.$http.get(globalData.data.Ip+'/user/info',{credentials:true}).then(function(res){ 
+                    console.log(res);   
+                    if(res.data.code==200){
+                        self.loginStatus = '退出登录';
+                    }
+                    if(res.data.code==undefined){
+                        self.loginStatus = '登录';
+                    }                         
+                    console.log(self.loginStatus)
+                })
             }
         }
     }
@@ -252,7 +222,7 @@
 
     .index .banner .swiper-pagination-bullets .swiper-pagination-bullet-active {
         list-style: none;
-        background: #ff8000;
+        background: #f71327;
         width: 12px;
         height: 12px;
         margin-right: 10px;
@@ -378,7 +348,17 @@
     .index .bill .billBox {
         width: 1280px;
         margin: 0 auto;
-        padding: 78px 0;
+        padding: 36px 0;
+    }
+
+    .index .bill .billBox .billTitle{
+        font-size: 18px;
+        width: 100%;
+        height: 26px;
+        line-height: 26px;
+        margin-bottom: 16px;
+        font-weight: 500;
+        font-family: '.PingFang-SC';
     }
 
     .index .bill .billBox .billList {
@@ -401,7 +381,7 @@
         line-height: 70px;
         text-align: center;
         font-size: 46px;
-        color: #ff8000;
+        color: #f71327;
         padding-top: 12px;
     }
 
@@ -437,6 +417,9 @@
     .index .bill .billBox .billList .billItem .billItemDrawer span,
     .index .bill .billBox .billList .billItem .billItemBank span {
         color: #434343;
+        /* display: inline-block; */
+        width: 150px;
+        overflow: hidden;
     }
 
     .index .bill .billBox .billList .billItem .billItemBid {
@@ -486,7 +469,7 @@
 
     .index .partner .partnerBox .partnerTop span {
         font-size: 14px;
-        color: #ff8000;
+        color: #f71327;
         padding-left: 8px;
     }
 

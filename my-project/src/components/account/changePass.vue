@@ -11,9 +11,9 @@
                         旧密码：
                     </div>
                     <div class="changePassItem_text">
-                        <input type="password" name="" id="" value="" />
+                        <input type="password" v-model="oldPassword" name="" id="" value="" />
                     </div>
-                    <div class="changePassItem_tip">
+                    <div class="changePassItem_tip" ref="oldtip">
                         密码输入错误
                     </div>
                 </li>
@@ -22,9 +22,9 @@
                         新密码：
                     </div>
                     <div class="changePassItem_text">
-                        <input type="password" name="" id="" value="" />
+                        <input type="password" v-model="newPassword" name="" id="" value="" />
                     </div>
-                    <div class="changePassItem_tip">
+                    <div class="changePassItem_tip" ref="newtip">
                         密码输入错误
                     </div>
                 </li>
@@ -33,28 +33,75 @@
                         确认新密码：
                     </div>
                     <div class="changePassItem_text">
-                        <input type="password" name="" id="" value="" />
+                        <input type="password" v-model="repeatPassword" name="" id="" value="" />
                     </div>
-                    <div class="changePassItem_tip">
+                    <div class="changePassItem_tip" ref="retip">
                         密码输入错误
                     </div>
                 </li>
             </ul>
             <div class="changePassBtn">
-                <a class="changePassEnsure">确认修改</a>
+                <a class="changePassEnsure" @click="changePassword">确认修改</a>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import globalData from '../globalData'
+
 export default {
-  name: 'ChangePass',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+    name: 'ChangePass',
+    data () {
+        return {
+            oldPassword:'',
+            newPassword:'',
+            repeatPassword:''
+        }
+    },
+    methods:{
+        changePassword(){
+            var self = this;
+            if(self.oldPassword==''){
+                self.$refs.oldtip.style.display = 'block';
+                return;
+            }
+            self.$refs.oldtip.style.display = 'none';
+            if(self.newPassword==''){
+                self.$refs.newtip.style.display = 'block';
+                return;
+            }
+            self.$refs.newtip.style.display = 'none';
+            if(self.repeatPassword==''||self.repeatPassword!=self.newPassword){
+                self.$refs.retip.style.display = 'block';
+                return;
+            }
+            self.$refs.retip.style.display = 'none';
+            // 调取接口，修改密码
+            self.$http.post(globalData.data.Ip+'/user/info/changePwd',{
+                userPassword:self.oldPassword,
+                userNewPassword:self.newPassword
+            },{emulateJSON:true,credentials: true}).then(function(res) { 
+                console.log(res)
+                const title = '提示';
+                const content = '密码修改成功，请重新登录！';
+                self.$Modal.warning({
+                    title: title,
+                    content: content,
+                    onOk: function(){
+                        // 执行退出登录
+                        self.$http.get(globalData.data.Ip+'/user/logouted',{emulateJSON:true,credentials:true}).then(function(res){ 
+                            // console.log(res);   
+                            self.loginStatus = '登录';
+                            // 删除存储的登录信息
+                            globalData.methods.deleteItem('loginStatus');
+                            self.$router.push('/login');
+                        })
+                    },
+                });
+            })
+        }
     }
-  }
 }
 </script>
 
@@ -85,7 +132,7 @@ export default {
         height: 76px;
         font-size: 18px;
         text-align: center;
-        color: #ff8000;
+        color: #f71327;
         padding-top: 50px;
         margin: 0 auto 26px;
     }
@@ -131,6 +178,7 @@ export default {
         width: 110px;
         color: red;
         padding-left: 10px;
+        display: none;
     }
 
     .changePass .changePassMain .changePassBtn {
@@ -147,7 +195,7 @@ export default {
         line-height: 58px;
         text-align: center;
         color: white;
-        background: #ff8000;
+        background: #f71327;
         font-size: 16px;
         border-radius: 4px;
     }

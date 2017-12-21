@@ -85,7 +85,7 @@ export default {
         width: 300px;
         height: 18px;
         float: left;
-        color: #ff8000;
+        color: #f71327;
         font-size: 16px;
     }
 
@@ -148,7 +148,7 @@ export default {
 
     .bidPouup .bidPouupMain .bidPouupRate .bidPouupRate_text span {
         float: left;
-        color: #ff8000;
+        color: #f71327;
     }
 
     .bidPouup .bidPouupMain .bidPouupAdd {
@@ -233,7 +233,7 @@ export default {
         text-align: center;
         border-radius: 4px;
         margin: 0 auto;
-        background-color: #ff8000;
+        background-color: #f71327;
     }
 
     .bidPouup .bidPouupMain .bidPouupBtn .bidPouupOffer {

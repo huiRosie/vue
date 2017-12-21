@@ -13,10 +13,10 @@
                         账号：
                     </div>
                     <div class="loginMainLoginItem_text">
-                        <input type="text" name="" id="" value="" />
+                        <input type="text" name="" v-model="phone"  v-on:blur='onblurPhone(phone)' value="" />
                     </div>
-                    <div class="loginMainLoginItem_tip">
-                        账号输入错误
+                    <div class="loginMainLoginItem_tip" ref="loginPhone_tip"> 
+                        请正确输入您的账号
                     </div>
                 </div>
                 <div class="loginMainLoginItem">
@@ -24,16 +24,16 @@
                         密码：
                     </div>
                     <div class="loginMainLoginItem_text">
-                        <input type="text" name="" id="" value="" />
+                        <input type="password" name="" v-model="password"  v-on:blur='onblurPassword(password)' value="" />
                     </div>
-                    <div class="loginMainLoginItem_tip">
-                        密码输入错误
+                    <div class="loginMainLoginItem_tip" ref="loginPassword_tip">
+                        {{passwordTip}}
                     </div>
                 </div>
-                <div class="loginMainLoginBtn">
+                <div class="loginMainLoginBtn" @click='goLogin'>
                     登录
                 </div>
-                <div class="loginMainLoginPass">
+                <div class="loginMainLoginPass" style="display:none;">
                     <a class="loginMainLoginPass_remember">
                         <input type="checkbox" name="" id="" value="" /> 
                         <span> 记住密码</span>
@@ -47,13 +47,73 @@
 </template>
 
 <script>
+import globalData from '../globalData'
+
 export default {
-  name: 'Login',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+    name: 'Login',
+    data () {
+        return {
+        phone: '',
+        password:'',
+        passwordTip:'密码输入错误',
+        username:''
+        }
+    },
+    methods:{
+        goLogin:function(){
+            if(this.phone==''){
+                this.$refs.loginPhone_tip.style.display = 'block'   
+                return
+            }
+            if(this.password==''){
+                this.$refs.loginPassword_tip.style.display = 'block'   
+                return
+            }
+            if ((/^[1][3578][0-9]{9}$/).test(this.phone)&&(/^[a-zA-Z0-9]{6,18}$/).test(this.password)) {
+                var self = this;
+                // console.log(1)
+                self.$http.post(globalData.data.Ip+'/user/login',
+                    {
+                        username:self.phone,
+                        password:self.password
+                    },{emulateJSON:true,withCredentials: true}).then(function(res){        
+                    if(res.data.code == 200) {
+                        console.log(res);
+                        globalData.data.loginStatus = '退出登录'
+                        self.$router.push('/index');
+                        self.$emit('userSignIn', globalData.data.loginStatus);
+                        // 登录成功，存储登录信息
+                        globalData.methods.setData('loginStatus','已登录');
+                        self.$Message.success('登录成功');
+                    } else {
+                        this.$refs.loginPassword_tip.style.display = 'block'
+                        self.passwordTip = res.data.data; 
+                        console.log(res.data.data);
+                        console.log(res);
+                    }
+                })
+            }
+        },
+        // 绑定键盘事件
+        
+        // 失去焦点
+        onblurPhone:function(ele){
+            var self = this;
+            if((/^[1][3578][0-9]{9}$/).test(ele)){
+                self.$refs.loginPhone_tip.style.display = 'none'  
+            }else{
+                self.$refs.loginPhone_tip.style.display = 'block'  
+            }
+        },
+        onblurPassword:function(ele){
+            var self = this;
+            if((/^[a-zA-Z0-9]{6,18}$/).test(ele)){
+                self.$refs.loginPassword_tip.style.display = 'none'  
+            }else{
+                self.$refs.loginPassword_tip.style.display = 'block'  
+            }
+        },
     }
-  }
 }
 </script>
 
@@ -104,7 +164,7 @@ export default {
     }
 
     .login .loginContent .loginMain .loginMainTop .loginMainTopActive {
-        color: #ff8000;
+        color: #f71327;
     }
 
     .login .loginContent .loginMain .loginMainLogin {
@@ -115,9 +175,8 @@ export default {
 
     .login .loginContent .loginMain .loginMainLogin .loginMainLoginItem {
         width: 100%;
-        height: auto;
+        height: 68px;
         overflow: hidden;
-        margin-bottom: 20px;
     }
 
     .login .loginContent .loginMain .loginMainLogin .loginMainLoginItem .loginMainLoginItem_label {
@@ -168,7 +227,7 @@ export default {
         height: 46px;
         line-height: 46px;
         float: left;
-        color: #fd6e08;
+        color: #f71327;
         cursor: pointer;
     }
 
@@ -180,8 +239,9 @@ export default {
         line-height: 46px;
         text-align: center;
         border-radius: 4px;
-        background-color: #ff8300;
+        background-color: #f71327;
         margin-left: 54px;
+        cursor: pointer;
     }
 
     .login .loginContent .loginMain .loginMainLogin .loginMainLoginPass {
@@ -196,7 +256,7 @@ export default {
         line-height: 12px;
         float: left;
         font-size: 12px;
-        color: #ff8000;
+        color: #f71327;
     }
 
     .login .loginContent .loginMain .loginMainLogin .loginMainLoginPass .loginMainLoginPass_remember input {
@@ -214,6 +274,6 @@ export default {
         height: 12px;
         float: right;
         font-size: 12px;
-        color: #ff8000;
+        color: #f71327;
     }
 </style>

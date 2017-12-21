@@ -3,27 +3,27 @@
         <div class="accountMain">
             <div class="accountLeft">
                 <div class="accountSubBox">
-                    <div class="accountSub" onclick="disabled">
+                    <div class="accountSub" ref="pub">
                         <h2 class="accountSubTitle">我的发布</h2>
                     </div>
-                    <router-link class="accountSubNav" to="/acc/accAnn">· 交易中</router-link>
-                    <router-link class="accountSubNav" to="/acc/accAnn">· 交易成功</router-link>
-                    <router-link class="accountSubNav" to="/acc/accAnn">· 交易失败</router-link>
+                    <router-link class="accountSubNav" ref="pubing" to="/acc/mypub/accAnn/trading">· 交易中</router-link>
+                    <router-link class="accountSubNav" to="/acc/mypub/accAnn/success">· 交易成功</router-link>
+                    <router-link class="accountSubNav" to="/acc/mypub/accAnn/failure">· 交易失败</router-link>
                 </div>
                 <div class="accountSubBox">
-                    <div class="accountSub">
+                    <div class="accountSub" ref="buy">
                         <h2 class="accountSubTitle">我是买家</h2>
                     </div>
-                    <router-link class="accountSubNav" to="/acc/accOffer">· 我报价的汇票</router-link>
-                    <router-link class="accountSubNav" to="/acc/accBuy">· 我买到的汇票</router-link>	
+                    <router-link class="accountSubNav" to="/acc/buy/accOffer/publish">· 我竞价的汇票</router-link>
+                    <router-link class="accountSubNav" to="/acc/buy/accBuy/success">· 我买到的汇票</router-link>	
                 </div>
                 <div class="accountSubBox">
-                    <div class="accountSub accountSubActive">
+                    <div class="accountSub" ref="set">
                         <h2 class="accountSubTitle">账户设置</h2>
                     </div>
-                    <router-link class="accountSubNav" to="/acc/accInfo">· 账户信息</router-link>
-                    <router-link class="accountSubNav" to="/acc/accMes">· 消息中心</router-link>
-                    <router-link class="accountSubNav" to="/acc/changePass">· 修改密码</router-link>
+                    <router-link class="accountSubNav" to="/acc/set/accInfo">· 账户信息</router-link>
+                    <router-link class="accountSubNav" to="/acc/set/accMes">· 消息中心</router-link>
+                    <router-link class="accountSubNav" to="/acc/set/changePass">· 修改密码</router-link>
                 </div>
             </div>
             <div class="accountRight">
@@ -34,13 +34,77 @@
 </template>
 
 <script>
+import globalData from '../globalData'
+
 export default {
-  name: 'Account',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+    name: 'Account',
+    data () {
+        return {
+            
+        }
+    },
+    mounted:function(){
+        this.subLight();
+    },
+    methods:{
+        // 侧边栏高亮
+        subLight:function(){
+            var self = this;
+            // 获取路径后缀
+            var suffix = this.$route.path;
+            //首次进入
+            if(suffix.length==4&&suffix=='/acc'){
+                suffix = '/acc/set/accInfo';
+                // self.$refs.pubing.style.color = '#f71327';
+            }
+            // console.log(suffix);
+            // 一级标题高亮
+            if(suffix.indexOf('mypub')!=-1){
+                self.$refs.pub.style.color = '#fff'; 
+                self.$refs.pub.style.background = '#f71327';
+            }else{
+                self.$refs.pub.style.color = '#555';
+                self.$refs.pub.style.background = '#fdeaea';
+            }
+            if(suffix.indexOf('buy')!=-1){
+                self.$refs.buy.style.color = '#fff';
+                self.$refs.buy.style.background = '#f71327';
+            }else{
+                self.$refs.buy.style.color = '#555';
+                self.$refs.buy.style.background = '#fdeaea';
+            }
+            if(suffix.indexOf('set')!=-1){
+                self.$refs.set.style.color = '#fff';
+                self.$refs.set.style.background = '#f71327';
+            }else{
+                self.$refs.set.style.color = '#555';
+                self.$refs.set.style.background = '#fdeaea';
+            }
+        },
+        getOfferList:function(current,billStatus){
+            var self = this;
+            console.log(billStatus)
+            console.log(current)
+            //调用接口  获取竞价汇票列表
+            self.$http.post(globalData.data.Ip+'/bill/page',{params:{
+                currentPage:current,
+                pageSize:8,
+                isCurrentUser:true,
+                billStatus:self.billStatus
+            },credentials:true}).then(function(res){ 
+                console.log(res);     
+                self.billList = res.data.data.recordList;      
+                self.total = res.data.data.totalCount;
+            });
+        }
+    },
+    watch:{
+        "$route": "subLight",
+        // "$route"(to,from,next){
+            
+        // }
+
     }
-  }
 }
 </script>
 
@@ -50,7 +114,7 @@ export default {
         width: 100%;
         height: auto;
         background: #f1f1f1;
-        padding: 20px 0;
+        padding: 24px 0;
     }
 
     .account .accountMain {
@@ -72,7 +136,7 @@ export default {
         width: 280px;
         height: 58px;
         padding: 18px 20px;
-        background: #ffefdd;
+        background: #fdeaea;
     }
 
     .account .accountMain .accountLeft .accountSub .accountSubTitle {
@@ -82,17 +146,17 @@ export default {
         font-size: 16px;
         font-weight: 500;
         text-indent: 10px;
-        border-left: 5px solid #ff8000;
+        border-left: 5px solid #f71327;
     }
 
     .account .accountMain .accountLeft .accountSub:hover {
         color: #fff;
-        background: #ff8000;
+        background: #f71327;
     }
 
     .account .accountMain .accountLeft .accountSubActive {
         color: #fff;
-        background: #ff8000;
+        background: #f71327;
     }
 
     .account .accountMain .accountLeft .accountSubNav {
@@ -103,7 +167,7 @@ export default {
     }
 
     .account .accountMain .accountLeft .router-link-active {
-        color: #ff8000;
+        color: #f71327;
     }
 
     .account .accountMain .accountRight {

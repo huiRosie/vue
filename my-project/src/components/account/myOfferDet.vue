@@ -2,14 +2,16 @@
     <div class="myOfferDet">
         <div class="myOfferDetContent">
             <h2 class="myOfferDetTitle">
-                <router-link class="accountSubNav" to="/acc/accOffer">我是买家</router-link> >
-                <router-link class="accountSubNav" to="/acc/accOffer">交易中</router-link> >
+                <router-link class="accountSubNav" to="/acc/buy/accOffer/'publish'">我是买家</router-link> >
+                <router-link class="accountSubNav" to="/acc/buy/accOffer/'publish'">我竞价的汇票</router-link> >
                 <span>汇票详情</span>
             </h2>
             <div class="myOfferDetMain">
                 <!--汇票信息-->
                 <div class="myOfferDetBill">
-                    <h3 class="myOfferDetBillTitle">汇票信息<span class="myOfferDetBillStatus">交易中</span></h3>
+                    <h3 class="myOfferDetBillTitle">汇票信息
+                        <span v-if="billData.billStatus=='publishing'" class="myOfferDetBillStatus">交易中</span>
+                    </h3>
                     <div class="myOfferDetBillInfo">
                         <ul class="myOfferDetBillInfoLeft">
                             <li class="myOfferDetBillInfoItem">
@@ -17,7 +19,7 @@
                                     票据号：
                                 </div>
                                 <div class="myOfferDetBillInfoItem_text">
-                                    1315246868985
+                                    {{billData.billNo}}
                                 </div>
                             </li>
                             <li class="myOfferDetBillInfoItem">
@@ -25,7 +27,7 @@
                                     承兑人全称：
                                 </div>
                                 <div class="myOfferDetBillInfoItem_text">
-                                    1315246868985
+                                    {{billData.billUserName}}
                                 </div>
                             </li>
                             <li class="myOfferDetBillInfoItem">
@@ -33,7 +35,7 @@
                                     票据类型：
                                 </div>
                                 <div class="myOfferDetBillInfoItem_text">
-                                    1315246868985
+                                    {{billData.billClassify}}
                                 </div>
                             </li>
                             <li class="myOfferDetBillInfoItem">
@@ -41,7 +43,7 @@
                                     票面金额(元)：
                                 </div>
                                 <div class="myOfferDetBillInfoItem_text">
-                                    1315246868985
+                                    {{billData.billMoney}}
                                 </div>
                             </li>
                             <li class="myOfferDetBillInfoItem">
@@ -49,7 +51,7 @@
                                     汇票到期日：
                                 </div>
                                 <div class="myOfferDetBillInfoItem_text">
-                                    1315246868985
+                                    {{billData.billExpire}}
                                 </div>
                             </li>
                             <li class="myOfferDetBillInfoItem">
@@ -57,7 +59,7 @@
                                     背书次数：
                                 </div>
                                 <div class="myOfferDetBillInfoItem_text">
-                                    1315246868985
+                                    {{billData.billEndorse}}
                                 </div>
                             </li>
                             <li class="myOfferDetBillInfoItem">
@@ -65,12 +67,13 @@
                                     汇票瑕疵：
                                 </div>
                                 <div class="myOfferDetBillInfoItem_text">
-                                    1315246868985
+                                    {{billData.billImgHealth}}
                                 </div>
                             </li>
                         </ul>
                         <div class="myOfferDetBillInfoRight">
-                            <img src="../../assets/bill.png"/>
+                            <img v-if="billData.billImg.indexOf('http://')!=-1||billData.billImg.indexOf('https://')!=-1" :src="billData.billImg"/>
+                            <img v-else :src="'http://'+billData.billImg"/>
                         </div>
                     </div>
                 </div>
@@ -78,13 +81,14 @@
                 <div class="myOfferDetAttach">
                     <h3 class="myOfferDetAttachTitle">背书及附件</h3>
                     <div class="myOfferDetAttachInfo">
-                        <img src="../../assets/jpg.png"/>
+                        <img v-if="billData.billEvidence.indexOf('http://')!=-1||billData.billEvidence.indexOf('https://')!=-1" :src="billData.billImg"/>
+                        <img v-else :src="'http://'+billData.billEvidence"/>
                         <p class="myOfferDetAttachDes">背书.jpg</p>
                     </div>
                 </div>
-                <!--我要竞价-->
+                <!--放弃竞价-->
                 <div class="myOfferDetBtn">
-                    <a class="myOfferDetBtnBack">放弃交易</a>
+                    <a class="myOfferDetBtnBack" @click="giveUp">放弃交易</a>
                 </div>
             </div>
         </div>
@@ -92,13 +96,56 @@
 </template>
 
 <script>
+import globalData from '../globalData'
+
 export default {
-  name: 'MyOfferDet',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+    name: 'MyOfferDet',
+    data () {
+        return {
+            billId:'',
+            billData:''
+        }
+    },
+    created:function(){
+        this.getBillDet();
+    },
+    methods:{
+        getBillDet:function(){
+            //调用接口  获取汇票详情
+            var self = this;
+            self.billId = self.$route.params.billId;
+            console.log(self.billId);      
+            self.$http.get(globalData.data.Ip+'/bill/info',{params:{
+                billId:self.billId
+            }},{emulateJSON:true}).then(function(res){ 
+                self.billData = res.data.data;
+                console.log(self.billData);                             
+            },function(error){
+                console.log(error);  
+            })
+        },
+        giveUp:function(){
+            var self = this;
+            self.$Modal.confirm({
+                title:'提示',
+                content:'你确定放弃竞价吗？',
+                onOk:function(){
+                    //调用接口   放弃报价
+                    self.$http.post(globalData.data.Ip+'/bill/quote/refuse',
+                        {
+                            quoteId:self.billId
+                        },{emulateJSON:true,withCredentials:true}).then(function(res){ 
+                            if(res.data.code==200){
+                                self.modal1 = false;
+                                self.$Message.success('操作成功');
+                            }                         
+                        },function(error){
+                            console.log(error);  
+                    })
+                }
+            })
+        }
     }
-  }
 }
 </script>
 
@@ -125,7 +172,7 @@ export default {
     }
 
     .myOfferDet .myOfferDetContent .myOfferDetTitle a:hover {
-        color: #ff8000;
+        color: #f71327;
     }
 
     .myOfferDet .myOfferDetContent .myOfferDetMain {
@@ -143,7 +190,7 @@ export default {
     }
 
     .myOfferDet .myOfferDetContent .myOfferDetMain .myOfferDetBill .myOfferDetBillTitle {
-        width: 947px;
+        width: 952px;
         height: 20px;
         line-height: 20px;
         font-size: 16px;
@@ -151,7 +198,7 @@ export default {
         font-weight: 600;
         margin-bottom: 35px;
         margin-left: 30px;
-        border-left: 5px solid #ff8000;
+        border-left: 5px solid #f71327;
     }
 
     .myOfferDet .myOfferDetContent .myOfferDetMain .myOfferDetBill .myOfferDetBillTitle .myOfferDetBillStatus {
@@ -162,7 +209,7 @@ export default {
         line-height: 40px;
         text-align: center;
         color: white;
-        background: #ff8000;
+        background: #f71327;
         font-size: 16px;
         font-weight: 100;
         border-top-left-radius: 20px;
@@ -170,7 +217,7 @@ export default {
     }
 
     .myOfferDet .myOfferDetContent .myOfferDetMain .myOfferDetBill .myOfferDetBillInfo {
-        width: 1190px;
+        width: 982px;
         padding-left: 30px;
         height: auto;
         overflow: hidden;
@@ -217,7 +264,7 @@ export default {
     }
 
     .myOfferDet .myOfferDetContent .myOfferDetMain .myOfferDetAttach {
-        width: 1220px;
+        width: 982px;
         height: auto;
         padding: 25px 30px 50px;
         margin: 0 auto;
@@ -232,7 +279,7 @@ export default {
         text-indent: 10px;
         font-weight: 600;
         margin-bottom: 35px;
-        border-left: 5px solid #ff8000;
+        border-left: 5px solid #f71327;
     }
 
     .myOfferDet .myOfferDetContent .myOfferDetMain .myOfferDetAttach .myOfferDetAttachInfo {
@@ -255,7 +302,7 @@ export default {
 
     .myOfferDet .myOfferDetContent .myOfferDetMain .myOfferDetBtn {
         width: 240px;
-        height: 58px;
+        height: 108px;
         margin: 0 auto;
         padding-bottom: 50px;
     }
@@ -267,7 +314,7 @@ export default {
         line-height: 58px;
         text-align: center;
         color: white;
-        background: #ff8000;
+        background: #f71327;
         font-size: 16px;
         border-radius: 4px;
     }

@@ -10,51 +10,64 @@
                 <div class="accBuyItemNav accBuyItemOffer">我的报价</div>
                 <div class="accBuyItemNav accBuyItemOperate">操作</div>
             </li>
-            <li class="accBuyItem">
-                <div class="accBuyItemNav accBuyItemType">汇票类型</div>
-                <div class="accBuyItemNav accBuyItemTerm">交易方式</div>
-                <div class="accBuyItemNav accBuyItemIsti">承兑机构</div>
-                <div class="accBuyItemNav accBuyItemMoney">票面金额</div>
-                <div class="accBuyItemNav accBuyItemPub">发布时间</div>
-                <div class="accBuyItemNav accBuyItemOffer">5%/每十万加1000</div>
+            <li class="accBuyItem" v-if="billList.length>0" v-for="billItem in billList">
+                <div class="accBuyItemNav accBuyItemType">{{billItem.billClassify}}</div>
+                <div class="accBuyItemNav accBuyItemTerm">{{billItem.billTradeType}}</div>
+                <div class="accBuyItemNav accBuyItemIsti">{{billItem.billAcceptOrg}}</div>
+                <div class="accBuyItemNav accBuyItemMoney">{{billItem.billMoney}}</div>
+                <div class="accBuyItemNav accBuyItemPub">{{billItem.billCreateDate.substring(0,11)}}</div>
+                <div class="accBuyItemNav accBuyItemOffer">{{billItem.quoteRate}}<span style="color:#f71327;">/</span>每十万加{{billItem.quoteIncrement}}</div>
                 <div class="accBuyItemNav accBuyItemOperate">
-                    <router-link class="accBuyItem_scan" to='/acc/myOfferDet'>查看详情</router-link>
+                    <a class="accBuyItem_scan" @click="goDetail(billItem.billId)">查看详情</a>
                 </div>
             </li>
-            <li class="accBuyItem">
-                <div class="accBuyItemNav accBuyItemType">汇票类型</div>
-                <div class="accBuyItemNav accBuyItemTerm">交易方式</div>
-                <div class="accBuyItemNav accBuyItemIsti">承兑机构</div>
-                <div class="accBuyItemNav accBuyItemMoney">票面金额</div>
-                <div class="accBuyItemNav accBuyItemPub">发布时间</div>
-                <div class="accBuyItemNav accBuyItemDeadline">到期时间</div>
-                <div class="accBuyItemNav accBuyItemOperate">
-                    <router-link class="accBuyItem_scan" to='/acc/myOfferDet'>查看详情</router-link>
-                </div>
-            </li>
-            <li class="accBuyItem">
-                <div class="accBuyItemNav accBuyItemType">汇票类型</div>
-                <div class="accBuyItemNav accBuyItemTerm">交易方式</div>
-                <div class="accBuyItemNav accBuyItemIsti">承兑机构</div>
-                <div class="accBuyItemNav accBuyItemMoney">票面金额</div>
-                <div class="accBuyItemNav accBuyItemPub">发布时间</div>
-                <div class="accBuyItemNav accBuyItemDeadline">到期时间</div>
-                <div class="accBuyItemNav accBuyItemOperate">
-                    <router-link class="accBuyItem_scan" to='/acc/myOfferDet'>查看详情</router-link>
-                </div>
+            <li class="accBuyItem" v-if="billList.length<=0">
+                <div class="accBuyItemNav accBuyItemType">暂无数据</div>
             </li>
         </ul>
+        <Page 
+        ref="pages"
+        class="pageBox" 
+        :total="total" 
+        v-if="total>8"
+        :current="current"
+        :pageSize="8"
+        @on-change="getOfferList"
+        ></Page>
     </div>
 </template>
 
 <script>
 export default {
-  name: 'AccountBuy',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+    name: 'AccountBuy',
+    data () {
+        return {
+            billList:[],
+            total:''
+        }
+    },
+    created:function(){
+
+    },
+    methods:{
+        getOfferList:function(current){
+            console.log(current)
+            //调用接口  获取竞价汇票列表
+            var self = this;
+            self.$http.get(globalData.data.Ip+'/bill/quote/page',{params:{
+                currentPage:current,
+                pageSize:8,
+                quoteStatus:'success'
+            },credentials:true}).then(function(res){ 
+                console.log(res);     
+                self.billList = res.data.data.recordList;      
+                self.total = res.data.data.totalCount;
+            });
+        },
+        goDetail:function(billId){
+            this.$router.push('/acc/buy/accOffer/myOfferDet/'+billId);
+        }
     }
-  }
 }
 </script>
 
@@ -94,6 +107,11 @@ export default {
         margin: 0 auto;
     }
 
+    .accountBuy .accBuyMain .accBuyItem .accBuyItemNav .accBuyItem_scan:hover{
+        border:1px solid #f71327;
+        color: #f71327;
+    }
+
     .accountBuy .accBuyMain .accBuyItem .accBuyItemNav:nth-child(4) {
         width: 162px;
     }
@@ -104,6 +122,6 @@ export default {
 
     .accountBuy .accBuyMain .accBuyTitle {
         color: white;
-        background: #ff8000;
+        background: #f71327;
     }
 </style>
