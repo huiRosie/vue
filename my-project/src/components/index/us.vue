@@ -30,7 +30,7 @@
                     </li>
                 </ul>
                 <div class="usMainRight">
-                    <h3 class="usMainRightTitle">公司地址：武汉市洪山区光谷大道现代世贸中心A座1108</h3>
+                    <h3 class="usMainRightTitle">公司地址：武汉市洪山区光谷大道41号现代光谷世贸中心A座1108</h3>
                     <div class="usMainRightMap">
                         <router-view></router-view>
                     </div>
@@ -86,7 +86,11 @@ export default {
         color: white;
         padding: 16px 20px;
         margin-right: 16px;
-        background-image: linear-gradient(134deg, rgba(253, 189, 21, 0.5), rgba(244, 38, 38, 0.5)), linear-gradient(#f71327, #f71327);
+        background-image: linear-gradient(
+            134deg, 
+            rgba(253, 189, 21, 0.5), 
+            rgba(244, 38, 38, 0.5)), 
+            linear-gradient(#ff8000, #ff8000);
     }
 
     .us .usContent .usMain .usMainLeft .usMainLeftItem {

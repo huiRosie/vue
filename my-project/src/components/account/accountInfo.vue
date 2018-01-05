@@ -17,11 +17,11 @@
                 </li>
                 <li class="perInfoItem">
                     <div class="perInfoItem_label">姓名：</div>
-                    <div class="perInfoItem_text" v-if="realName!=''">
-                        {{realName}}
-                    </div>
-                    <div class="perInfoItem_text" style="fontsize:12px;color:#878787;" v-if="realName==''">
+                    <div class="perInfoItem_text" style="fontsize:12px;color:#878787;" v-if="realName==''||realName==null">
                        未填写
+                    </div>
+                    <div class="perInfoItem_text" v-else>
+                        {{realName}}
                     </div>
                 </li>
                 <li class="perInfoItem">
@@ -77,7 +77,7 @@
                 </li>
                 <li class="identInfoItem">
                     <div class="identInfoItem_label">企业认证：</div>
-                    <div v-if="companyAuth ==''">
+                    <div v-if="companyAuth ==''||companyAuth ==null">
                         <div class="identInfoItem_text">
                             未认证
                         </div>

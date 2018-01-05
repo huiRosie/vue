@@ -11,9 +11,14 @@
 </script>
 
 <style>
-  .wrap {
+  html,body,#app{
     width: 100%;
-    height: auto;
+    height: 100%;
+  }
+
+  .wrap {
+    min-width: 1280px;
+    height: 100%;
   }
 
   .wrap .top {
@@ -317,7 +322,7 @@
   h5,
   h6 {
     font-size: 100%;
-    font-weight: 100;
+    font-weight: 600;
   }
 
   em {
@@ -347,6 +352,10 @@
   }
 
   a:hover {
+    color: #f71327;
+    text-decoration: none;
+  }
+  a:active {
     color: #f71327;
     text-decoration: none;
   }

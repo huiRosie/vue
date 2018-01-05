@@ -82,7 +82,7 @@
                 <!-- 银票title -->
                 <h2 class="billTitle">优质汇票 · 买到即是赚到</h2>
                 <ul class="billList">
-                    <li class="billItem" v-for="bill in billLists" >
+                    <li class="billItem" v-for="bill in billLists" :key="bill.billId">
                         <div class="billItemPrice" v-if="bill.billMoney<=10000">
                             <span>{{bill.billMoney}}</span>元
                         </div>
@@ -161,7 +161,7 @@
                 this.$http.get(globalData.data.Ip+'/index/main'
                 ).then(function(res){  
                     this.billLists = res.data.data.bills;
-                    console.log(res);                                
+                    // console.log(res);                                
                 },function(error){
                     console.log(error);  
                 })

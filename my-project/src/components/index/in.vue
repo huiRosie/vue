@@ -7,7 +7,7 @@
                     <div class="inSearLeft">
                         <h3 class="inSearPriceTitle">面额筛选</h3>
                         <ul class="inSearPriceList">
-                            <li class="inSearPriceItem " v-for="(moneyItem,index) in moneyList" v-on:click="searchMoney(index)"  
+                            <li class="inSearPriceItem " v-for="(moneyItem,index) in moneyList" :key="moneyItem" v-on:click="searchMoney(index)"  
                             v-bind:class="{inSearPriceItemActive:moneyChoose==index}" >{{moneyItem}}</li>
                         </ul>
                     </div>
@@ -87,7 +87,7 @@
                         <div class="inBillItem_status">状态</div>
                         <div class="inBillItem_operate">操作</div>
                     </li>
-                    <li class="inBillItem" v-for="bill in billLists">
+                    <li class="inBillItem" v-for="bill in billLists" :key="bill.billId">
                         <div class="inBillItem_type">{{bill.billClassify}}</div>
                         <div class="inBillItem_trade">{{bill.billTradeType}}</div>
                         <div class="inBillItem_institution">{{bill.billAcceptOrg}}</div>
@@ -227,7 +227,7 @@ export default {
             this.billLists = res.data.data.recordList;
             this.total = res.data.data.totalCount;
             // console.log(res);
-            console.log(this.billLists);
+            // console.log(this.billLists);
           },
           function(error) {
             console.log(error);
@@ -258,8 +258,8 @@ export default {
     searchMoney: function(index) {
       // 改变样式
       this.moneyChoose = index;
-      console.log(index);
-      console.log(self.moneyChoose);
+      // console.log(index);
+      // console.log(this.moneyChoose);
       var billMoney;
       if (index == 0) {
         billMoney = "全部";
@@ -418,7 +418,7 @@ export default {
       );
     },
     bidBill: function(billId) {
-      console.log(billId);
+      // console.log(billId);
       this.$router.push({ name: "InDetail", params: { billId: billId } });
     }
   }
@@ -477,11 +477,10 @@ export default {
   height: 465px;
   float: left;
   background-image: linear-gradient(
-      152deg,
-      rgba(253, 189, 21, 0.5),
-      rgba(244, 38, 38, 0.5)
-    ),
-    linear-gradient(#f71327, #f71327);
+    134deg, 
+    rgba(253, 189, 21, 0.5), 
+    rgba(244, 38, 38, 0.5)), 
+    linear-gradient(#ff8000, #ff8000);
 }
 
 .in .inContent .inMain .inSear .inSearLeft .inSearPriceTitle {

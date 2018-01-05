@@ -1,33 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Index1 from '@/components/index/index'
-import Out from '@/components/index/out'
-import In from '@/components/index/in'
-import InDetail from '@/components/index/inDetail'
-import Us from '@/components/index/us'
-import Mymap from '@/components/index/map'
-import Regist from '@/components/index/regist'
-import Login from '@/components/index/login'
-import Helper from '@/components/index/helper'
-import HelpLogin from '@/components/index/helpLogin'
-import HelpIdent from '@/components/index/helpIdent'
-import HelpIn from '@/components/index/helpIn'
-import HelpOut from '@/components/index/helpOut'
-import Aide from '@/components/index/aide'
-import Account from '@/components/account/account'
-import AccountAnnounce from '@/components/account/accountAnnounce'
-import MyBillDet from '@/components/account/myBillDet'
-import AccountOffer from '@/components/account/accountOffer'
-import MyOfferDet from '@/components/account/myOfferDet'
-import AccountBuy from '@/components/account/accountBuy'
-import MyBuyDet from '@/components/account/myBuyDet'
-import AccountInfo from '@/components/account/accountInfo'
-import AccInfoEdit from '@/components/account/accInfoEdit'
-import AccInfoIdent from '@/components/account/accInfoIdent'
-import AccComIdent from '@/components/account/accComIdent'
-import AccountMes from '@/components/account/accountMes'
-import AccountMesDet from '@/components/account/accountMesDet'
-import ChangePass from '@/components/account/changePass'
+const _import = require('./_import_' + process.env.NODE_ENV)
 
 import globalData from '../components/globalData'
 
@@ -38,20 +11,18 @@ export default new Router({
     {
       path: '/',
       name: 'Index1',
-      component: Index1
+      component: _import('index/index')
     },
     {
       path: '/index',
       name: 'Index1',
-      component: Index1
+      component: _import('index/index')
     },
     {
       path: '/bill/out',
       name: 'Out',
-      component: Out,
+      component: _import('index/out'),
       beforeEnter: function(to,from,next){
-        // console.log(to)
-        // console.log(from)
         var data = localStorage.getItem('loginStatus');
         var dataObj = JSON.parse(data);
         if(data==null){
@@ -65,150 +36,145 @@ export default new Router({
         }else{
           next()
         }
-        // console.log(dataObj)
       }
     },
     {
       path: '/bill/in',
       name: 'In',
-      component: In
+      component: _import('index/in')
     },
     {
       path: '/inDet/:billId',
       name: 'InDetail',
-      component: InDetail
+      component: _import('index/inDetail')
     },
     {
       path: '/us',
-      name: 'Us',
-      component: Us,
+      component: _import('index/us'),
       children:[
         {
           path: '',
           name: 'Mymap',
-          component: Mymap
+          component: _import('index/map')
         }
       ]
     },
     {
       path: '/reg',
       name: 'Regist',
-      component: Regist
+      component: _import('index/regist')
     },
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: _import('index/login')
     },
     {
       path: '/hel',
       name: 'Helper',
-      component: Helper
+      component: _import('index/helper')
     },
     {
       path: '/helog',
       name: 'HelpLogin',
-      component: HelpLogin
+      component: _import('index/helpLogin')
     },
     {
       path: '/helide',
       name: 'HelIdent',
-      component: HelpIdent
+      component: _import('index/helpIdent')
     },
     {
       path: '/helin',
       name: 'HelpIn',
-      component: HelpIn
+      component: _import('index/helpIn')
     },
     {
       path: '/helout',
       name: 'HelpOut',
-      component: HelpOut
+      component: _import('index/helpOut')
     },
     {
       path: '/aide',
       name: 'Aide',
-      component: Aide
+      component: _import('index/aide')
     },
     {
       path: '/acc',
-      name: 'Account',
-      component: Account,
+      component: _import('account/account'),
         children:[
           {
             path: '',
             name: 'AccountInfo',
-            component: AccountInfo
+            component: _import('account/accountInfo')
           },
           {
             path: 'mypub/accAnn/:status',
             name: 'AccountAnnounce',
-            component: AccountAnnounce
+            component: _import('account/accountAnnounce')
           },
           {
             path: 'mypub/accAnn/myBillDet/:billId',
             name: 'MyBillDet',
-            component: MyBillDet
+            component: _import('account/myBillDet')
           },
           {
             path: 'buy/accOffer/:status',
             name: 'AccountOffer',
-            component: AccountOffer
+            component: _import('account/accountOffer')
           },
           {
             path: 'buy/accOffer/myOfferDet/:billId',
             name: 'MyOfferDet',
-            component: MyOfferDet
+            component: _import('account/myOfferDet')
           },
           {
             path: 'buy/accBuy/:status',
             name: 'AccountBuy',
-            component: AccountBuy
+            component: _import('account/accountBuy')
           },
           {
             path: 'buy/accBuy/myBuyDet/:billId',
             name: 'MyBuyDet',
-            component: MyBuyDet
+            component: _import('account/myBuyDet')
           },
           {
             path: 'set/accInfo',
             name: 'AccountInfo',
-            component: AccountInfo
+            component: _import('account/accountInfo')
           },
           {
             path: 'set/accInfo/accInfoEdit',
             name: 'AccInfoEdit',
-            component: AccInfoEdit
+            component: _import('account/accInfoEdit')
           },
           {
             path: 'set/accInfo/accInfoIdent',
             name: 'AccInfoIdent',
-            component: AccInfoIdent
+            component: _import('account/accInfoIdent')
           },
           {
             path: 'set/accInfo/accComIdent',
             name: 'AccComIdent',
-            component: AccComIdent
+            component: _import('account/accComIdent')
           },
           {
             path: 'set/accMes',
             name: 'AccountMes',
-            component: AccountMes
+            component: _import('account/accountMes')
           },
           {
             path: 'set/accMes/accMesDet',
             name: 'AccountMesDet',
-            component: AccountMesDet
+            component: _import('account/accountMesDet')
           },
           {
             path: 'set/changePass',
             name: 'ChangePass',
-            component: ChangePass
+            component: _import('account/changePass')
           }
         ],
         beforeEnter: function(to,from,next){
-          // console.log(to)
-          // console.log(from)
           var data = localStorage.getItem('loginStatus');
           var dataObj = JSON.parse(data);
           if(data==null){
@@ -222,7 +188,6 @@ export default new Router({
           }else{
             next()
           }
-          // console.log(dataObj)
         }
     }
   ]

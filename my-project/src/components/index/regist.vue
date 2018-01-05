@@ -41,7 +41,7 @@
                         {{getcode}}
                     </div>
                     <div class="registMainRegItem_tip" ref="regCode_tip">
-                        请输入正确有效的短信验证码
+                        {{regCodeTip}}
                     </div>
                 </div>
                 <div class="registMainRegBtn" v-on:click='goRegist()'>
@@ -63,9 +63,10 @@ export default {
             getcode: '获取短信验证码',
             isActive:false,
             phone:'',
-            password:'',
+            password:'123456',
             msgcode:'',
-            msgId:''
+            msgId:'',
+            regCodeTip:'请输入正确有效的短信验证码'
         }
     },
     methods: {
@@ -87,7 +88,7 @@ export default {
                     }
                 },1000)
                 self.$http.post(globalData.data.Ip+'/common/sms',
-                    {userPhone:self.phone},{emulateJSON:true}).then((res) => {        
+                    {userPhone:self.phone},{emulateJSON:true}).then((res) => {
                     if(res.data.code == 200) {
                         console.log(res);
                         self.msgId = res.data.data.msgId;
@@ -127,28 +128,20 @@ export default {
                 self.$refs.regPassword_tip.style.display = 'none'   
                 self.$refs.regCode_tip.style.display = 'none'   
                 self.$http.post(globalData.data.Ip+'/user/register',
-                    {
-                        userPhone:self.phone,
-                        userPassword:self.password,
-                        smsCode:self.msgcode,
-                        smsId:self.msgId
-                    },{emulateJSON:true}).then((res) => {        
+                {
+                    userPhone:self.phone,
+                    userPassword:self.password,
+                    smsCode:self.msgcode,
+                    smsId:self.msgId
+                },{emulateJSON:true}).then((res) => {     
+                    console.log(res.data);         
                     if(res.data.code == 200) {
-                        console.log(res);
                         self.$Message.success('注册成功，请登录！')
                         self.$router.push('/login');
-                    } 
-                    if(res.data.code == 401) {
-                        self.$refs.regCode_tip.style.display = 'block' 
-                        self.$refs.regCode_tip.text = '手机号已注册，请直接去登录！' 
-                        return
-                    }
-                    if(res.data.code == 402){
-                        self.$refs.regCode_tip.style.display = 'block' 
-                        self.$refs.regCode_tip.text = '验证码已失效，请重新获取！' 
-                        return
                     }else{
-                        console.log(res);
+                        self.$refs.regCode_tip.style.display = 'block' 
+                        self.regCodeTip = res.data.msg ;
+                        return;
                     } 
                 })
             }

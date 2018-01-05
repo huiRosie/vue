@@ -2,8 +2,8 @@
     export default{
         name:'globalData',
         data:{
-            Ip:'http:/'+'/192.168.11.26',
-            // Ip:'.',
+            // Ip:'http:/'+'/192.168.11.26',
+            Ip:'.',
             loginStatus:'登录',
         },
         methods:{
@@ -28,27 +28,19 @@
                 var cMonth = this.addNum(countDate.slice(5,7));
                 var cDay = this.addNum(countDate.slice(8,10));
                 //slice(start,end)不包括start，包括end
-                // console.log(cYear+'-'+cMonth+'-'+cDay);
                 // 剩余天数
                 var leftDate = (new Date(cYear,cMonth-1,cDay)) - (new Date());
                 var leftDays = parseInt(leftDate / 1000 / 60 / 60 / 24 ,10); //计算剩余的天数 
-                // console.log(leftDate)
-                // console.log(leftDays)
                 return leftDays;
             },
             // 日期倒计时
             countDowns:function(countDate,newDate){
-                // var countDate = '2017-12-12';
                 var cYear = countDate.slice(0,4);
                 var cMonth = this.addNum(countDate.slice(5,7));
                 var cDay = this.addNum(countDate.slice(8,10));
-                //slice(start,end)不包括start，包括end
-                // console.log(cYear+'-'+cMonth+'-'+cDay);
                 // 剩余天数
                 var leftDate = (new Date(cYear,cMonth-1,cDay)) - (new Date());
                 var leftDays = parseInt(leftDate / 1000 / 60 / 60 / 24 ,10); //计算剩余的天数 
-                // console.log(leftDate)
-                // console.log(leftDays)
                 return leftDays;
             },
             changeVueDate:function(dates,fmt) {
@@ -117,8 +109,6 @@
             setData:function (key,value){
                 var curTime = new Date().getTime();
                 localStorage.setItem(key,JSON.stringify({data:value,time:curTime}));
-                console.log(key)
-                console.log(value)
             },
             //localStorage取值
              getData:function(key){
@@ -131,13 +121,6 @@
                 var dataObiTime = ((new Date().getTime() - dataObj.time)/1000/60).toFixed(2);//分钟
                 if (dataObiTime>120) {
                     this.$router.push('/login');
-                    // this.$Modal.warning({
-                    //     title:'提示',
-                    //     content:'您还未登录，请登录后查看，谢谢！',
-                    //     onOk: function(){
-                    //         self.$router.push('/login') ;
-                    //     },
-                    // })
                 }else{
                     var dataObjToJson = dataObj.data;
                     return dataObjToJson;
@@ -146,7 +129,6 @@
             //localStorage删除指定键对应的值
             deleteItem:function (key){
                 localStorage.removeItem(key);
-                // console.log(localStorage.getItem(key));
             }
         }
     }

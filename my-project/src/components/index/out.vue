@@ -243,7 +243,11 @@
                 // console.log(res)
                 this.uploadFrontList = fileList;
                 // console.log(this.uploadFrontList)
-                file.url = "http://"+res.data;
+                if(res.data.indexOf('http://')==-1&&res.data.indexOf('https://')==-1){
+                    file.url = "http://"+res.data;
+                }else{
+                    file.url = res.data;
+                }
                 file.name = res.data;
                 this.billFrontImg = res.data;
                 // console.log(file.url)
@@ -253,7 +257,11 @@
                 this.uploadBackList = fileList;
                 // console.log(this.uploadBackList)
                 // console.log(res.data)
-                file.url = "http://"+res.data;
+                if(res.data.indexOf('http://')==-1&&res.data.indexOf('https://')==-1){
+                    file.url = "http://"+res.data;
+                }else{
+                    file.url = res.data;
+                }
                 file.name = res.data;
                 this.billBackImg = res.data;
                 // console.log(file.url)
@@ -262,7 +270,11 @@
                 // console.log(res)
                 this.uploadFileList = fileList;
                 // console.log(this.uploadFileList)
-                file.url = "http://"+res.data;
+                if(res.data.indexOf('http://')==-1&&res.data.indexOf('https://')==-1){
+                    file.url = "http://"+res.data;
+                }else{
+                    file.url = res.data;
+                }
                 file.name = res.data;
                 this.billEvidence = res.data;
                 // console.log(file.url)
@@ -412,7 +424,7 @@
                         console.log(res)
                         if(res.data.code==200){
                             self.$Message.success('发布成功');
-                            self.$router.push('/acc/pub/accAnn/"交易中"');
+                            self.$router.push('/acc/mypub/accAnn/trading');
                         }                         
                     },function(error){
                         console.log(error);  

@@ -124,7 +124,7 @@ export default {
 
 <style>
 .wrap {
-  width: 100%;
+  min-width: 1280px;
   height: auto;
 }
 
@@ -240,7 +240,7 @@ export default {
 .wrap .container {
   width: 100%;
   margin-top: 116px;
-  min-height: 678px;
+  min-height: 729px;
   background: #f1f1f1;
 }
 

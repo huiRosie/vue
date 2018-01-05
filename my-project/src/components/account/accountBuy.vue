@@ -10,7 +10,7 @@
                 <div class="accBuyItemNav accBuyItemOffer">我的报价</div>
                 <div class="accBuyItemNav accBuyItemOperate">操作</div>
             </li>
-            <li class="accBuyItem" v-if="billList.length>0" v-for="billItem in billList">
+            <li class="accBuyItem" v-if="billList.length>0" v-for="billItem in billList" :key="billItem.billId">
                 <div class="accBuyItemNav accBuyItemType">{{billItem.billClassify}}</div>
                 <div class="accBuyItemNav accBuyItemTerm">{{billItem.billTradeType}}</div>
                 <div class="accBuyItemNav accBuyItemIsti">{{billItem.billAcceptOrg}}</div>

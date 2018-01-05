@@ -8,6 +8,12 @@
                 <!-- 路由出口 -->
                 <!-- 路由匹配到的组件将渲染在这里 -->
                 <appMain></appMain>
+                <!-- 悬浮框 -->
+                <div class="addBill" @click="publishBill">
+                  <Icon class="addBillIcon" type="ios-plus-empty"></Icon>
+                  <div class="addBillTitle">发布汇票</div>
+                </div>
+                
             </div>
         </div>
         <!--公共底部-->
@@ -30,12 +36,14 @@
             bottom
         },
         data() { 
-        return {
-            oheight:' ' 
-        }
+          return {
+              oheight:' ' 
+          }
         },
         methods: { 
-    　　   
+    　　   publishBill:function(){
+            this.$router.push('/out/pub');
+          }
         }
     }
 </script>
@@ -47,17 +55,42 @@
     }
 
     .wrap .container {
-        width: 100%;
-        height: 743px;
+        min-width: 1280px;
+        min-height: 743px;
         background: #f1f1f1;
         padding: 20px 0;
     }
 
-    .wrap .index .indexMain {
+    .wrap .container .indexMain {
         width: 1280px;
         margin: 0 auto;
-        height: 696px;
-        overflow: hidden;
+        min-height: 696px;
+        /* position: relative; */
+    }
+
+    .addBill{
+      position: absolute;
+      top: 50%;
+      right:20px;
+      margin-top: -40px;
+      width: 136px;
+      height: 136px;
+      border-radius: 4px;
+      color: white;
+      background: #f71327;
+      text-align: center;
+      padding: 0 26px;
+      cursor: pointer;
+      z-index: 999;
+      /* display: none; */
+    }
+
+    .addBill .addBillIcon{
+      font-size: 100px;
+    }
+
+    .addBill .addBillTitle{
+      font-size: 16px;
     }
 
   body,

@@ -27,7 +27,7 @@
                 </div>
                 <div class="accInfoIdentLeftIdfont">
                     <div class="accInfoIdentLeftIdfont_label">
-                        身份证正面：
+                        手持身份证正面照：
                     </div>
                     <div class="accInfoIdentLeftIdfont_img">
                         <div class="demo-upload-list" v-if="uploadFrontList.length >0" >
@@ -61,7 +61,7 @@
                                 </Upload>
                     </div>
                 </div>
-                <div class="accInfoIdentLeftIdback">
+                <!-- <div class="accInfoIdentLeftIdback">
                     <div class="accInfoIdentLeftIdback_label">
                         身份证反面：
                     </div>
@@ -70,7 +70,6 @@
                                     <template v-if="uploadBackList[0].status === 'finished'">
                                         <img :src="uploadBackList[0].url">
                                         <div class="demo-upload-list-cover">
-                                            <!-- <Icon type="ios-eye-outline" @click.native="handleView(uploadBackList[0].name)"></Icon> -->
                                             <Icon type="ios-trash-outline" @click.native="handleRemoveBack"></Icon>
                                         </div>
                                     </template>
@@ -89,16 +88,16 @@
                                     :on-format-error="handleFormatError"
                                     :on-exceeded-size="handleMaxSize" 
                                     type="drag"
-                                    action="./common/upload"
+                                    action="http://192.168.11.26/common/upload"
                                     style="display:inline-block;width:320px;" >
                                     <div style="width:320px;height:198px;line-height:236px;">
                                         <Icon type="ios-plus-empty" class="addIcon" size="60" ></Icon>
                                     </div>
                                 </Upload>
                     </div>
-                </div>
+                </div> -->
                 <div class="accInfoIdentLeftBtn">
-                    <a class="accInfoIdentLeftBtnSubmit" @click="accInfoIdent">提交申请</a>
+                    <a class="accInfoIdentLeftBtnSubmit" @click="accInfoIdent()">提交申请</a>
                 </div>
             </div>
         </div>
@@ -117,7 +116,7 @@ export default {
             frontImg:'',
             backImg:'',
             uploadFrontList: [],
-            uploadBackList: []
+            // uploadBackList: []
         }
     },
         methods: {
@@ -163,7 +162,7 @@ export default {
                 const title = '提示';
                 if(self.realName==''){
                     const content = '<p>请输入您的真实姓名！</p>';
-                    this.$Modal.info({
+                    this.$Modal.warning({
                         title: title,
                         content: content
                     });
@@ -171,35 +170,35 @@ export default {
                 }
                 if(self.idCode==''){
                     const content = '<p>请输入您的身份证号！</p>';
-                    this.$Modal.info({
+                    this.$Modal.warning({
                         title: title,
                         content: content
                     });
                     return;
                 }
                 if(self.frontImg==''){
-                    const content = '<p>请上传您的身份证正面图片！</p>';
-                    this.$Modal.info({
+                    const content = '<p>请上传您的手持身份证正面照！</p>';
+                    this.$Modal.warning({
                         title: title,
                         content: content
                     });
                     return;
                 }
-                if(self.backImg==''){
-                    const content = '<p>请上传您的身份证反面图片！</p>';
-                    this.$Modal.info({
-                        title: title,
-                        content: content
-                    });
-                    return;
-                }  
+                // if(self.backImg==''){
+                //     const content = '<p>请上传您的身份证反面图片！</p>';
+                //     this.$Modal.info({
+                //         title: title,
+                //         content: content
+                //     });
+                //     return;
+                // }  
                 // 调取接口  发布汇票
                 self.$http.post(globalData.data.Ip+'/user/auth/user',
                     {
                         realName:self.realName,
                         idcard:self.idcard,
                         idcardImg:self.frontImg,
-                        idcardbgImg:self.backImg
+                        // idcardbgImg:self.backImg
                     },{emulateJSON:true,credentials:true}).then(function(res){ 
                         console.log(res)
                         if(res.data.code==200){
@@ -213,7 +212,7 @@ export default {
         },
         mounted () {
             this.uploadFrontList = this.$refs.uploadFront.fileList;
-            this.uploadBackList = this.$refs.uploadBack.fileList;
+            // this.uploadBackList = this.$refs.uploadBack.fileList;
         }
 }
 </script>

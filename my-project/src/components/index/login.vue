@@ -24,13 +24,13 @@
                         密码：
                     </div>
                     <div class="loginMainLoginItem_text">
-                        <input type="password" name="" v-model="password"  v-on:blur='onblurPassword(password)' value="" />
+                        <input type="password" v-model="password" v-on:keyup.enter="goLogin"  v-on:blur='onblurPassword(password)' value="" />
                     </div>
                     <div class="loginMainLoginItem_tip" ref="loginPassword_tip">
                         {{passwordTip}}
                     </div>
                 </div>
-                <div class="loginMainLoginBtn" @click='goLogin'>
+                <div class="loginMainLoginBtn"  @click='goLogin'>
                     登录
                 </div>
                 <div class="loginMainLoginPass" style="display:none;">
@@ -78,7 +78,7 @@ export default {
                         password:self.password
                     },{emulateJSON:true,withCredentials: true}).then(function(res){        
                     if(res.data.code == 200) {
-                        console.log(res);
+                        // console.log(res);
                         globalData.data.loginStatus = '退出登录'
                         self.$router.push('/index');
                         self.$emit('userSignIn', globalData.data.loginStatus);
@@ -88,7 +88,7 @@ export default {
                     } else {
                         this.$refs.loginPassword_tip.style.display = 'block'
                         self.passwordTip = res.data.data; 
-                        console.log(res.data.data);
+                        // console.log(res.data.data);
                         console.log(res);
                     }
                 })

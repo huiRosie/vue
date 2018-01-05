@@ -10,7 +10,7 @@
                 <div class="accAnnItemNav accAnnItemDeadline">到期时间</div>
                 <div class="accAnnItemNav accAnnItemOperate">操作</div>
             </li>
-            <li class="accAnnItem" v-for="billItem in billList">
+            <li class="accAnnItem" v-for="billItem in billList" :key="billItem.billId">
                 <div class="accAnnItemNav accAnnItemType">{{billItem.billClassify}}</div>
                 <div class="accAnnItemNav accAnnItemTerm">{{billItem.billTradeType}}</div>
                 <div class="accAnnItemNav accAnnItemIsti">{{billItem.billAcceptOrg}}</div>

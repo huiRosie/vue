@@ -5,13 +5,13 @@
             <div class="bottomLeft">
                 <ul class="bottomLeftNav">
                     <li class="bottomLeftNavItem">
-                        <router-link class="bottomNavItem_link" to="/us">联系我们</router-link>
+                        <router-link class="bottomNavItem_link" to="">联系我们</router-link>
                     </li>
                     <li class="bottomLeftNavItem">
-                        <router-link class="bottomNavItem_link" to="/helper">帮助中心</router-link>
+                        <router-link class="bottomNavItem_link" to="">帮助中心</router-link>
                     </li>
                     <li class="bottomLeftNavItem">
-                        <router-link class="bottomNavItem_link" to="/aide">汇票助手</router-link>
+                        <router-link class="bottomNavItem_link" to="">汇票助手</router-link>
                     </li>
                 </ul>
                 <p class="bottomLeftCopyright">Copyright © 2002-2011. 武汉华四投资顾问有限公司 版权所有 Power by Mereca 鄂ICP备14007080号-1</p>
@@ -48,8 +48,10 @@
 
   .wrap .bottom .bottomBox {
     width: 1280px;
+    height: 128px;
     margin: 0 auto;
     padding-top: 40px;
+    overflow: hidden;
   }
 
   .wrap .bottom .bottomBox .bottomLeft {

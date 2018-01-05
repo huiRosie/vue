@@ -1,8 +1,8 @@
 <template>
     <div class="saleDet">
         <div class="topNav">
-            <router-link class="topNavLink" to='/'>出票中心</router-link> > 
-            <router-link class="topNavLink" to='/'>出售中的汇票</router-link> > 
+            <span>出票中心</span> > 
+            <router-link class="topNavLink" to='/out/sale/publishing'>出售中的汇票</router-link> > 
             <span>汇票详情</span>
         </div>
         <div class="saleDetMain">
@@ -16,7 +16,7 @@
                                     票据号：
                                 </div>
                                 <div class="saleDetInfoItem_text">
-                                    1315246868985
+                                    {{billInfo.billNo}}
                                 </div>
                             </li>
                             <li class="saleDetInfoItem">
@@ -24,7 +24,7 @@
                                     承兑人全称：
                                 </div>
                                 <div class="saleDetInfoItem_text">
-                                    1315246868985
+                                    {{billInfo.billUserName}}
                                 </div>
                             </li>
                             <li class="saleDetInfoItem">
@@ -32,7 +32,7 @@
                                     票据类型：
                                 </div>
                                 <div class="saleDetInfoItem_text">
-                                    1315246868985
+                                    {{billInfo.billClassify}}
                                 </div>
                             </li>
                             <li class="saleDetInfoItem">
@@ -40,7 +40,7 @@
                                     票面金额(元)：
                                 </div>
                                 <div class="saleDetInfoItem_text">
-                                    1315246868985
+                                    {{billInfo.billMoney}}
                                 </div>
                             </li>
                             <li class="saleDetInfoItem">
@@ -48,7 +48,7 @@
                                     汇票到期日：
                                 </div>
                                 <div class="saleDetInfoItem_text">
-                                    1315246868985
+                                    {{billInfo.billExpire}}
                                 </div>
                             </li>
                             <li class="saleDetInfoItem">
@@ -56,7 +56,7 @@
                                     背书次数：
                                 </div>
                                 <div class="saleDetInfoItem_text">
-                                    1315246868985
+                                    {{billInfo.billEndorse}}
                                 </div>
                             </li>
                             <li class="saleDetInfoItem">
@@ -64,12 +64,14 @@
                                     汇票瑕疵：
                                 </div>
                                 <div class="saleDetInfoItem_text">
-                                    1315246868985
+                                    {{billInfo.billImgHealth}}
                                 </div>
                             </li>
                         </ul>
                         <div class="saleDetInfoRight">
-                            <img src="../../../assets/images/bill.png"/>
+                            <img v-if="billInfo.billImg!=null&&billInfo.billImg.indexOf('http://')==-1&&billInfo.billImg.indexOf('https://')==-1" :src="'http://'+billInfo.billImg"/>
+                            <img v-else :src="billInfo.billImg"/>
+                            <!-- <img v-else :src="billInfo.billImg"/> -->
                         </div>
                     </div>
                 </div>
@@ -77,25 +79,55 @@
                 <div class="saleDetAttach">
                     <h3 class="saleDetAttachTitle">背书及附件</h3>
                     <div class="saleDetAttachInfo">
-                        <img src="../../../assets/images/jpg.png"/>
+                        <img v-if="billInfo.billEvidence!=null&&billInfo.billEvidence.indexOf('http://')==-1&&billInfo.billEvidence.indexOf('https://')==-1" :src="'http://'+billInfo.billEvidence"/>
+                        <img v-else :src="billInfo.billEvidence"/>
+                        <!-- <img :src="billInfo.billEvidence"/> -->
                     </div>
                 </div>
-                <!--我要竞价-->
-                <div class="saleDetBtn">
-                    <a class="saleDetBtnAban">放弃交易</a>
+                <!--放弃交易-->
+                <div class="salePubDetBtn">
+                    <a class="saleDetBtnAban" @click="abanBill(billInfo.billId)">放弃交易</a>
                 </div>
         </div>
     </div>
 </template>
 
 <script>
+import {fetchBillDetail,fetchFailBill} from '../../assets/js/billApi'
+
 export default {
-  name: 'saleDet',
-  data () {
-    return {
-      
+    name: 'saleDet',
+    data () {
+        return {
+            billId:'',
+            billInfo:''
+        }
+    },
+    created:function(){
+        this.getBillDetail();
+    },
+    methods:{
+        getBillDetail:function(){
+            var self = this;
+            self.billId = self.$route.params.billId;
+            fetchBillDetail({
+                billId:self.billId
+            }).then(function(res){
+                console.log(res);
+                self.billInfo = res.data.data;
+            })
+        },
+        abanBill:function(billId){
+            var self = this;
+            fetchFailBill({
+                billId:billId
+            }).then(function(res){
+                console.log(res);
+                self.$Message.success('操作成功!');
+                self.$router.push('/out/sale/finish');
+            })
+        }
     }
-  }
 }
 </script>
 
@@ -122,7 +154,7 @@ export default {
     }
 
     .saleDet .saleDetMain .saleDet {
-        width: 1220px;
+        width: 982px;
         height: auto;
         padding: 20px 30px 30px;
         margin: 0 auto;
@@ -137,7 +169,7 @@ export default {
         text-indent: 10px;
         font-weight: 600;
         margin-bottom: 15px;
-        border-left: 5px solid #ff8000;
+        border-left: 5px solid #f71327;
     }
 
     .saleDet .saleDetMain .saleDet .saleDetInfo {
@@ -187,7 +219,7 @@ export default {
     }
 
     .saleDet .saleDetMain .saleDetAttach {
-        width: 1220px;
+        width: 982px;
         height: auto;
         padding: 0 30px 50px;
         margin: 0 auto;
@@ -202,7 +234,7 @@ export default {
         text-indent: 10px;
         font-weight: 600;
         margin-bottom: 25px;
-        border-left: 5px solid #ff8000;
+        border-left: 5px solid #f71327;
     }
 
     .saleDet .saleDetMain .saleDetAttach .saleDetAttachInfo {
@@ -216,21 +248,28 @@ export default {
         margin-bottom: 10px;
     }
 
-    .saleDet .saleDetMain .saleDetBtn {
+    .saleDet .saleDetMain .saleOrdDetBtn {
+        width: 520px;
+        height: 108px;
+        margin: 0 auto;
+        padding-bottom: 50px;
+    }
+
+    .saleDet .saleDetMain .salePubDetBtn {
         width: 240px;
         height: 108px;
         margin: 0 auto;
         padding-bottom: 50px;
     }
 
-    .saleDet .saleDetMain .saleDetBtn .saleDetBtnAban {
+    .saleDet .saleDetMain .salePubDetBtn .saleDetBtnAban{
         display: block;
         width: 240px;
         height: 58px;
         line-height: 58px;
         text-align: center;
         color: white;
-        background: #ff8000;
+        background: #f71327;
         font-size: 16px;
         border-radius: 4px;
     }

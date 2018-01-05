@@ -3,21 +3,21 @@
     <div class="top">
         <div class="topB">
             <div class="topBBox">
-                <h1 class="topBLogo"><img class="logoImg" src="../../assets/images/elebill-com-logo.png"/></h1>
+                <h1 class="topBLogo"><router-link to='/out/sale/publishing'><img class="logoImg" src="../../assets/images/elebill-com-logo.png"/></router-link></h1>
                 <div class="topSear">
                   <div class="topSearBox">
                     <input type="text" placeholder="请输入汇票信息">
                     <Icon class="topSearBtn" type="search"></Icon>
                   </div>
-                  <router-link class="topSearOut topSearItem" to="/">出票中心</router-link>
-                  <router-link class="topSearIn topSearItem" to="/index">收票中心</router-link>
+                  <router-link class="topSearOut topSearItem" to="/out/sale/publishing">出票中心</router-link>
+                  <router-link class="topSearIn topSearItem" to="/in/check/validating">收票中心</router-link>
                 </div>
                 <div class="topBNav">
-                    <router-link class="topBNav_mes topBNav_item" to="/index">
+                    <router-link class="topBNav_mes topBNav_item" to="">
                       <Icon class="topBNavMes" type="chatbubble-working"></Icon>
                     </router-link>
-                    <router-link class="topBNav_name topBNav_item" to="/out">黑不溜秋</router-link>
-                    <router-link class="topBNav_pass topBNav_item" to="/in">修改登录密码</router-link>
+                    <router-link class="topBNav_name topBNav_item" to="/user/userInfo">黑不溜秋</router-link>
+                    <router-link class="topBNav_pass topBNav_item" to="/user/pwd">修改登录密码</router-link>
                     <router-link class="topBNav_loginout topBNav_item" to="/login">退出登录</router-link>
                 </div>
             </div>

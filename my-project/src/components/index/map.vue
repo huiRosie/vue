@@ -10,7 +10,7 @@ export default {
     return {
       markerArr : [{
                 title:'武汉小墨科技有限公司',
-                content: '现代光谷世贸中心A座1108',
+                content: '武汉市洪山区光谷大道41号现代光谷世贸中心A座1108',
                 point: 114.428188 + '|' + 30.478188,
                 isOpen: 0,
                 icon: {

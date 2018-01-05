@@ -3,6 +3,7 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
+const webpack = require('webpack')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -76,5 +77,18 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+  externals:{
+    // 'vue':'Vue',
+    // 'vue-router':'Router',
+    // 'vue-resource':'VueResource',
+    // 'iview':'iView'
+  },
+  // 添加DllReferencePlugin插件  
+  plugins: [    
+    new webpack.DllReferencePlugin({      
+      context: path.resolve(__dirname, '..'),      
+      manifest: require('./vendor-manifest.json')    
+    }) 
+  ]
 }

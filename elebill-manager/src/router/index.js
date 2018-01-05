@@ -1,17 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Sale from '@/views/sale/sale/index'
-import SaleDet from '@/views/sale/sale/saleDetail'
-import SaleODet from '@/views/sale/sale/saleODetail'
-import Pre from '@/views/sale/pre/index'
-import PreDet from '@/views/sale/pre/preDetail'
-import Off from '@/views/sale/off/index'
-import OffDet from '@/views/sale/off/offDetail'
-import Check from '@/views/invoice/check'
-import Handel from '@/views/invoice/handel'
-import Success from '@/views/invoice/success'
-import Fail from '@/views/invoice/fail'
-import Login from '@/views/login/index'
+const _import = require('./_import_' + process.env.NODE_ENV)
+
 import Layout from '@/views/common/layout'
 
 Vue.use(Router)
@@ -19,93 +9,161 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
+      path: '/',
+      name: 'Login',
+      component: _import('login/index')
+    },    
+    {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: _import('login/index')
     },    
+    // 出票中心
+    // 发布汇票
     {
-      path: '/',
-      name: '首页',
-      component: Layout,
-      // redirect:'sale/index',
-      children: [
-        { 
-          path: 'inedx', 
-          name:'出售中',
-          component: Sale 
+      path:'/out/pub',
+      name:'发布汇票',
+      component:Layout,
+      children:[
+        {
+          path:'/',
+          name:'发布汇票',
+          component:_import('sale/pubBill')
         }
       ]
-    },    
+    },
+    // 出票中心
     {
-      path: '/sale/index',
-      name: '首页',
+      path: '/out/sale/:billStatus',
+      name: '出售中的汇票',
       component: Layout,
-      // redirect:'sale/index',
       children: [
+        // 出票中心列表
         { 
-          path: 'inedx', 
-          name:'出售中',
-          component: Sale 
+          path: '/', 
+          name:'首页',
+          component: _import('sale/index') 
         },
+        // 出票中心详情
         { 
-          path: 'saleDet', 
-          name:'汇票详情',
-          component: Sale 
+          path: 'saleDet/:billId', 
+          name:'SaleDet',
+          component: _import('sale/saleDetail')  
         },
+        // 出票中心预选报价列表
         { 
-          path: 'saleODet', 
-          name:'报价详情',
-          component: Sale 
+          path: 'saleQList/:billId', 
+          name:'SaleQuoteList',
+          component: _import('sale/saleQuoteList')  
+        },        
+        // 出票中心预选报价详情
+        { 
+          path: 'saleQDet/:quoteId', 
+          name:'SaleQDet',
+          component: _import('sale/saleQuoteDetail')  
+        },       
+        // 出票中心已完成汇票详情
+        { 
+          path: 'saleFDet/:quoteId', 
+          name:'SaleFDet',
+          component: _import('sale/saleFinishDetail')  
         },
       ]
-    },    
+    },      
+    //收票中心
     {
-      path: '/pre',
-      name: '预选汇票',
+      path: '/in/check/:billStatus',
+      name: '待审核',
       component: Layout,
-      // redirect:'sale/index',
-      children: [
-        { 
-          path: 'index', 
-          name:'预选汇票',
-          component: Pre
+      children:[
+        //收票中心列表
+        {
+          path: '/',
+          name: 'CheckIndex',
+          component: _import('invoice/check/index') 
         },
-        { 
-          path: 'preDet', 
-          name:'汇票详情',
-          component: PreDet 
+        // 待审核详情
+        {
+          path: 'checkDet/:billId',
+          name: 'CheckDet',
+          component: _import('invoice/check/checkDetail') 
+        },      
+        //待处理详情
+        {
+          path: 'handelDet/:billId',
+          name: 'HandelDet',
+          component: _import('invoice/check/handelDetail') 
+        }
+      ]
+    },
+    //个人认证审核
+    {
+      path:'/ident/pers',
+      name:'认证审核',
+      component:Layout,
+      children:[
+        {
+          path:'/',
+          name:'用户认证信息',
+          component:_import('ident/person/index') 
+        },
+        {
+          path:'persCheck/:userId',
+          name:'IdentPersCheck',
+          component:_import('ident/person/check') 
+        },
+        {
+          path:'persDet',
+          name:'IdentPersDet',
+          component:_import('ident/person/detail') 
+        }
+      ]
+    },
+    // 企业认证
+    {
+      path:'/ident/comp',
+      name:'认证审核',
+      component:Layout,
+      children:[
+        {
+          path:'/',
+          name:'企业认证信息',
+          component:_import('ident/company/index') 
+        },
+        {
+          path:'compCheck/:userId',
+          name:'IdentCompCheck',
+          component:_import('ident/company/check') 
+        },
+        {
+          path:'compDet',
+          name:'IdentCompDet',
+          component:_import('ident/company/detail') 
         },
       ]
-    },    
+    },
+    //用户中心
     {
-      path: '/off',
-      name: 'Off',
-      component: Off
-    },    
-    {
-      path: '/offDet',
-      name: 'OffDet',
-      component: OffDet
-    },    
-    {
-      path: '/check',
-      name: 'Check',
-      component: Check
-    },    
-    {
-      path: '/hand',
-      name: 'Handel',
-      component: Handel
-    },    
-    {
-      path: '/suc',
-      name: 'Success',
-      component: Success
-    },    
-    {
-      path: '/fail',
-      name: 'Fail',
-      component: Fail
+      path:'/user',
+      name:'用户中心',
+      component:Layout,
+      children:[
+        {
+          path:'userInfo',
+          name:'用户信息',
+          component:_import('user/userInfo') 
+        },
+        {
+          path:'edit',
+          name:'用户信息编辑',
+          component:_import('user/userInfoEdit') 
+        },
+        {
+          path:'pwd',
+          name:'修改登录密码',
+          component:_import('user/changePass') 
+        },
+      ]
     }
   ]
 })

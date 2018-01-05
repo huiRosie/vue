@@ -10,13 +10,14 @@
                 <div class="accOfferItemNav accOfferItemStatus">竞价状态</div>
                 <div class="accOfferItemNav accOfferItemOperate">操作</div>
             </li>
-            <li class="accOfferItem" v-if="billList.length>0" v-for="billItem in billList">
+            <li class="accOfferItem" v-if="billList.length>0" v-for="billItem in billList" :key="billItem.billId">
                 <div class="accOfferItemNav accOfferItemType">{{billItem.billClassify}}</div>
                 <div class="accOfferItemNav accOfferItemTerm">{{billItem.billTradeType}}</div>
                 <div class="accOfferItemNav accOfferItemIsti">{{billItem.billAcceptOrg}}</div>
                 <div class="accOfferItemNav accOfferItemMoney">{{billItem.billMoney}}</div>
                 <div class="accOfferItemNav accOfferItemPub">{{billItem.billCreateDate.substring(0,11)}}</div>
                 <div class="accOfferItemNav accOfferItemStatus" v-if="billItem.quoteStatus=='run'">竞价中</div>
+                <div class="accOfferItemNav accOfferItemStatus" v-if="billItem.quoteStatus=='ording'">已预选</div>
                 <div class="accOfferItemNav accOfferItemStatus" v-if="billItem.quoteStatus=='refuse'">放弃竞价</div>
                 <div class="accOfferItemNav accOfferItemStatus" v-if="billItem.quoteStatus=='success'">竞价成功</div>
                 <div class="accOfferItemNav accOfferItemStatus" v-if="billItem.quoteStatus=='fail'">竞价失败</div>

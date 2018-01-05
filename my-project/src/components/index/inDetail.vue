@@ -78,7 +78,7 @@
                 <div class="inDetAttach">
                     <h3 class="inDetAttachTitle">背书及附件</h3>
                     <div class="inDetAttachInfo">
-                        <img v-if="billData.billEvidence.indexOf('http://')!=-1||billData.billEvidence.indexOf('https://')!=-1" v-bind:src="billData.billImg"/>
+                        <img v-if="billData.billEvidence.indexOf('http://')!=-1||billData.billEvidence.indexOf('https://')!=-1" v-bind:src="billData.billEvidence"/>
                         <img v-else v-bind:src="'http://'+billData.billEvidence"/>
                         <!-- <img v-bind:src="'http://'+billData.billEvidence"/> -->
                         <p class="inDetAttachDes">背书.jpg</p>
@@ -147,7 +147,7 @@
 
 <script>
     import globalData from '../globalData'
-    import {quoteBill} from '../../assets/js/billApi'
+    // import {quoteBill} from '../../assets/js/billApi'
 
     export default {
         name: 'InDetail',
@@ -170,12 +170,12 @@
                 //调用接口  获取汇票详情
                 var self = this;
                 self.billId = self.$route.params.billId;
-                console.log(self.billId);      
+                // console.log(self.billId);      
                 self.$http.get(globalData.data.Ip+'/bill/info',{params:{
                         billId:self.billId
                     }},{emulateJSON:true}).then(function(res){ 
                         self.billData = res.data.data;
-                        console.log(self.billData);                             
+                        // console.log(self.billData);                             
                     },function(error){
                         console.log(error);  
                 })
@@ -203,12 +203,12 @@
                 var discountAddMoney = (billMoneys/100000)*self.bidAdd;
                 // 利率的总贴现金额
                 var interestMoneys = billMoneys*self.bidRate*leftDays/36000;    //billMoneys*(self.bidRate/100)*leftDays/360
-                console.log(billMoneys)
-                console.log(self.bidRate)
-                console.log(leftDays)
+                // console.log(billMoneys)
+                // console.log(self.bidRate)
+                // console.log(leftDays)
                 // 贴现金额
                 self.discountMoney = (billMoneys-interestMoneys-discountAddMoney).toFixed(2);
-                console.log(self.discountMoney)
+                // console.log(self.discountMoney)
                 // 贴息金额
                 self.interestMoney = (billMoneys-self.discountMoney).toFixed(2);
             },
@@ -250,7 +250,7 @@
                                 quoteDiscountAmount:self.interestMoney,
                                 quoteAmount:self.discountMoney
                             },{emulateJSON:true,withCredentials:true}).then(function(res){
-                                console.log(res)
+                                // console.log(res)
                                 if(res.data.code==200){
                                     self.modal1 = false;
                                     self.$Message.success('报价成功');
