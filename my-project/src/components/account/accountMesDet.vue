@@ -8,28 +8,46 @@
             <div class="accMesDetMainTitle">
                 <div class="accMesDetItem_dot"></div>
                 <div class="accMesDetItem_text">
-                    您有新的交易请求！请尽快到“我收到的交易请求”中查看卖家的联系方式与卖家进行交易协商。
+                    {{mesInfo.messageTitle}}
                 </div>
                 <div class="accMesDetItem_time">
-                    2017.11.24 13:53:59
+                    {{mesInfo.createDate}}
                 </div>
             </div>
             <div class="accMesDetMainDet">
-                买家嘿卟溜湫于2017年11月24日 17:30:24 请求与您交易，
-                请尽快“我收到的交易请求”中查看买家联系方式与卖家进行交易协商。预祝您交易愉快！
+                {{mesInfo.messageContent}}
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import globalData from '../globalData'
+
 export default {
-  name: 'AccountMesDet',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+    name: 'AccountMesDet',
+    data () {
+        return {
+            mesInfo:'',
+            mesId:''
+        }
+    },
+    created:function(){
+        this.getMesDet();
+    },
+    methods:{
+        getMesDet:function(){
+            var self = this;
+            self.mesId = self.$route.params.mesId;
+            console.log(self.mesId)
+            self.$http.get(globalData.data.Ip+'/user/message/info',{params:{
+                messageContainerId:self.mesId
+            },credentials:true}).then(function(res){ 
+                console.log(res);   
+                self.mesInfo = res.data.data;                     
+            })
+        }
     }
-  }
 }
 </script>
 

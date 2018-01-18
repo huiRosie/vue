@@ -1,50 +1,43 @@
 <template>
     <div class="login">
         <div class="loginContent">
-        <div class="loginMain">
-            <div class="loginMainTop">
-                <a class="loginMainTopLogin loginMainTopActive" >登录</a>
-            </div>
-            <!--登录-->
-            <div class="loginMainLogin">
-                <div class="loginMainLoginItem">
-                    <div class="loginMainLoginItem_label">
-                        账号：
-                    </div>
-                    <div class="loginMainLoginItem_text">
-                        <input type="text" name="" v-model="phone"  v-on:blur='onblurPhone(phone)' value="" />
-                    </div>
-                    <div class="loginMainLoginItem_tip" ref="loginPhone_tip"> 
-                        请正确输入您的账号
-                    </div>
+            <div class="loginMain">
+                <div class="loginMainTop">
+                    <a class="loginMainTopLogin loginMainTopActive" >登录</a>
                 </div>
-                <div class="loginMainLoginItem">
-                    <div class="loginMainLoginItem_label">
-                        密码：
+                <!--登录-->
+                <div class="loginMainLogin">
+                    <div class="loginMainLoginItem">
+                        <div class="loginMainLoginItem_label">
+                            账号：
+                        </div>
+                        <div class="loginMainLoginItem_text">
+                            <input type="text" name="" v-model="phone"  value="" />
+                        </div>
+                        <div class="loginMainLoginItem_tip" ref="loginPhone_tip"> 
+                            请正确输入您的账号
+                        </div>
                     </div>
-                    <div class="loginMainLoginItem_text">
-                        <input type="password" name="" v-model="password"  v-on:blur='onblurPassword(password)' value="" />
+                    <div class="loginMainLoginItem">
+                        <div class="loginMainLoginItem_label">
+                            密码：
+                        </div>
+                        <div class="loginMainLoginItem_text">
+                            <input type="password" name="" v-model="password" v-on:keyup.enter="goLogin" value="" />
+                        </div>
+                        <div class="loginMainLoginItem_tip" ref="loginPassword_tip">
+                            {{passwordTip}}
+                        </div>
                     </div>
-                    <div class="loginMainLoginItem_tip" ref="loginPassword_tip">
-                        {{passwordTip}}
+                    <div class="loginMainLoginBtn" @click='goLogin'>
+                        登录
                     </div>
-                </div>
-                <div class="loginMainLoginBtn" @click='goLogin'>
-                    登录
-                </div>
-                <div class="loginMainLoginPass" style="display:none;">
-                    <a class="loginMainLoginPass_remember">
-                        <input type="checkbox" name="" id="" value="" /> 
-                        <span> 记住密码</span>
-                    </a>
-                    <a class="loginMainLoginPass_forget">忘记密码?</a>
                 </div>
             </div>
         </div>
+        <!-- <div class="canvaszz"> </div>
+        <canvas id="canvas" ref="canvas"></canvas>  -->
     </div>
-    <div class="canvaszz"> </div>
-    <canvas id="canvas" ref="canvas"></canvas> 
-</div>
 </template>
 
 <script>
@@ -54,8 +47,8 @@ export default {
     name: 'Login',
     data () {
         return {
-            phone: '15671624885',
-            password:'123456',
+            phone: '',
+            password:'',
             passwordTip:'密码输入错误',
             username:'',
             canvas:'',
@@ -63,7 +56,7 @@ export default {
         }
     },
     created:function(){
-        // this.canvasBackground();
+        
     },
     methods:{
         goLogin:function(){
@@ -75,158 +68,38 @@ export default {
                 this.$refs.loginPassword_tip.style.display = 'block'   
                 return
             }
-            if ((/^[1][3578][0-9]{9}$/).test(this.phone)&&(/^[a-zA-Z0-9]{6,18}$/).test(this.password)){
+            if (this.phone!=''&&this.password!=''){
                 var self = this;
-                self.$router.push('/out/sale/publishing');
+                var data = self.$qs.stringify({
+                    userName:self.phone,
+                    userPassword:self.password
+                })
                 //调用接口  
-                // loginIn({
-                //     username:self.phone,
-                //     password:self.password
-                // },{emulateJSON:true,credentials:true}).then(function(res){
-                //     console.log(res)
-                //     if(res.data.code == 200) {
-                //         console.log(res);
-                //         globalData.data.loginStatus = '退出登录'
-                //         self.$router.push('/index');
-                //         self.$emit('userSignIn', globalData.data.loginStatus);
-                //         // 登录成功，存储登录信息
-                //         globalData.methods.setData('loginStatus','已登录');
-                //         self.$Message.success('登录成功');
-                //     } else {
-                //         this.$refs.loginPassword_tip.style.display = 'block'
-                //         self.passwordTip = res.data.data; 
-                //         console.log(res.data.data);
-                //         console.log(res);
-                //     }
-                // })
+                loginIn(data,{emulateJSON:true,credentials:true}).then(function(res){
+                    if(res.data.code == 200) {
+                        // console.log(res);
+                        self.$router.push('/out/sale/publishing');
+                        self.$Message.success('登录成功');
+                        // 登录成功，存储登录信息
+                        self.setData('eleManagerLogin','已登录');
+                    } else {
+                        self.$refs.loginPassword_tip.style.display = 'block'
+                        self.passwordTip = res.data.data; 
+                        // console.log(res.data.data);
+                        // console.log(res);
+                    }
+                })
             }
         },
-        // 绑定键盘事件
-        
         // 失去焦点
-        onblurPhone:function(ele){
-            var self = this;
-            if((/^[1][3578][0-9]{9}$/).test(ele)){
-                self.$refs.loginPhone_tip.style.display = 'none'  
-            }else{
-                self.$refs.loginPhone_tip.style.display = 'block'  
-            }
-        },
-        onblurPassword:function(ele){
-            var self = this;
-            if((/^[a-zA-Z0-9]{6,18}$/).test(ele)){
-                self.$refs.loginPassword_tip.style.display = 'none'  
-            }else{
-                self.$refs.loginPassword_tip.style.display = 'block'  
-            }
-        },
         oHeight:function(){
             
         },
-        // 星空背景
-        canvasBackground:function(){
-            this.canvas = document.getElementById(this.canvas);
-            console.log(this.canvas);
-            this.ctx = this.canvas.getContext('2d');
-            var w = canvas.width = window.innerWidth,
-            h = canvas.height = window.innerHeight,
-            hue = 217,
-            stars = [],
-            count = 0,
-            maxStars = 1300;//星星数量
-
-            var canvas2 = document.createElement('canvas'),
-            ctx2 = canvas2.getContext('2d');
-            canvas2.width = 100;
-            canvas2.height = 100;
-            var half = canvas2.width / 2,
-            gradient2 = ctx2.createRadialGradient(half, half, 0, half, half, half);
-            gradient2.addColorStop(0.025, '#CCC');
-            gradient2.addColorStop(0.1, 'hsl(' + hue + ', 61%, 33%)');
-            gradient2.addColorStop(0.25, 'hsl(' + hue + ', 64%, 6%)');
-            gradient2.addColorStop(1, 'transparent');
-
-            ctx2.fillStyle = gradient2;
-            ctx2.beginPath();
-            ctx2.arc(half, half, half, 0, Math.PI * 2);
-            ctx2.fill();
-
-            // End cache
-
-            function random(min, max) {
-            if (arguments.length < 2) {
-                max = min;
-                min = 0;
-            }
-
-            if (min > max) {
-                var hold = max;
-                max = min;
-                min = hold;
-            }
-
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-            }
-
-            function maxOrbit(x, y) {
-            var max = Math.max(x, y),
-                diameter = Math.round(Math.sqrt(max * max + max * max));
-            return diameter / 2;
-            //星星移动范围，值越大范围越小，
-            }
-
-            var Star = function() {
-
-            this.orbitRadius = random(maxOrbit(w, h));
-            this.radius = random(60, this.orbitRadius) / 8; 
-            //星星大小
-            this.orbitX = w / 2;
-            this.orbitY = h / 2;
-            this.timePassed = random(0, maxStars);
-            this.speed = random(this.orbitRadius) / 50000; 
-            //星星移动速度
-            this.alpha = random(2, 10) / 10;
-
-            count++;
-            stars[count] = this;
-            }
-
-            Star.prototype.draw = function() {
-            var x = Math.sin(this.timePassed) * this.orbitRadius + this.orbitX,
-                y = Math.cos(this.timePassed) * this.orbitRadius + this.orbitY,
-                twinkle = random(10);
-
-            if (twinkle === 1 && this.alpha > 0) {
-                this.alpha -= 0.05;
-            } else if (twinkle === 2 && this.alpha < 1) {
-                this.alpha += 0.05;
-            }
-
-            ctx.globalAlpha = this.alpha;
-            ctx.drawImage(canvas2, x - this.radius / 2, y - this.radius / 2, this.radius, this.radius);
-            this.timePassed += this.speed;
-            }
-
-            for (var i = 0; i < maxStars; i++) {
-            new Star();
-            }
-
-            function animation() {
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.globalAlpha = 0.5; //尾巴
-            ctx.fillStyle = 'hsla(' + hue + ', 64%, 6%, 2)';
-            ctx.fillRect(0, 0, w, h)
-
-            ctx.globalCompositeOperation = 'lighter';
-            for (var i = 1, l = stars.length; i < l; i++) {
-                stars[i].draw();
-            };
-
-            window.requestAnimationFrame(animation);
-            }
-
-            animation();
-        }
+        //封装过期控制代码localStorage存储
+        setData:function (key,value){
+            var curTime = new Date().getTime();
+            localStorage.setItem(key,JSON.stringify({data:value,time:curTime}));
+        },
     }
 }
 </script>
@@ -236,10 +109,7 @@ export default {
     .login {
         width: 100%;
         height: 100%;
-        background: #e1e1e1;
-        background-color:rgb(15, 71, 97);
         position:relative;
-        background-size: 100% 100%;
     }
 
     .login canvas {
@@ -264,10 +134,13 @@ export default {
 	}
 
     .login .loginContent {
-        width: 1280px;
+        min-width: 402px;
         height: 100%;
         overflow: hidden;
         margin: 0 auto;
+        background: url(../../assets/images/loginbg.jpg) no-repeat center;
+        background-size: 100% 100%;
+        /* background-color:rgb(15, 71, 97); */
     }
 
     .login .loginContent .loginMain {

@@ -89,6 +89,11 @@ module.exports = {
     new webpack.DllReferencePlugin({      
       context: path.resolve(__dirname, '..'),      
       manifest: require('./vendor-manifest.json')    
-    }) 
+    }),
+    new webpack.optimize.CommonsChunkPlugin('common.js'),
+    // new webpack.ProvidePlugin({
+    //     jQuery: "jquery",
+    //     $: "jquery"
+    // })
   ]
 }

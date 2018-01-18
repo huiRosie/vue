@@ -2,7 +2,7 @@ import axios from 'axios'
 
 var service = axios.create({
     baseURL:'http://192.168.11.26',
-    // baseURL:'.',
+    // baseURL:'',
     timeout:2000,
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     // headers: {'Content-Type': 'application/json'},

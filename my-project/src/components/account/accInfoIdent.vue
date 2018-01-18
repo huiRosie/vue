@@ -114,7 +114,7 @@ export default {
             realName:'',
             idCode:'',
             frontImg:'',
-            backImg:'',
+            backImg:'idcardimg',
             uploadFrontList: [],
             // uploadBackList: []
         }
@@ -192,13 +192,13 @@ export default {
                 //     });
                 //     return;
                 // }  
-                // 调取接口  发布汇票
+                // 调取接口  个人认证
                 self.$http.post(globalData.data.Ip+'/user/auth/user',
                     {
                         realName:self.realName,
                         idcard:self.idcard,
                         idcardImg:self.frontImg,
-                        // idcardbgImg:self.backImg
+                        idcardbgImg:self.backImg
                     },{emulateJSON:true,credentials:true}).then(function(res){ 
                         console.log(res)
                         if(res.data.code==200){

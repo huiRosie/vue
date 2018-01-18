@@ -127,7 +127,7 @@
                                     :on-format-error="handleFormatError"
                                     :on-exceeded-size="handleMaxSize" 
                                     type="drag"
-                                    action="./common/upload"
+                                    action="/common/upload"
                                     style="display:block;width:200px;" >
                                     <div style="width:200px;height:198px;line-height:236px;">
                                         <Icon type="ios-plus-empty" class="addIcon" size="60" ></Icon>
@@ -182,7 +182,7 @@
                             :on-format-error="handleFormatError"
                             :on-exceeded-size="handleMaxSize" 
                             type="drag"
-                            action="./common/upload"
+                            action="/common/upload"
                             style="display:inline-block;width:240px;" >
                             <div style="width:240px;height:46px;">
                                 <Button class="uploadFile_boxbtn" type="ghost">选择文件</Button>
@@ -210,16 +210,16 @@ export default {
             visible: false,
             uploadFrontList: [],
             uploadFileList: [],
-            billNo:'1000000001',
-            billUserName:'中国建设银行',
-            billMoney:'1000',
-            billType:'电票',
-            billDeadline:'2018-03-20',
-            billEndorse:'1',
-            billFlaws:'无',
+            billNo:'',
+            billUserName:'',
+            billMoney:'',
+            billType:'',
+            billDeadline:'',
+            billEndorse:'',
+            billFlaws:'',
             billImg:'',
             billEndorseImg:'',
-            billAcceptOrg:'国股',
+            billAcceptOrg:'',
             orgList:[
                 '国股','商城','三农','村镇','外贸','财务公司','商票'
             ],
@@ -232,7 +232,11 @@ export default {
             // console.log(res)
             this.uploadFrontList = fileList;
             // console.log(this.uploadFrontList)
-            file.url = "http://"+res.data;
+            if(res.data.indexOf('http://')==-1&&res.data.indexOf('https://')==-1){
+                file.url = "http://"+res.data;
+            }else{
+                file.url = res.data;
+            }
             file.name = res.data;
             this.billImg = res.data;
             // console.log(file.url)
@@ -241,7 +245,11 @@ export default {
             // console.log(res)
             this.uploadFileList = fileList;
             // console.log(this.uploadFileList)
-            file.url = "http://"+res.data;
+            if(res.data.indexOf('http://')==-1&&res.data.indexOf('https://')==-1){
+                file.url = "http://"+res.data;
+            }else{
+                file.url = res.data;
+            }
             file.name = res.data;
             this.billEndorseImg = res.data;
             // console.log(file.url)
@@ -371,29 +379,6 @@ export default {
                 return;
             }
             // 调取接口  发布汇票
-            // var data = self.$qs.stringify({
-            //     billNo:self.billNo,
-            //     billUserName:self.billUserName,
-            //     billMoney:self.billMoney*10000,
-            //     billClassify:self.billType,
-            //     billExpire:self.billDeadline,
-            //     billEndorse:self.billEndorse,
-            //     billImgHealth:self.billFlaws,
-            //     billImg:self.billImg,
-            //     billEndorseImg:null,
-            //     billEvidence:self.billEndorseImg,
-            //     billAcceptOrg:self.billAcceptOrg,
-            //     billTradeType:self.billTradeType
-            // });
-            // fetchPublishBill(data,{emulateJSON:true,withCredentials: true}).then(function(res){
-            //     console.log(res)
-            //      if(res.data.code==200){
-            //         self.$Message.success('发布成功');
-            //         self.$router.push('/out/sale/publishing');
-            //     }                 
-            // },function(error){
-            //         console.log(error);  
-            // })
             var data = {
                 billNo:self.billNo,
                 billUserName:self.billUserName,
@@ -408,16 +393,13 @@ export default {
                 billAcceptOrg:self.billAcceptOrg,
                 billTradeType:self.billTradeType
             };
-            console.log(data)
-            // self.$http.post('http://192.168.11.26'+'/manager/bill/publish',
-            self.$http.post('.'+'/manager/bill/publish',
-                data,{emulateJSON:true,credentials:true}).then(function(res){ 
-                    console.log(res)
-                    if(res.data.code==200){
-                        self.$Message.success('发布成功');
-                        self.$router.push('/out/sale/publishing');
-                    }                         
-                },function(error){
+            fetchPublishBill(data,{emulateJSON:true,withCredentials:true}).then(function(res){
+                // console.log(res)
+                 if(res.data.code==200){
+                    self.$Message.success('发布成功');
+                    self.$router.push('/out/sale/publishing');
+                }                 
+            },function(error){
                     console.log(error);  
             })
         },

@@ -1,11 +1,24 @@
 <template>
     <div class="index">
         <!--banner-->
-        <div class="banner swiper-container">
-            <div class="bannerList swiper-wrapper" id="bannerList">
-                <a class="bannerItem swiper-slide" >
-                    <img src="../../assets/banner2.png" class="swiper-lazy"/>
-                </a>
+        <div class="banner">
+            <div class="bannerList" id="bannerList">
+                <Carousel
+                    :height='460' 
+                    v-model="value3"
+                    :autoplay="setting.autoplay"
+                    :autoplay-speed="setting.autoplaySpeed"
+                    :dots="setting.dots"
+                    :radius-dot="setting.radiusDot"
+                    :trigger="setting.trigger"
+                    :arrow="setting.arrow">
+                    <CarouselItem>
+                        <img src="../../assets/banner2.png" class="demo-carousel"/>
+                    </CarouselItem>
+                    <CarouselItem>
+                        <img src="../../assets/banner.png" class="demo-carousel"/>
+                    </CarouselItem>
+                </Carousel>
             </div>
             <div class="swiper-pagination"></div>
         </div>
@@ -90,7 +103,9 @@
                             <span>{{bill.billMoney/10000}}</span>万元
                         </div>
                         <div class="billItemDeadline">
-                            到期倒计时：<span>{{bill.billTimeout}}天</span>
+                            到期倒计时：
+                            <span v-if="bill.billTimeout>0">{{bill.billTimeout}}天</span>
+                            <span v-else>已到期</span>
                         </div>
                         <div class="billItemDate">
                             汇票到期日：<span>{{bill.billExpire}}</span>
@@ -101,7 +116,8 @@
                         <div class="billItemDate">
                             付款行全称：<span>{{bill.billBank}}</span>
                         </div>
-                        <a class="billItemBid" @click="bidBill(bill.billId)">参与竞价</a>
+                        <a class="billItemBid" v-if="bill.billTimeout>0" @click="bidBill(bill.billId)">参与竞价</a>
+                        <a class="billItemBid" v-else @click="bidBill(bill.billId)">查看详情</a>
                         <!-- <router-link class="billItemBid" to="{path:'inDetail',params:{billId:bill.billId}}">参与竞价</router-link> -->
                     </li>
                 </ul>
@@ -149,7 +165,16 @@
         data () {
             return {
                 billLists:'',
-                loginStatus:''
+                loginStatus:'',
+                value3: 0,
+                setting: {
+                    autoplay: true,
+                    autoplaySpeed: 2000,
+                    dots: 'inside',
+                    radiusDot: false,
+                    trigger: 'click',
+                    arrow: 'hover'
+                }
             }
         },
         created:function(){
@@ -161,7 +186,7 @@
                 this.$http.get(globalData.data.Ip+'/index/main'
                 ).then(function(res){  
                     this.billLists = res.data.data.bills;
-                    // console.log(res);                                
+                    console.log(res);                                
                 },function(error){
                     console.log(error);  
                 })

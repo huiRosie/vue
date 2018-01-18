@@ -114,7 +114,7 @@ export default new Router({
             component: _import('account/accountAnnounce')
           },
           {
-            path: 'mypub/accAnn/myBillDet/:billId',
+            path: 'mypub/accAnn/:status/myBillDet/:billId',
             name: 'MyBillDet',
             component: _import('account/myBillDet')
           },
@@ -124,7 +124,7 @@ export default new Router({
             component: _import('account/accountOffer')
           },
           {
-            path: 'buy/accOffer/myOfferDet/:billId',
+            path: 'buy/accOffer/:status/myOfferDet/:billId',
             name: 'MyOfferDet',
             component: _import('account/myOfferDet')
           },
@@ -164,7 +164,7 @@ export default new Router({
             component: _import('account/accountMes')
           },
           {
-            path: 'set/accMes/accMesDet',
+            path: 'set/accMes/accMesDet/:mesId',
             name: 'AccountMesDet',
             component: _import('account/accountMesDet')
           },

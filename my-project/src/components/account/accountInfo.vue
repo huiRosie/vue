@@ -20,9 +20,7 @@
                     <div class="perInfoItem_text" style="fontsize:12px;color:#878787;" v-if="realName==''||realName==null">
                        未填写
                     </div>
-                    <div class="perInfoItem_text" v-else>
-                        {{realName}}
-                    </div>
+                    <div class="perInfoItem_text" v-else v-text="realName"></div>
                 </li>
                 <li class="perInfoItem">
                     <div class="perInfoItem_label">电话：</div>
@@ -100,7 +98,7 @@
                             认证失败
                         </div>
                         <div class="identInfoItem_ident">
-                            <router-link class='identInfoItem_identBtn' to='/acc/set/accInfo/accInfoIdent'>[重新认证]</router-link>
+                            <router-link class='identInfoItem_identBtn' to='/acc/set/accInfo/accComIdent'>[重新认证]</router-link>
                         </div>
                     </div>
                 </li>

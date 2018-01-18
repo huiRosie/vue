@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import { fetchAdminInfo,fetchEditAdminInfo } from '../../assets/js/billApi'
 
 export default {
     name: 'userInfoEdit',
@@ -68,8 +69,8 @@ export default {
         //   调取接口，获取用户信息
         getUserInfo:function(){
             var self = this;
-            self.$http.get(globalData.data.Ip+'/user/info',{credentials:true}).then(function(res){ 
-                console.log(res);   
+            fetchAdminInfo({credentials:true}).then(function(res){ 
+                // console.log(res);   
                 self.realName = res.data.data.realName;                          
                 self.userName = res.data.data.userName;                          
                 self.userPhone = res.data.data.userPhone;                          
@@ -79,17 +80,16 @@ export default {
         // 调取接口，修改个人信息
         editUserInfo:function(){
             var self = this;
-            self.$http.post(globalData.data.Ip+'/user/info/edit',
-                {
+            fetchEditAdminInfo({
                     userName:self.userName,
                     realName:self.realName,
                     userPhone:self.userPhone,
                     userEmail:self.userEmail
                 },{emulateJSON:true,credentials:true}).then(function(res){ 
-                    console.log(res)
+                    // console.log(res)
                     if(res.data.code==200){
                         self.$Message.success('个人信息编辑成功');
-                        self.$router.push('/acc/set/accInfo');
+                        self.$router.push('/user/userInfo');
                     }                         
                 },function(error){
                     console.log(error);  

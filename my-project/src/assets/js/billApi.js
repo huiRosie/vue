@@ -1,4 +1,4 @@
-// import fetch from './fetch'
+import fetch from './fetch'
 
 // 获取汇票列表
 export function fetchBillList(query){

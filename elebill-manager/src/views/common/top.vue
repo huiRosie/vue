@@ -4,7 +4,7 @@
         <div class="topB">
             <div class="topBBox">
                 <h1 class="topBLogo"><router-link to='/out/sale/publishing'><img class="logoImg" src="../../assets/images/elebill-com-logo.png"/></router-link></h1>
-                <div class="topSear">
+                <div class="topSear" style="display:none;">
                   <div class="topSearBox">
                     <input type="text" placeholder="请输入汇票信息">
                     <Icon class="topSearBtn" type="search"></Icon>
@@ -13,12 +13,12 @@
                   <router-link class="topSearIn topSearItem" to="/in/check/validating">收票中心</router-link>
                 </div>
                 <div class="topBNav">
-                    <router-link class="topBNav_mes topBNav_item" to="">
+                    <router-link style="display:none;" class="topBNav_mes topBNav_item" to="">
                       <Icon class="topBNavMes" type="chatbubble-working"></Icon>
                     </router-link>
-                    <router-link class="topBNav_name topBNav_item" to="/user/userInfo">黑不溜秋</router-link>
-                    <router-link class="topBNav_pass topBNav_item" to="/user/pwd">修改登录密码</router-link>
-                    <router-link class="topBNav_loginout topBNav_item" to="/login">退出登录</router-link>
+                    <router-link class="topBNav_name topBNav_item" style="display:none;" to="/user/userInfo">黑不溜秋</router-link>
+                    <router-link class="topBNav_pass topBNav_item" style="display:none;" to="/user/pwd">修改登录密码</router-link>
+                    <a class="topBNav_loginout topBNav_item" @click="loginOut()" >退出登录</a>
                 </div>
             </div>
         </div>
@@ -34,7 +34,10 @@
       }
     },
     methods: { 
-　　   
+　　     loginOut:function(){
+            localStorage.removeItem('eleManagerLogin');
+            this.$router.push('/login');
+        }
     }
   }
 </script>

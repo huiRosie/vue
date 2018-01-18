@@ -81,7 +81,7 @@ export default {
                 userPassword:self.oldPassword,
                 userNewPassword:self.newPassword
             },{emulateJSON:true,credentials: true}).then(function(res) { 
-                console.log(res)
+                // console.log(res)
                 const title = '提示';
                 const content = '密码修改成功，请重新登录！';
                 self.$Modal.warning({

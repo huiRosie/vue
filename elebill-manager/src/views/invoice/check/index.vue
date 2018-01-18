@@ -17,7 +17,7 @@
                 <div class="checkItemNav checkItemOperate">操作</div>
             </li>
             <li class="checkItem" v-if="billList.length>0" v-for="billItem in billList" :key="billItem.billId">
-                <div class="checkItemNav checkItemName">{{billItem.billTradeArea}}</div>
+                <div class="checkItemNav checkItemName">{{billItem.billUserName}}</div>
                 <div class="checkItemNav checkItemArea">{{billItem.billTradeArea}}</div>
                 <div class="checkItemNav checkItemMoney">{{billItem.billMoney}}</div>
                 <div class="checkItemNav checkItemDeadline">{{billItem.billExpire}}</div>
@@ -54,7 +54,7 @@ export default {
   data () {
     return {
         billList:[],
-        total:0,
+        total:'',
         current:1,
         billStatus:''
     }
@@ -76,6 +76,7 @@ export default {
                 console.log(res)
                 if(res.data.code==200){
                     self.billList = res.data.data.recordList;
+                    self.total = res.data.data.totalCount;
                 } 
             },function(error){
                 console.log(error);  
@@ -97,8 +98,7 @@ export default {
         display: block;
         min-width: 128px;
         padding-bottom: 30px;
-        padding-left: 76px;
-        margin: 0 auto;
+        margin: 20px auto;
         /* float: right; */
     }
 
@@ -131,8 +131,13 @@ export default {
 
     .check .checkMain .checkItem .checkItemNav {
         width: 162px;
+        height: 30px;
         text-align: center;
         float: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding: 0 10px;
     }
 
     .check .checkMain .checkItem .checkItemOperate a {

@@ -1,9 +1,19 @@
 <template>
     <div class="myBillDet">
         <div class="myBillDetContent">
-            <h2 class="myBillDetTitle">
-                <router-link class="accountSubNav" to="/acc/mypub/accAnn/'trading'">我的发布</router-link> >
-                <router-link class="accountSubNav" to="/acc/mypub/accAnn/'trading'">交易中</router-link> >
+            <h2 class="myBillDetTitle" v-if="billData.billStatus=='successs'">
+                <router-link class="accountSubNav" to="/acc/mypub/accAnn/trading">我的发布</router-link> >
+                <router-link class="accountSubNav" to="/acc/mypub/accAnn/trading">交易中</router-link> >
+                <span>汇票详情</span>
+            </h2>
+            <h2 class="myBillDetTitle" v-if="billData.billStatus=='successs'">
+                <router-link class="accountSubNav" to="/acc/mypub/accAnn/success">我的发布</router-link> >
+                <router-link class="accountSubNav" to="/acc/mypub/accAnn/success">交易成功</router-link> >
+                <span>汇票详情</span>
+            </h2>
+            <h2 class="myBillDetTitle" v-if="billData.billStatus=='failure'">
+                <router-link class="accountSubNav" to="/acc/mypub/accAnn/failure">我的发布</router-link> >
+                <router-link class="accountSubNav" to="/acc/mypub/accAnn/failure">交易失败</router-link> >
                 <span>汇票详情</span>
             </h2>
             <div class="myBillDetMain">
@@ -70,8 +80,8 @@
                             </li>
                         </ul>
                         <div class="myBillDetBillInfoRight">
-                            <img v-if="billData.billImg.indexOf('http://')!=-1||billData.billImg.indexOf('https://')!=-1" :src="billData.billImg"/>
-                            <img v-else :src="'http://'+billData.billImg"/>
+                            <img v-if="billData.billImg!=null&&billData.billImg.indexOf('http://')==-1&&billData.billImg.indexOf('https://')==-1" :src="'http://'+billData.billImg"/>
+                            <img v-else :src="billData.billImg"/>
                         </div>
                     </div>
                 </div>
@@ -79,8 +89,8 @@
                 <div class="myBillDetAttach">
                     <h3 class="myBillDetAttachTitle">背书及附件</h3>
                     <div class="myBillDetAttachInfo">
-                        <img v-if="billData.billEvidence.indexOf('http://')!=-1||billData.billEvidence.indexOf('https://')!=-1" :src="billData.billImg"/>
-                        <img v-else :src="'http://'+billData.billEvidence"/>
+                        <img v-if="billData.billEvidence!=null&&billData.billEvidence.indexOf('http://')==-1&&billData.billEvidence.indexOf('https://')==-1" :src="'http://'+billData.billImg"/>
+                        <img v-else :src="billData.billEvidence"/>
                         <p class="myBillDetAttachDes">背书.jpg</p>
                     </div>
                 </div>

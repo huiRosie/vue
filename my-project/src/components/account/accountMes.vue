@@ -3,24 +3,15 @@
         <h2 class="accountMesTitle">消息中心</h2>
         <div class="accMesMain">
             <div class="accMesList">
-                <router-link class="accMesItem"  to="/acc/set/accMes/accMesDet">
+                <a class="accMesItem" v-bind:class="{accMesItemRead:mesItem.messageContainerStatus=='read'}"  v-for="mesItem in mesList" :key="mesItem.messageContainerId" @click="readMesDet(mesItem.messageContainerId)">
                     <div class="accMesItem_dot"></div>
                     <div class="accMesItem_text">
-                        您有新的交易请求！请尽快到“我收到的交易请求”中查看卖家的联系方式与卖家进行交易协商。
+                        {{mesItem.messageTitle}}
                     </div>
                     <div class="accMesItem_time">
-                        2017.11.24 13:53:59
+                        {{mesItem.createDate}}
                     </div>
-                </router-link>
-                <router-link class="accMesItem accMesItemRead"  to="/acc/set/accMes/accMesDet">
-                    <div class="accMesItem_dot"></div>
-                    <div class="accMesItem_text">
-                        您有新的交易请求！请尽快到“我收到的交易请求”中查看卖家的联系方式与卖家进行交易协商。
-                    </div>
-                    <div class="accMesItem_time">
-                        2017.11.24 13:53:59
-                    </div>
-                </router-link> 
+                </a>
             </div>
         </div>
     </div>
@@ -45,8 +36,11 @@ export default {
             var self = this;
             self.$http.get(globalData.data.Ip+'/user/message/page',{credentials:true}).then(function(res){ 
                 console.log(res);   
-                self.mesList = res.data.data;                     
+                self.mesList = res.data.data.recordList;                     
             })
+        },
+        readMesDet:function(mesId){
+            this.$router.push({name:'AccountMesDet',params:{mesId:mesId}})
         }
     }
 }

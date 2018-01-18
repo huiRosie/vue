@@ -131,7 +131,7 @@ export default {
                 currentPage:current,
                 pageSize:8
             },{emulateJSON:true,credentials:true}).then(function(res){
-                console.log(res)
+                // console.log(res)
                 if(res.data.code==200){
                     self.billList = res.data.data.recordList;
                     self.total = res.data.data.totalCount;

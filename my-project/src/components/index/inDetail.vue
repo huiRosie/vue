@@ -1,9 +1,13 @@
 <template>
     <div class="inDetail">
         <div class="inDetContent">
-            <h2 class="inDetTitle">
-                <router-link to="/bill/in">我要收票</router-link> >
+            <h2 v-if="billData.billStatus=='success'||billData.billStatus=='failure'" class="inDetTitle">
+                <a @click="routerBack">我要收票</a> >
                 <span>汇票详情</span>
+            </h2>
+            <h2 v-else class="inDetTitle">
+                <a @click="routerBack">我要收票</a> >
+                <span>竞价详情</span>
             </h2>
             <div class="inDetMain">
                 <!--汇票信息-->
@@ -16,7 +20,7 @@
                                     票据号：
                                 </div>
                                 <div class="inDetBillInfoItem_text">
-                                    {{billData.billId}}
+                                    {{billData.billNo}}
                                 </div>
                             </li>
                             <li class="inDetBillInfoItem">
@@ -69,8 +73,8 @@
                             </li>
                         </ul>
                         <div class="inDetBillInfoRight">
-                            <img v-if="billData.billImg.indexOf('http://')!=-1||billData.billImg.indexOf('https://')!=-1" v-bind:src="billData.billImg"/>
-                            <img v-else v-bind:src="'http://'+billData.billImg"/>
+                            <img v-if="billData.billImg!=null&&billData.billImg.indexOf('http://')==-1&&billData.billImg.indexOf('https://')==-1" v-bind:src="'http://'+billData.billImg"/>
+                            <img v-else v-bind:src="billData.billImg"/>
                         </div>
                     </div>
                 </div>
@@ -78,15 +82,16 @@
                 <div class="inDetAttach">
                     <h3 class="inDetAttachTitle">背书及附件</h3>
                     <div class="inDetAttachInfo">
-                        <img v-if="billData.billEvidence.indexOf('http://')!=-1||billData.billEvidence.indexOf('https://')!=-1" v-bind:src="billData.billEvidence"/>
-                        <img v-else v-bind:src="'http://'+billData.billEvidence"/>
-                        <!-- <img v-bind:src="'http://'+billData.billEvidence"/> -->
+                        <img v-if="billData.billEvidence!=null&&billData.billEvidence.indexOf('http://')==-1&&billData.billEvidence.indexOf('https://')==-1" v-bind:src="'http://'+billData.billEvidence"/>
+                        <img v-else v-bind:src="billData.billEvidence"/>
                         <p class="inDetAttachDes">背书.jpg</p>
                     </div>
                 </div>
                 <!--我要竞价-->
                 <div class="inDetBtn">
-                    <a v-if="billData.billStatus=='publishing'" class="inDetBtnClick"  @click="bidModel">我要竞价</a>
+                    <a v-if="billData.billStatus=='publishing'&&leftDays>0" class="inDetBtnClick"  @click="bidModel">我要竞价</a>
+                    <a v-if="billData.billStatus=='publishing'&&leftDays<=0" class="inDetBtnClick" style="background:#ccc;cursor:not-allowed;" >竞价结束</a>
+                    <a v-if="billData.billStatus=='ording'" class="inDetBtnClick" style="background:#ccc;cursor:not-allowed;" >已预选</a>
                     <a v-if="billData.billStatus=='failure'" class="inDetBtnClick" style="display:none;" >交易失败</a>
                     <a v-if="billData.billStatus=='success'" class="inDetBtnClick" style="display:none;" >交易成功</a>
                     <!-- 点击出现弹框 -->
@@ -159,7 +164,8 @@
                 interestMoney:'',
                 discountMoney:'',
                 billData:'',
-                billId:''
+                billId:'',
+                leftDays:''
             }
         },
         created:function(){
@@ -170,12 +176,13 @@
                 //调用接口  获取汇票详情
                 var self = this;
                 self.billId = self.$route.params.billId;
-                // console.log(self.billId);      
                 self.$http.get(globalData.data.Ip+'/bill/info',{params:{
                         billId:self.billId
                     }},{emulateJSON:true}).then(function(res){ 
                         self.billData = res.data.data;
-                        // console.log(self.billData);                             
+                        console.log(self.billData);       
+                        // 计算汇票到期倒计时
+                        self.leftDays = globalData.methods.countDown(res.data.data.billExpire);                      
                     },function(error){
                         console.log(error);  
                 })
@@ -254,6 +261,7 @@
                                 if(res.data.code==200){
                                     self.modal1 = false;
                                     self.$Message.success('报价成功');
+                                    self.go(-1);
                                 }                         
                             },function(error){
                                 console.log(error);  
@@ -261,6 +269,9 @@
                         
                     }
                 }          
+            },
+            routerBack:function(){
+                this.$router.go(-1);
             }
         }
     }

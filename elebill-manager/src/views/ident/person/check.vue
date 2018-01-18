@@ -117,7 +117,7 @@ export default {
                 userId:self.userId
             }).then(function(res){
                 self.userInfo = res.data.data;
-                console.log(self.userInfo)
+                // console.log(self.userInfo)
             })
         },
         bidModal:function(){
@@ -134,7 +134,7 @@ export default {
                 userAuth:userAuth,
                 userAuthDesc:self.userAuthDesc
             }).then(function(res){
-                console.log(res)
+                // console.log(res)
                 self.$Message.success('操作成功!');
                 self.$router.push('/ident/pers');
             })

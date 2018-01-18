@@ -3,7 +3,7 @@ import fetch from './fetch'
 // 登录
 export function loginIn(query){
     return fetch({
-        url:'/user/login',
+        url:'/manager/user/login',
         method:'post',
         data:query
     })
@@ -164,6 +164,26 @@ export function fetchPersonCheck(query){
         params:query
     })
 }
+
+
+// 获取管理员信息详情
+export function fetchAdminInfo(query){
+    return fetch({
+        url:'/user/info',
+        method:'get',
+        params:query
+    })
+}
+
+// 编辑管理员信息
+export function fetchEditAdminInfo(query){
+    return fetch({
+        url:'/user/info/edit',
+        method:'post',
+        params:query
+    })
+}
+
 
 // 用户功能 修改密码
 export function fetchChangePwd(query){

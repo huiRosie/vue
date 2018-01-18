@@ -73,7 +73,7 @@ export default {
             });
         },
         goDetail:function(billId){
-            this.$router.push('/acc/buy/accOffer/myOfferDet/'+billId);
+            this.$router.push({name:'MyOfferDet',params:{billId:billId}});
         }
     }
 }

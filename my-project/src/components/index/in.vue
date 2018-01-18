@@ -16,19 +16,14 @@
                         <ul class="inSearCondList">
                             <li class="inSearCondItem">
                                 <h4 class="inSearCondItemTitle inSearType">票据类型</h4>
-                                <!-- <RadioGroup v-model="picked1">
-                                    <Radio label="全部" v-on:click='searchType("全部")'></Radio>
-                                    <Radio label="电票" v-on:click='searchType("电票")'></Radio>
-                                    <Radio label="商票" v-on:click='searchType("商票")'></Radio>
-                                </RadioGroup> -->
                                 <div class="inSearCondItemListItem inSearTypeItem">
-                                    <input type="radio" name="billType" v-model="picked1" v-on:click='searchType("全部")' id="" value="全部" />全部
+                                    <input type="radio" name="billType" v-model="picked1" v-on:click='searchType("全部")' @click="clickRadio" id="" value="全部" />全部
                                 </div>
                                 <div class="inSearCondItemListItem inSearTypeItem">
-                                    <input type="radio" name="billType" v-model="picked1" v-on:click='searchType("电票")' id="" value="电票" />电票
+                                    <input type="radio" name="billType" v-model="picked1" v-on:click='searchType("电票")' @click="clickRadio" id="" value="电票" />电票
                                 </div>
                                 <div class="inSearCondItemListItem inSearTypeItem">
-                                    <input type="radio" name="billType" v-model="picked1" v-on:click='searchType("商票")' id="" value="商票" />商票
+                                    <input type="radio" name="billType" v-model="picked1" v-on:click='searchType("商票")' @click="clickRadio" id="" value="商票" />商票
                                 </div>
                             </li>
                             <li class="inSearCondItem">
@@ -46,7 +41,8 @@
                             <li class="inSearCondItem">
                                 <h4 class="inSearCondItemTitle">汇票状态</h4>
                                 <div class="inSearCondItemListItem"><input type="radio" name="billStatus" v-model="picked3" v-on:click='searchStatus("全部")' id="" value="全部" />全部</div>
-                                <div class="inSearCondItemListItem"><input type="radio" name="billStatus" v-model="picked3" v-on:click='searchStatus("交易中")' id="" value="交易中" />发布中</div>
+                                <div class="inSearCondItemListItem"><input type="radio" name="billStatus" v-model="picked3" v-on:click='searchStatus("发布中")' id="" value="发布中" />交易中</div>
+                                <!-- <div class="inSearCondItemListItem"><input type="radio" name="billStatus" v-model="picked3" v-on:click='searchStatus("预选中")' id="" value="预选中" />已预选</div> -->
                                 <div class="inSearCondItemListItem"><input type="radio" name="billStatus" v-model="picked3" v-on:click='searchStatus("交易成功")' id="" value="交易成功" />交易成功</div>
                             </li>
                             <li class="inSearCondItem">
@@ -96,19 +92,23 @@
                         <div class="inBillItem_deadline">{{bill.billExpire}}</div>
                         <div class="inBillItem_area">{{bill.billTradeArea}}</div>
                         <div class="inBillItem_num">{{bill.billQuoteCount}}</div>
-                        <div class="inBillItem_status" v-if="bill.billStatus=='发布中'">
-                          交易中
-                        </div>
                         <div class="inBillItem_status" v-if="bill.billStatus=='交易成功'">
                           交易完成
                         </div>
                         <div class="inBillItem_status" v-if="bill.billStatus=='交易失败'">
                           交易关闭
                         </div>
+                        <div class="inBillItem_status" v-if="bill.billStatus=='发布中'">
+                          交易中
+                        </div>
+                        <div class="inBillItem_status" v-if="bill.billStatus=='预定中'">
+                          已预选
+                        </div>
                         <div class="inBillItem_operate">
-                            <a v-if="bill.billStatus=='发布中'" class="inBillItem_operate_link" @click="bidBill(bill.billId)">参与竞价</a>
                             <a v-if="bill.billStatus=='交易成功'" class="inBillItem_operate_link" @click="bidBill(bill.billId)">查看详情</a>
                             <a v-if="bill.billStatus=='交易失败'" class="inBillItem_operate_link" @click="bidBill(bill.billId)">查看详情</a>
+                            <a v-if="bill.billStatus=='发布中'" class="inBillItem_operate_link" @click="bidBill(bill.billId)">参与竞价</a>
+                            <a v-if="bill.billStatus=='预定中'" class="inBillItem_operate_link" @click="bidBill(bill.billId)">查看详情</a>
                         </div>
                     </li>
                 </ul>
@@ -129,7 +129,6 @@
 <script>
 import globalData from "../globalData";
 import addressData from "../../assets/js/addressData";
-import { fetchBillList } from "../../assets/js/billApi";
 
 export default {
   name: "In",
@@ -147,7 +146,8 @@ export default {
       current: 1,
       total: 0,
       moneyChoose: 0,
-      moneyList: ["全部", "一万以内", "一万至十万", "十万至一百万", "百万以上"]
+      moneyList: ["全部", "一万以内", "一万至十万", "十万至一百万", "百万以上"],
+      typeList:["全部","电票","商票"]
     };
   },
   created: function() {
@@ -170,47 +170,25 @@ export default {
     );
   },
   methods: {
-    getBillList: function(
-      current,
-      billMoney,
-      billClassify,
-      billTradeType,
-      billStatus,
-      billAcceptOrg,
-      billFeature,
-      billTradeArea
-    ) {
-      // console.log(current);
-      // console.log(billMoney);
-      // console.log(billClassify);
-      // console.log(billTradeType);
-      // console.log(billStatus);
-      // console.log(billAcceptOrg);
-      // console.log(billFeature);
-      // console.log(billTradeArea);
-      // fetchBillList({
-      //     currentPage:current,
-      //     pageSize:10,
-      //     billMoney:billMoney,
-      //     billClassify:billClassify,
-      //     billTradeType:billTradeType,
-      //     billStatus:billStatus,
-      //     billAcceptOrg:billAcceptOrg,
-      //     billFeature:billFeature,
-      //     billTradeArea:billTradeArea,
-      //     isCurrentUser:false
-      // },{emulateJSON:true,withCredentials: true}).then(response => {
-      //     console.log(response)
-      //     this.billLists = response.data.data.recordList;
-      //     this.total = response.data.data.totalCount;
-      // })
+    getBillList: function(current,billMoney,billClassify,billTradeType,billStatus,billAcceptOrg,
+      billFeature,billTradeArea) {
+      // var data = {
+      //       currentPage: current,
+      //       billMoney: billMoney,
+      //       billClassify: billClassify,
+      //       billTradeType: billTradeType,
+      //       billStatus: billStatus,
+      //       billAcceptOrg: billAcceptOrg,
+      //       billFeature: billFeature,
+      //       billTradeArea: billTradeArea,
+      //       isCurrentUser: false
+      //     };
+      //     console.log(data)
       //调用接口
-      this.$http
-        .post(
-          globalData.data.Ip + "/bill/page",
-          {
+      var self = this;
+      self.$http.post(
+          globalData.data.Ip + "/bill/page",{
             currentPage: current,
-            pageSize: 10,
             billMoney: billMoney,
             billClassify: billClassify,
             billTradeType: billTradeType,
@@ -219,15 +197,12 @@ export default {
             billFeature: billFeature,
             billTradeArea: billTradeArea,
             isCurrentUser: false
-          },
-          { emulateJSON: true, withCredentials: true }
-        )
-        .then(
+          },{ emulateJSON:true }
+        ).then(
           function(res) {
-            this.billLists = res.data.data.recordList;
-            this.total = res.data.data.totalCount;
-            // console.log(res);
-            // console.log(this.billLists);
+            self.billLists = res.data.data.recordList;
+            self.total = res.data.data.totalCount;
+            console.log(res);
           },
           function(error) {
             console.log(error);
@@ -236,14 +211,15 @@ export default {
     },
     // 分页
     getBillLists: function(current) {
-      var billClassify = this.picked1;
-      var billTradeType = this.picked2;
-      var billStatus = this.picked3;
-      var billAcceptOrg = this.picked4;
-      var billFeature = this.picked5;
-      var billTradeArea = this.picked6;
-      var billMoney = this.billMoney;
-      this.getBillList(
+      var self = this;
+      var billClassify = self.picked1;
+      var billTradeType = self.picked2;
+      var billStatus = self.picked3;
+      var billAcceptOrg = self.picked4;
+      var billFeature = self.picked5;
+      var billTradeArea = self.picked6;
+      var billMoney = self.billMoney;
+      self.getBillList(
         current,
         billMoney,
         billClassify,
@@ -420,6 +396,26 @@ export default {
     bidBill: function(billId) {
       // console.log(billId);
       this.$router.push({ name: "InDetail", params: { billId: billId } });
+    },
+    clickRadio:function(){
+      var billClassify = this.picked1;
+      var billTradeType = this.picked2; 
+      var billStatus = this.picked3;
+      var billAcceptOrg = this.picked4;
+      var billFeature = this.picked5;
+      var billTradeArea = this.picked6;
+      var billMoney = this.billMoney;
+      var data = {
+          billMoney: billMoney,
+          billClassify: billClassify,
+          billTradeType: billTradeType,
+          billStatus: billStatus,
+          billAcceptOrg: billAcceptOrg,
+          billFeature: billFeature,
+          billTradeArea: billTradeArea,
+          isCurrentUser: false
+      };
+      console.log(data)
     }
   }
 };
@@ -651,15 +647,8 @@ export default {
   margin-right: 0;
 }
 
-.in
-  .inContent
-  .inMain
-  .inSear
-  .inSearRight
-  .inSearCondList
-  .inSearCondItem
-  .inSearCondItemListItem:nth-child(6) {
-  margin-left: 164px;
+.in .inContent .inMain .inSear .inSearRight .inSearCondList .inSearCondItem .inSearCondItemListItem:nth-child(6) {
+   margin-left: 164px;
 }
 
 .in .inContent .inMain .inBill {
@@ -671,6 +660,7 @@ export default {
 }
 
 .in .inContent .inMain .inBill .inBillItem {
+  width: 100%;
   height: 60px;
   line-height: 30px;
   padding: 15px 0;
@@ -680,6 +670,7 @@ export default {
 
 .in .inContent .inMain .inBill .inBillItem div {
   width: 112px;
+  height: 30px;
   float: left;
   text-align: center;
 }

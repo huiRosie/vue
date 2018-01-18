@@ -7,14 +7,14 @@
             <div class="perInfoTop">
                 <h2 class="perInfoTitle">账户信息</h2>
                 <div class="perInfoEdit">
-                    <router-link class='perInfoEditBtn' to='/user/edit'>编辑</router-link>
+                    <router-link class='perInfoEditBtn' to='/user/edit' style="display:none;">编辑</router-link>
                 </div>
             </div>
             <ul class="perInfoList">
                 <li class="perInfoItem">
                     <div class="perInfoItem_label">昵称：</div>
                     <div class="perInfoItem_text" v-text="userName"></div>
-                    <div class="perInfoItem_des">
+                    <div v-if="(/^[1][3578][0-9]{9}$/).test(userName)" class="perInfoItem_des">
                         （默认为手机号）
                     </div>
                 </li>
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import { fetchAdminInfo } from '../../assets/js/billApi'
 
 export default {
     name: 'userInfo',
@@ -56,37 +57,22 @@ export default {
             realName:'',
             userName:'',
             userPhone:'',
-            userEmail:'',
-            blCompanyName:'',
-            companyAuth:'',
-            userAuth:''
+            userEmail:''
         }
     },
     created:function(){
-        // this.getUserInfo();
+        this.getUserInfo();
     },
     methods:{
         //   调取接口，获取用户信息
         getUserInfo:function(){
             var self = this;
-            self.$http.get(globalData.data.Ip+'/user/info',{credentials:true}).then(function(res){ 
+            fetchAdminInfo({credentials:true}).then(function(res){ 
                 console.log(res);   
-                if(res.data.data=='用户未登录'){
-                    self.$Modal.warning({
-                        title: '提示',
-                        content: '您还未登录，请您登录后再查看，谢谢！',
-                        onOk: function(){
-                            self.$router.push('/login');
-                        },
-                    })
-                }
                 self.userName = res.data.data.userName;                          
                 self.userPhone = res.data.data.userPhone;                          
                 self.userEmail = res.data.data.userEmail;         
-                self.realName = res.data.data.realName;                 
-                self.companyAuth = res.data.data.companyAuth;         
-                self.userAuth = res.data.data.userAuth;                 
-                self.blCompanyName = res.data.data.blCompanyName;                 
+                self.realName = res.data.data.realName;           
             })
         }
     }

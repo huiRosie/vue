@@ -64,7 +64,7 @@
                                     {{userInfo.blCompanyName}}
                                 </div>
                             </li>
-                            <li class="checkAttachInfoItem">
+                            <li class="checkAttachInfoItem" style="display:none;">
                                 <div class="checkAttachInfoItem_label">
                                     法人代表：
                                 </div>
@@ -145,7 +145,7 @@ export default {
                 userId:self.userId
             }).then(function(res){
                 self.userInfo = res.data.data;
-                console.log(self.userInfo)
+                // console.log(self.userInfo)
             })
         },
         bidModal:function(){
@@ -162,7 +162,7 @@ export default {
                 companyAuth:companyAuth,
                 companyAuthDesc:self.companyAuthDesc
             }).then(function(res){
-                console.log(res);
+                // console.log(res);
                 self.$Message.success('操作成功!');
                 self.$router.push('/ident/comp');
             })

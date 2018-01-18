@@ -72,8 +72,8 @@
                             </li>
                         </ul>
                         <div class="myOfferDetBillInfoRight">
-                            <img v-if="billData.billImg.indexOf('http://')!=-1||billData.billImg.indexOf('https://')!=-1" :src="billData.billImg"/>
-                            <img v-else :src="'http://'+billData.billImg"/>
+                            <img v-if="billData.billImg!=null&&billData.billImg.indexOf('http://')==-1&&billData.billImg.indexOf('https://')==-1" :src="'http://'+billData.billImg"/>
+                            <img v-else :src="billData.billImg"/>
                         </div>
                     </div>
                 </div>
@@ -81,8 +81,8 @@
                 <div class="myOfferDetAttach">
                     <h3 class="myOfferDetAttachTitle">背书及附件</h3>
                     <div class="myOfferDetAttachInfo">
-                        <img v-if="billData.billEvidence.indexOf('http://')!=-1||billData.billEvidence.indexOf('https://')!=-1" :src="billData.billImg"/>
-                        <img v-else :src="'http://'+billData.billEvidence"/>
+                        <img v-if="billData.billEvidence!=null&&billData.billEvidence.indexOf('http://')==-1&&billData.billEvidence.indexOf('https://')==-1" :src="'http://'+billData.billImg"/>
+                        <img v-else :src="billData.billEvidence"/>
                         <p class="myOfferDetAttachDes">背书.jpg</p>
                     </div>
                 </div>
@@ -114,7 +114,6 @@ export default {
             //调用接口  获取汇票详情
             var self = this;
             self.billId = self.$route.params.billId;
-            console.log(self.billId);      
             self.$http.get(globalData.data.Ip+'/bill/info',{params:{
                 billId:self.billId
             }},{emulateJSON:true}).then(function(res){ 

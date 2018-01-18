@@ -1,9 +1,9 @@
-// import axios from 'axios'
+import axios from 'axios'
 import {Modal} from 'iview'
 
 var service = axios.create({
-    // baseURL:'http://192.168.11.26',
-    baseURL:'.',
+    baseURL:'http://192.168.11.26',
+    // baseURL:'.',
     timeout:2000,
     headers: {'content-type': 'application/json'}
     // headers: {'X-Custom-Header':'foobar'}

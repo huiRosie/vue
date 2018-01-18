@@ -88,7 +88,7 @@ export default {
             fetchBillDetail({
                 billId:self.billId
             }).then(function(res){
-                console.log(res);
+                // console.log(res);
                 self.billInfo = res.data.data;
                 self.leftDays = self.countDown(res.data.data.billExpire);
                 self.quoteStatus = res.data.data.billStatus;
@@ -107,7 +107,7 @@ export default {
                 pageSize:7,
                 currentPage:current
             }).then(function(res){
-                console.log(res.data.data)
+                // console.log(res.data.data)
                 self.billList = res.data.data.recordList;
                 self.total = res.data.data.totalCount;
             })
@@ -115,11 +115,11 @@ export default {
         // 预选报价
         preBill:function(quoteId){
             var self = this;
-            console.log(quoteId)
+            // console.log(quoteId)
             fetchPreBill({
                 quoteId:quoteId
             }).then(function(res){
-                console.log(res)
+                // console.log(res)
                 if(res.data.code==200){
                     self.$Message.success('操作成功！');
                     self.getQuoteList();
@@ -133,7 +133,7 @@ export default {
                 tradeStatus:tradeStatus,
                 quoteDesc:self.quoteDesc
             }).then(function(res){
-                console.log(res)
+                // console.log(res)
                 if(res.data.code==200){
                     self.$Message.success('操作成功！');
                     self.getQuoteList();

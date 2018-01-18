@@ -111,7 +111,7 @@ export default {
                 userId:self.userId
             }).then(function(res){
                 self.userInfo = res.data.data;
-                console.log(self.userInfo)
+                // console.log(self.userInfo)
             })
         }
     }

@@ -2,8 +2,8 @@
     export default{
         name:'globalData',
         data:{
-            // Ip:'http:/'+'/192.168.11.26',
-            Ip:'.',
+            Ip:'http:/'+'/192.168.11.26',
+            // Ip:'.',
             loginStatus:'登录',
         },
         methods:{

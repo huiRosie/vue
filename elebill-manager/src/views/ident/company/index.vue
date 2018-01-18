@@ -22,10 +22,12 @@
                 <div class="identCompItemNav identCompItemOperate">操作</div>
             </li>
             <li class="identCompItem" v-for="companyItem in companyList" :key="companyItem.userId">
-                <div class="identCompItemNav identCompItemName">{{companyItem.realName}}</div>
+                <div v-if="companyItem.realName==null||companyItem.realName==''" class="identCompItemNav identCompItemName">未填写</div>
+                <div v-if="companyItem.realName!=null" class="identCompItemNav identCompItemName">{{companyItem.realName}}</div>
                 <div class="identCompItemNav identCompItemNickName">{{companyItem.userName}}</div>
                 <div class="identCompItemNav identCompItemPhone">{{companyItem.userPhone}}</div>
-                <div class="identCompItemNav identCompItemEmail">{{companyItem.blCompanyName}}</div>
+                <div v-if="companyItem.blCompanyName==null||companyItem.blCompanyName==''" class="identCompItemNav identCompItemEmail">未填写</div>
+                <div v-if="companyItem.blCompanyName!=null" class="identCompItemNav identCompItemEmail">{{companyItem.blCompanyName}}</div>
                 <div v-if="companyItem.companyAuth=='unauth'" class="identCompItemNav identCompItemStatus">未认证</div>
                 <div v-if="companyItem.companyAuth=='authing'" class="identCompItemNav identCompItemStatus">待审核</div>
                 <div v-if="companyItem.companyAuth=='success'" class="identCompItemNav identCompItemStatus">已认证</div>
@@ -93,6 +95,7 @@ export default {
                 console.log(res)
                 if(res.data.code==200){
                     self.companyList = res.data.data.recordList;
+                    self.total = res.data.data.totalCount;
                 } 
             },function(error){
                 console.log(error);  

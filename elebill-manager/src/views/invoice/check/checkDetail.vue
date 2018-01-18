@@ -10,7 +10,8 @@
             <div class="checkDetAttach">
                 <h3 class="checkDetAttachTitle">背书文件</h3>
                 <div class="checkDetAttachInfo">
-                    <img :src="'http://'+billInfo.billEvidence"/>
+                    <img v-if="billInfo.billEvidence!=null&&billInfo.billEvidence!=''&&billInfo.billEvidence.indexOf('http://')==-1&&billInfo.billEvidence.indexOf('https://')==-1" :src="'http://'+billInfo.billEvidence"/>
+                    <img v-else :src="billInfo.billEvidence"/>
                 </div>
             </div>
             <!--审核录入-->
@@ -18,7 +19,12 @@
                 <h3 class="checkDetTitle">汇票信息</h3>
                 <div class="checkDetInfo">
                     <div class="checkDetInfoRight">
-                        <imgZoom :src="'http://'+billInfo.billImg" width="529" height="302" :bigsrc="'http://'+billInfo.billImg" :configs="configs" />
+                        <img v-if="billInfo.billImg!=null&&billInfo.billImg!=''&&billInfo.billImg.indexOf('http://')==-1&&billInfo.billImg.indexOf('https://')==-1" :src="'http://'+billInfo.billImg" @click="viewImg" />
+                        <img v-else :src="billInfo.billImg" @click="viewImg" />
+                        <Modal title="查看大图" v-model="visible" width='1080' class-name="vertical-center-modal">
+                            <img v-if="billInfo.billImg!=null&&billInfo.billImg.indexOf('http://')==-1&&billInfo.billImg.indexOf('https://')==-1&&visible" :src="'http://'+billInfo.billImg" style="width: 100%">
+                            <img v-if="billInfo.billImg!=null&&billInfo.billImg.indexOf('http://')!=-1&&visible" :src="billInfo.billImg" style="width: 100%">
+                        </Modal>
                     </div>
                     <ul class="checkDetInfoLeft">
                         <li class="checkDetInfoItem">
@@ -123,7 +129,6 @@
 
 <script>
 import { fetchBillDetail,checkBill } from '../../../assets/js/billApi'
-import imgZoom from 'vue2.0-zoom'
 
 export default {
     name: 'checkDet',
@@ -141,18 +146,8 @@ export default {
             billInfo:'',
             failText:'',
             billStatus:'',
-            configs: {
-                width:200,
-                height:200,
-                maskWidth:100,
-                maskHeight:100,
-                maskColor:'white',
-                maskOpacity:0.2
-           }
+            visible: false
         }
-    },
-    components: { 
-        imgZoom 
     },
     created:function(){
         this.getBillDetail();
@@ -174,7 +169,7 @@ export default {
                 self.billNo = self.billInfo.billNo;
                 self.billUserName = self.billInfo.billUserName;
                 self.billStatus = self.billInfo.billStatus;
-                console.log(self.billInfo)
+                // console.log(self.billInfo)
             })
         },
         // 票据审核通过
@@ -182,12 +177,12 @@ export default {
             var self = this;
             self.billId = self.$route.params.billId;
             var billId=self.billId;
-            if(self.billMoney==''||self.billClassify==''||self.billExpire==''||self.billEndorse==''||self.billImgHealth==''||self.billNo==''||self.billUserName==''){
+            if(self.billMoney==null||self.billClassify==null||self.billExpire==null||self.billEndorse==null||self.billImgHealth==null||self.billNo==null||self.billUserName==null){
                 self.$Modal.warning({
                     title:'提示',
                     content:'请将汇票信息填写完整'
                 });
-                return
+                return;
             }
             // console.log(billId);
             var data = self.$qs.stringify({
@@ -201,24 +196,26 @@ export default {
                 billNo:self.billNo,
                 billUserName:self.billUserName
             });
-            console.log(data)
+            // console.log(data)
             checkBill(data,{emulateJSON:true,withCredentials: true}).then(function(res){
-                console.log(res);
+                // console.log(res);
                 self.$router.push('/in/check/validating');
             })
+            
+            
         },
         // 票据审核未通过
         checkFail:function(checkStatus){
             var self = this;
             self.billId = self.$route.params.billId;
             var billId=self.billId;
-            console.log(billId);
+            // console.log(billId);
             var data = self.$qs.stringify({
                 billId:billId,
                 billStatus:checkStatus,
                 billMoney:self.billMoney,
                 billClassify:self.billClassify,
-                billExpire:self.changeDate(self.billExpire),
+                billExpire:null,
                 billEndorse:self.billEndorse,
                 billImgHealth:self.billImgHealth,
                 billNo:self.billNo,
@@ -226,11 +223,12 @@ export default {
             });
             // console.log(data)
             checkBill(data,{emulateJSON:true,withCredentials: true}).then(function(res){
-                console.log(res);
+                // console.log(res);
                 self.modal = false;
                 self.$router.push('/in/check/validating');
             })
         },
+        // 审核失败弹框
         checkModal:function(){
             this.modal = true;
         },
@@ -245,12 +243,25 @@ export default {
         addNum:function(num){
             return  num > 9 ? num : '0'+num 
         },
+        // 预览图片
+        viewImg:function(){
+            this.visible = true;
+        },
     }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+    .vertical-center-modal{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .vertical-center-modal .ivu-modal{
+            top: 0;
+    }
+
     .checkDet {
         width: 982px;
         height: auto;

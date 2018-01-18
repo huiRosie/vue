@@ -38,72 +38,62 @@
   }
 </script>
 
-<style>
+<style rel="stylesheet/less" lang="less" scoped>
   .wrap .bottom {
     min-width: 1280px;
     height: 128px;
     color: white;
     background: #323232;
-  }
-
-  .wrap .bottom .bottomBox {
-    width: 1280px;
-    height: 128px;
-    margin: 0 auto;
-    padding-top: 40px;
-    overflow: hidden;
-  }
-
-  .wrap .bottom .bottomBox .bottomLeft {
-    float: left;
-  }
-
-  .wrap .bottom .bottomBox .bottomLeft .bottomLeftNav {
-    width: auto;
-    height: 18px;
-    line-height: 18px;
-    overflow: hidden;
-  }
-
-  .wrap .bottom .bottomBox .bottomLeft .bottomLeftNav .bottomLeftNavItem {
-    float: left;
-    padding: 0 5px;
-    height: 14px;
-    line-height: 14px;
-    margin: 2px 0;
-    border-left: 1px solid white;
-  }
-
-  .wrap .bottom .bottomBox .bottomLeft .bottomLeftNav .bottomLeftNavItem a {
-    color: white;
-    font-size: 14px;
-  }
-
-  .wrap .bottom .bottomBox .bottomLeft .bottomLeftNav .bottomLeftNavItem:first-child {
-    border: 0;
-    padding-left: 0;
-  }
-
-  .wrap .bottom .bottomBox .bottomLeft .bottomLeftCopyright {
-    font-size: 14px;
-    height: 36px;
-    line-height: 36px;
-  }
-
-  .wrap .bottom .bottomBox .bottomRight {
-    float: right;
-  }
-
-  .wrap .bottom .bottomBox .bottomRight .bottomRightTel {
-    font-size: 14px;
-    height: 14px;
-    line-height: 14px;
-  }
-
-  .wrap .bottom .bottomBox .bottomRight .bottomRightNum {
-    color: #f71327;
-    font-size: 20px;
-    height: 36px;
-    line-height: 36px;
+    .bottomBox {
+      width: 1280px;
+      height: 128px;
+      margin: 0 auto;
+      padding-top: 40px;
+      overflow: hidden;
+      .bottomLeft {
+        float: left;
+        .bottomLeftNav {
+          width: auto;
+          height: 18px;
+          line-height: 18px;
+          overflow: hidden;
+          .bottomLeftNavItem {
+            float: left;
+            padding: 0 5px;
+            height: 14px;
+            line-height: 14px;
+            margin: 2px 0;
+            border-left: 1px solid white;
+            a {
+              color: white;
+              font-size: 14px;
+            }
+          }
+          .bottomLeftNavItem:first-child {
+            border: 0;
+            padding-left: 0;
+          }
+        }
+        .bottomLeftCopyright {
+          font-size: 14px;
+          height: 36px;
+          line-height: 36px;
+        }
+      }
+      .bottomRight {
+        float: right;
+        .bottomRightTel {
+          font-size: 14px;
+          height: 14px;
+          line-height: 14px;
+        }
+        .bottomRightNum {
+          color: #f71327;
+          font-size: 20px;
+          height: 36px;
+          line-height: 36px;
+        }
+      }
+    }
   }
 </style>

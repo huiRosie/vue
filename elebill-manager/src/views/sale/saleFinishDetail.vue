@@ -148,7 +148,7 @@ export default {
             fetchQuoteBillDetail({
                 quoteId:self.quoteId
             }).then(function(res){
-                console.log(res);
+                // console.log(res);
                 self.billInfo = res.data.data;
             })
         }

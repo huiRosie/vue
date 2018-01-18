@@ -145,11 +145,11 @@ export default {
         getBillDetail:function(){
             var self = this;
             self.quoteId = self.$route.params.quoteId;
-            console.log(self.quoteId)
+            // console.log(self.quoteId)
             fetchQuoteBillDetail({
                 quoteId:self.quoteId
             }).then(function(res){
-                console.log(res);
+                // console.log(res);
                 self.billInfo = res.data.data;
             })
         },
@@ -161,7 +161,7 @@ export default {
                 tradeStatus:tradeStatus,
                 quoteDesc:self.quoteDesc
             }).then(function(res){
-                console.log(res)
+                // console.log(res)
                 if (res.data.code==200) {
                     self.$Message.success('操作成功！');
                     self.$router.push('/out/sale/ordering');

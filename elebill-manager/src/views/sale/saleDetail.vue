@@ -113,7 +113,7 @@ export default {
             fetchBillDetail({
                 billId:self.billId
             }).then(function(res){
-                console.log(res);
+                // console.log(res);
                 self.billInfo = res.data.data;
             })
         },
@@ -122,7 +122,7 @@ export default {
             fetchFailBill({
                 billId:billId
             }).then(function(res){
-                console.log(res);
+                // console.log(res);
                 self.$Message.success('操作成功!');
                 self.$router.push('/out/sale/finish');
             })

@@ -79,7 +79,8 @@
                         </li>
                     </ul>
                     <div class="handelDetInfoRight">
-                        <imgZoom :src="'http://'+billInfo.billImg" width="382" height="218" :bigsrc="'http://'+billInfo.billImg" :configs="configs" />
+                        <img v-if="billInfo.billImg!=null&&billInfo.billImg!=''&&billInfo.billImg.indexOf('http://')==-1&&billInfo.billImg.indexOf('https://')==-1" :src="'http://'+billInfo.billImg" />
+                        <img v-else :src="billInfo.billImg"  />
                     </div>
                 </div>
             </div>
@@ -87,7 +88,8 @@
             <div class="handelDetAttach">
                 <h3 class="handelDetAttachTitle">背书及附件</h3>
                 <div class="handelDetAttachInfo">
-                    <img :src="'http://'+billInfo.billEvidence"/>
+                    <img v-if="billInfo.billEvidence!=null&&billInfo.billEvidence!=''&&billInfo.billEvidence.indexOf('http://')==-1&&billInfo.billEvidence.indexOf('https://')==-1" :src="'http://'+billInfo.billEvidence"/>
+                    <img v-else :src="billInfo.billEvidence"/>
                 </div>
             </div>
             <!--交易成功或失败-->
@@ -122,7 +124,6 @@
 
 <script>
 import { fetchBillDetail,fetchTradeBill } from '../../../assets/js/billApi'
-import imgZoom from 'vue2.0-zoom'
 
 
 export default {
@@ -142,9 +143,6 @@ export default {
            }
         }
     },
-    components: { 
-        imgZoom 
-    },
     created:function(){
         this.getBillDetail();
     },
@@ -157,7 +155,7 @@ export default {
                 billId:self.billId
             },{emulateJSON:true,credentials:true}).then(function(res){
                 self.billInfo = res.data.data;
-                console.log(self.billInfo)
+                // console.log(self.billInfo)
             })
         },
         // 交易成功 交易失败
@@ -178,7 +176,7 @@ export default {
                 billDesc:self.billFailReason
             });
             fetchTradeBill(data).then(function(res){
-                console.log(res)
+                // console.log(res)
                 self.$Message.success({
                     content:'操作成功'
                 });

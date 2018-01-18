@@ -80,7 +80,7 @@ export default {
             });
         },
         goDetail:function(billId){
-            this.$router.push('/acc/mypub/accAnn/myBillDet/'+billId);
+            this.$router.push({name:'MyBillDet',params:{billId:billId}});
         }
     },
     watch:{
