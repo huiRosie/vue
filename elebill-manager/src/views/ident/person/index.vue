@@ -17,7 +17,7 @@
                 <div class="identPersItemNav identPersItemName">姓名</div>
                 <div class="identPersItemNav identPersItemNickName">昵称</div>
                 <div class="identPersItemNav identPersItemPhone">电话</div>
-                <div class="identPersItemNav identPersItemEmail">邮箱</div>
+                <div class="identPersItemNav identPersItemIdcard">身份证号</div>
                 <div class="identPersItemNav identPersItemStatus">状态</div>
                 <div class="identPersItemNav identPersItemOperate">操作</div>
             </li>
@@ -28,13 +28,13 @@
                 <div class="identPersItemNav identPersItemPhone">{{personItem.userPhone}}</div>
                 <div v-if="personItem.userEmail==null||personItem.userEmail==''" class="identPersItemNav identPersItemEmail">未填写</div>
                 <div v-if="personItem.userEmail!=null&&personItem.userEmail!=''" class="identPersItemNav identPersItemEmail">{{personItem.userEmail}}</div>
-                <div v-if="personItem.companyAuth=='unauth'" class="identPersItemNav identPersItemStatus">未认证</div>
-                <div v-if="personItem.companyAuth=='authing'" class="identPersItemNav identPersItemStatus">待审核</div>
-                <div v-if="personItem.companyAuth=='success'" class="identPersItemNav identPersItemStatus">认证成功</div>
-                <div v-if="personItem.companyAuth=='failure'" class="identPersItemNav identPersItemStatus">认证失败</div>
-                <div v-if="personItem.companyAuth==null" class="identPersItemNav identPersItemStatus">未认证</div>
+                <div v-if="personItem.userAuth=='unauth'" class="identPersItemNav identPersItemStatus">未认证</div>
+                <div v-if="personItem.userAuth=='authing'" class="identPersItemNav identPersItemStatus">待审核</div>
+                <div v-if="personItem.userAuth=='success'" class="identPersItemNav identPersItemStatus">认证成功</div>
+                <div v-if="personItem.userAuth=='failure'" class="identPersItemNav identPersItemStatus">认证失败</div>
+                <div v-if="personItem.userAuth==null" class="identPersItemNav identPersItemStatus">未认证</div>
                 <div class="identPersItemNav identPersItemOperate">
-                    <a v-if="personItem.companyAuth=='authing'" class="identPersItem_scan" @click="persCheck(personItem.userId)">立即审核</a>
+                    <a v-if="personItem.userAuth=='authing'" class="identPersItem_scan" @click="persCheck(personItem.userId)">立即审核</a>
                     <a v-else class="identPersItem_scan" @click="scanDetail(personItem.userId)">查看详情</a>
                 </div>
             </li>
@@ -105,6 +105,7 @@ export default {
                 if(res.data.code==200){
                     self.personList = res.data.data.recordList;
                     self.total = res.data.data.totalCount;
+                    
                 } 
             },function(error){
                 console.log(error);  
@@ -122,6 +123,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+    .pageBox {
+        display: block;
+        min-width: 128px;
+        padding-bottom: 30px;
+        margin:40px 20px;
+        float: right;
+    }
+
     .identPers {
         width: 982px;
         height: auto;
@@ -132,7 +141,6 @@ export default {
         height: 58px;
         line-height: 30px;
         padding: 14px 30px;
-        background: white;
     }
 
     .topNavLeft{
@@ -160,12 +168,14 @@ export default {
     .topNavRight .topNavRightItemActive{
         color: white;
         border: 0;
+        line-height: 32px;
         background: #f71327;
     }
 
     .topNavRight .topNavRightItem:hover{
         color: white;
         border: 0;
+        line-height: 32px;
         background: #f71327;
     }
 
@@ -179,8 +189,7 @@ export default {
         height: 58px;
         line-height: 30px;
         padding: 14px 0;
-        margin-bottom: 2px;
-        background: white;
+        border-bottom: 1px solid #eee;
     }
 
     .identPers .identPersMain .identPersItem .identPersItemNav {
@@ -188,6 +197,18 @@ export default {
         height: 30px;
         text-align: center;
         float: left;
+    }
+
+    .identPers .identPersMain .identPersItem .identPersItemNav:nth-child(3) {
+        width: 180px;
+    }
+
+    .identPers .identPersMain .identPersItem .identPersItemNav:nth-child(2) {
+        width: 193px;
+    }
+
+    .identPers .identPersMain .identPersItem .identPersItemNav:last-child {
+        width: 120px;
     }
 
     .identPers .identPersMain .identPersItem .identPersItemOperate a {
@@ -208,5 +229,6 @@ export default {
     .identPers .identPersMain .identPersTitle {
         font-size: 16px;
         background: #fdeaea;
+        color: #333;
     }
 </style>

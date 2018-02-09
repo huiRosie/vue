@@ -2,24 +2,24 @@
     <!-- 侧边栏导航 -->
     <div class="indexLeft">
         <div class="indexSubBox">
-            <div class="indexSub" ref="outSale" disabled>
+            <div class="indexSub" :class="{indexSubActive:isActive1}" ref="outSale" disabled>
                 <h2 class="indexSubTitle">出票中心</h2>
             </div>
-            <router-link class="indexSubNav" to="/out/sale/publishing">· 出售中的汇票</router-link>
-            <router-link class="indexSubNav" to="/out/sale/ordering">· 我预选的报价</router-link>
-            <router-link class="indexSubNav" to="/out/sale/finish">· 已完成的汇票</router-link>
+            <router-link class="indexSubNav" to="/out/sale/publishing">· 待交易</router-link>
+            <router-link class="indexSubNav" to="/out/sale/ordering">· 交易中</router-link>
+            <router-link class="indexSubNav" to="/out/sale/finish">· 交易完成</router-link>
         </div>
         <div class="indexSubBox">
-            <div class="indexSub" ref="inCheck">
+            <div class="indexSub" :class="{indexSubActive:isActive2}" ref="inCheck">
                 <h2 class="indexSubTitle">收票中心</h2>
             </div>
             <router-link class="indexSubNav" to="/in/check/validating">· 待审核</router-link>
-            <router-link class="indexSubNav" to="/in/check/validate_success">· 待处理</router-link>	
-            <router-link class="indexSubNav" to="/in/check/success">· 交易成功</router-link>	
-            <router-link class="indexSubNav" to="/in/check/failure">· 交易失败</router-link>	
+            <router-link class="indexSubNav" to="/in/check/validate_success">· 待交易</router-link>	
+            <router-link class="indexSubNav" to="/in/check/ording">· 交易中</router-link>	
+            <router-link class="indexSubNav" to="/in/check/success">· 交易完成</router-link>	
         </div>
         <div class="indexSubBox">
-            <div class="indexSub" ref="ident">
+            <div class="indexSub" :class="{indexSubActive:isActive3}" ref="ident">
                 <h2 class="indexSubTitle">认证审核</h2>
             </div>
             <router-link class="indexSubNav" to="/ident/pers">· 用户认证信息</router-link>
@@ -33,7 +33,9 @@ export default {
     name: 'sidebar',
     data() { 
         return {
-
+            isActive1:false,
+            isActive2:false,
+            isActive3:false,
         }
     },
     mounted:function(){
@@ -48,25 +50,19 @@ export default {
             // console.log(suffix);
             // 一级标题高亮
             if(suffix.indexOf('/out/sale')!=-1){
-                self.$refs.outSale.style.color = '#fff'; 
-                self.$refs.outSale.style.background = '#f71327';
+                self.isActive1=true;
             }else{
-                self.$refs.outSale.style.color = '#555';
-                self.$refs.outSale.style.background = '#fdeaea';
+                self.isActive1=false;
             }
             if(suffix.indexOf('/in/check')!=-1){
-                self.$refs.inCheck.style.color = '#fff';
-                self.$refs.inCheck.style.background = '#f71327';
+                self.isActive2=true;
             }else{
-                self.$refs.inCheck.style.color = '#555';
-                self.$refs.inCheck.style.background = '#fdeaea';
+                self.isActive2=false;
             }
             if(suffix.indexOf('/ident')!=-1){
-                self.$refs.ident.style.color = '#fff';
-                self.$refs.ident.style.background = '#f71327';
+                self.isActive3=true;
             }else{
-                self.$refs.ident.style.color = '#555';
-                self.$refs.ident.style.background = '#fdeaea';
+                self.isActive3=false;
             }
         }
     },
@@ -107,9 +103,17 @@ export default {
         background: #f71327;
     }
 
+    .indexLeft .indexSub:hover .indexSubTitle{
+        border-left: 5px solid #fff;
+    }
+
     .indexLeft .indexSubActive {
         color: #fff;
         background: #f71327;
+    }
+
+    .indexLeft .indexSubActive .indexSubTitle{
+        border-left: 5px solid #fff;
     }
 
     .indexLeft .indexSubNav {

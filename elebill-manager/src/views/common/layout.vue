@@ -76,9 +76,9 @@
 
     .wrap .container {
         min-width: 1280px;
-        min-height: 743px;
+        min-height: 769px;
         background: #f1f1f1;
-        padding: 20px 0;
+        padding: 41px 0 42px;
     }
 
     .wrap .container .indexMain {

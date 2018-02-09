@@ -2,20 +2,31 @@
     export default{
         name:'globalData',
         data:{
-            Ip:'http:/'+'/192.168.11.26',
-            // Ip:'.',
+            // Ip:'http:/'+'/192.168.11.26',
+            // Ip:'http:/'+'/www.elebill.com',
+            // Ip:'http://192.168.11.26',
+            Ip:'.',
             loginStatus:'登录',
         },
         methods:{
-            //  调取接口，获取用户信息
+            //  调取接口，获取用户认证信息
             getUserInfo:function(){
                 var self = this;
-                self.$http.get(globalData.data.Ip+'/user/info',{credentials:true}).then(function(res){ 
-                    console.log(res);   
+                self.$http.get(self.Ip+'/user/info',{credentials:true}).then(function(res){ 
+                    // console.log(res);   
                     self.userName = res.data.data.userName;                          
                     self.userPhone = res.data.data.userPhone;                          
                     self.userEmail = res.data.data.userEmail;                          
+                    self.userAuth = res.data.data.userAuth;                          
+                    self.companyAuth = res.data.data.companyAuth;
+                    localStorage.setItem('eleUserAuth',self.userAuth);                         
+                    localStorage.setItem('eleCompanyAuth',self.companyAuth);                         
                 })
+            },
+            // 获取用户认证信息
+            getAuthInfo:function(){
+                var userAuth = localStorage.getItem('eleUserAuth');     
+                var companyAuth = localStorage.getItem('eleCompanyAuth');     
             },
             bidBill:function(billId){
                  console.log(billId)

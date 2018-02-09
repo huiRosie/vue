@@ -3,22 +3,23 @@
         <div class="accountMain">
             <div class="accountLeft">
                 <div class="accountSubBox">
-                    <div class="accountSub" ref="pub">
+                    <div class="accountSub" :class="{accountSubActive:isActive1}" ref="pub">
                         <h2 class="accountSubTitle">我的发布</h2>
                     </div>
+                    <router-link class="accountSubNav" to="/acc/mypub/accAnn/ontrade">· 待交易</router-link>
                     <router-link class="accountSubNav" ref="pubing" to="/acc/mypub/accAnn/trading">· 交易中</router-link>
-                    <router-link class="accountSubNav" to="/acc/mypub/accAnn/success">· 交易成功</router-link>
-                    <router-link class="accountSubNav" to="/acc/mypub/accAnn/failure">· 交易失败</router-link>
+                    <router-link class="accountSubNav" to="/acc/mypub/accAnn/success">· 交易完成</router-link>
                 </div>
                 <div class="accountSubBox">
-                    <div class="accountSub" ref="buy">
-                        <h2 class="accountSubTitle">我是买家</h2>
+                    <div class="accountSub" :class="{accountSubActive:isActive2}" ref="buy">
+                        <h2 class="accountSubTitle">我的收票</h2>
                     </div>
-                    <router-link class="accountSubNav" to="/acc/buy/accOffer/publish">· 我竞价的汇票</router-link>
-                    <router-link class="accountSubNav" to="/acc/buy/accBuy/success">· 我买到的汇票</router-link>	
+                    <router-link class="accountSubNav" to="/acc/buy/accBuy/quote">· 我的竞价</router-link>
+                    <router-link class="accountSubNav" to="/acc/buy/accBuy/run">· 交易中</router-link>
+                    <router-link class="accountSubNav" to="/acc/buy/accBuy/success">· 交易完成</router-link>	
                 </div>
                 <div class="accountSubBox">
-                    <div class="accountSub" ref="set">
+                    <div class="accountSub" :class="{accountSubActive:isActive3}" ref="set">
                         <h2 class="accountSubTitle">账户设置</h2>
                     </div>
                     <router-link class="accountSubNav" to="/acc/set/accInfo">· 账户信息</router-link>
@@ -40,7 +41,9 @@ export default {
     name: 'Account',
     data () {
         return {
-            
+            isActive1:false,
+            isActive2:false,
+            isActive3:false
         }
     },
     mounted:function(){
@@ -55,30 +58,24 @@ export default {
             //首次进入
             if(suffix.length==4&&suffix=='/acc'){
                 suffix = '/acc/set/accInfo';
-                // self.$refs.pubing.style.color = '#f71327';
             }
+
             // console.log(suffix);
             // 一级标题高亮
             if(suffix.indexOf('mypub')!=-1){
-                self.$refs.pub.style.color = '#fff'; 
-                self.$refs.pub.style.background = '#f71327';
+                self.isActive1 = true
             }else{
-                self.$refs.pub.style.color = '#555';
-                self.$refs.pub.style.background = '#fdeaea';
+                self.isActive1 = false
             }
             if(suffix.indexOf('buy')!=-1){
-                self.$refs.buy.style.color = '#fff';
-                self.$refs.buy.style.background = '#f71327';
+                self.isActive2 = true
             }else{
-                self.$refs.buy.style.color = '#555';
-                self.$refs.buy.style.background = '#fdeaea';
+                self.isActive2 = false
             }
             if(suffix.indexOf('set')!=-1){
-                self.$refs.set.style.color = '#fff';
-                self.$refs.set.style.background = '#f71327';
+                self.isActive3 = true
             }else{
-                self.$refs.set.style.color = '#555';
-                self.$refs.set.style.background = '#fdeaea';
+                self.isActive3 = false
             }
         },
         getOfferList:function(current,billStatus){
@@ -100,9 +97,6 @@ export default {
     },
     watch:{
         "$route": "subLight",
-        // "$route"(to,from,next){
-            
-        // }
 
     }
 }
@@ -126,7 +120,7 @@ export default {
 
     .account .accountMain .accountLeft {
         width: 280px;
-        height: 638px;
+        height: 696px;
         float: left;
         margin-right: 18px;
         background: white;
@@ -159,6 +153,14 @@ export default {
         background: #f71327;
     }
 
+    .account .accountMain .accountLeft .accountSubActive .accountSubTitle{
+        border-left: 5px solid #fff;
+    }
+
+    .account .accountMain .accountLeft .accountSub:hover .accountSubTitle{
+        border-left: 5px solid #fff;
+    }
+
     .account .accountMain .accountLeft .accountSubNav {
         width: 280px;
         height: 58px;
@@ -172,7 +174,8 @@ export default {
 
     .account .accountMain .accountRight {
         width: 982px;
-        min-height: 357px;
+        height: 696px;
         float: left;
+        background: #fff;
     }
 </style>

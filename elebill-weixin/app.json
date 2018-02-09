@@ -1,0 +1,14 @@
+{
+  "pages":[
+    "pages/index/index",
+    "pages/billDetail/billDetail"
+  ],
+  "window":{
+    "backgroundTextStyle":"dark",
+    "navigationBarBackgroundColor": "#f71327",
+    "navigationBarTitleText": "一笔汇票库",
+    "navigationBarTextStyle":"#f71327",
+    "enablePullDownRefresh":"true",
+    "backgroundColor":"#f71327"
+  }
+}

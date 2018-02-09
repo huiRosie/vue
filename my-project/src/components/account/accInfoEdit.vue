@@ -35,6 +35,14 @@
                 </li>
                 <li class="accInfoEditItem">
                     <div class="accInfoEditItem_label">
+                        微信：
+                    </div>
+                    <div class="accInfoEditItem_text">
+                        <input type="text" v-model="wexin" value="" />
+                    </div>
+                </li>
+                <li class="accInfoEditItem">
+                    <div class="accInfoEditItem_label">
                         Email：
                     </div>
                     <div class="accInfoEditItem_text">
@@ -59,6 +67,7 @@ export default {
             realName:'',
             userName:'',
             userPhone:'',
+            wexin:'',
             userEmail:'',
         }
     },
@@ -74,6 +83,7 @@ export default {
                 self.realName = res.data.data.realName;                          
                 self.userName = res.data.data.userName;                          
                 self.userPhone = res.data.data.userPhone;                          
+                self.wexin = res.data.data.wexin;                          
                 self.userEmail = res.data.data.userEmail;                          
             })
         },
@@ -85,6 +95,7 @@ export default {
                     userName:self.userName,
                     realName:self.realName,
                     userPhone:self.userPhone,
+                    wexin:self.wexin,
                     userEmail:self.userEmail
                 },{emulateJSON:true,credentials:true}).then(function(res){ 
                     console.log(res)
@@ -112,14 +123,12 @@ export default {
         height: 58px;
         line-height: 58px;
         padding: 0 20px;
-        margin-bottom: 1px;
-        background: white;
+        border-bottom: 1px solid #eee;
     }
 
     .accInfoEdit .accInfoEditMain {
         width: 100%;
         height: auto;
-        background: white;
     }
 
     .accInfoEdit .accInfoEditMain .accInfoEditTop {

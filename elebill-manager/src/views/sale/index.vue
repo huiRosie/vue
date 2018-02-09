@@ -2,15 +2,15 @@
     <div class="sale">
         <div v-if="billStatus=='publishing'" class="topNav">
             <span>出票中心</span> > 
-            <span>出售中的汇票</span>
+            <span>待交易</span>
         </div>        
         <div v-if="billStatus=='ordering'" class="topNav">
             <span>出票中心</span> > 
-            <span>我预选的汇票</span>
+            <span>交易中</span>
         </div>        
         <div v-if="billStatus=='finish'" class="topNav">
             <span>出票中心</span> > 
-            <span>已完成的汇票</span>
+            <span>交易完成</span>
         </div>
         <!-- 出售中的汇票 -->
         <ul class="saleMain" v-if="billStatus=='publishing'">
@@ -25,72 +25,59 @@
             </li>
             <li class="saleItem" v-for="billItem in billList" :key="billItem.billId">
                 <div class="saleItemNav saleItemType">{{billItem.billClassify}}</div>
-                <div class="saleItemNav saleItemTerm">{{billItem.billTradeType}}</div>
-                <div class="saleItemNav saleItemIsti">{{billItem.billAcceptOrg}}</div>
-                <div class="saleItemNav saleItemMoney">{{billItem.billMoney}}</div>
+                <div v-if="billItem.billQuoteType=='fixed'" class="saleItemNav saleItemTerm"><span>{{billItem.billFixedPrice}}</span>元/每十万加</div>
+                <div v-else class="saleItemNav saleItemTerm">竞价</div>
+                <div class="saleItemNav saleItemIsti">{{billItem.billUserName}}</div>
+                <div v-if="billItem.billMoney<=10000" class="saleItemNav saleItemMoney">{{billItem.billMoney}}</div>
+                <div v-if="billItem.billMoney>10000" class="saleItemNav saleItemMoney">{{billItem.billMoney/10000}}万</div>
                 <div class="saleItemNav saleItemDeadilne">{{billItem.billExpire}}</div>
-                <div class="saleItemNav saleItemNum">{{billItem.billQuoteCount}}</div>
+                <div v-if="billItem.billQuoteType=='fixed'" class="saleItemNav saleItemNum">一口价</div>
+                <div v-else class="saleItemNav saleItemNum">{{billItem.billQuoteCount}}</div>
                 <div class="saleItemNav saleItemOperate">
                     <a class="saleItem_scan" @click="scanDetail(billItem.billId)">汇票详情</a>
-                    <a class="saleItem_offer" @click="quoteList(billItem.billId)">报价详情</a>
+                    <a class="saleItem_offer" disabled v-if="billItem.billQuoteType=='fixed'">报价详情</a>
+                    <a class="saleItem_offer" v-else @click="quoteList(billItem.billId)">报价详情</a>
                 </div>
             </li>
             <li class="saleItem" v-if="billList.length<=0">
                 <div class="saleItemNav saleItemType">暂无数据</div>
             </li>
         </ul>
-        <!-- 我预选的报价汇票 -->
-        <ul class="preMain" v-if="billStatus=='ordering'">
+        <!-- 交易中 交易完成 汇票 -->
+        <ul class="preMain" v-else>
             <li class="preItem preTitle">
-                <div class="preItemNav preItemName">出票人全称</div>
+                <div class="preItemNav preItemType">汇票类型</div>
+                <div class="preItemNav preItemTerm">交易方式</div>
+                <div class="preItemNav preItemIsti">承兑机构</div>
                 <div class="preItemNav preItemMoney">票面金额(元)</div>
-                <div class="preItemNav preItemDeadline">剩余天数（天）</div>
-                <div class="preItemNav preItemUser">报价用户</div>
-                <div class="preItemNav preItemIntere">报价利率</div>
-                <div class="preItemNav preItemTel">联系电话</div>
+                <div class="preItemNav preItemDeadline">到期时间</div>
+                <div class="preItemNav preItemNum">贴现金额（元）</div>
+                <div class="preItemNav preItemNum">票据状态</div>
                 <div class="preItemNav preItemOperate">操作</div>
             </li>
-            <li class="preItem" v-for="billOrdItem in billList" :key="billOrdItem.quoteId">
-                <div class="preItemNav preItemName">{{billOrdItem.billUserName}}</div>
-                <div class="preItemNav preItemMoney">{{billOrdItem.billMoney}}</div>
-                <div class="preItemNav preItemDeadline" v-if="countDown(billOrdItem.billExpire)>0">{{countDown(billOrdItem.billExpire)}}</div>
-                <div class="preItemNav preItemDeadline" v-else>已到期</div>
-                <div class="preItemNav preItemUser">{{billOrdItem.userName}}</div>
-                <div class="preItemNav preItemIntere">{{billOrdItem.quoteRate}}%</div>
-                <div class="preItemNav preItemTel">{{billOrdItem.userPhone}}</div>
+            <li class="preItem" v-for="billItem in billList" :key="billItem.orderId">
+                <div class="preItemNav preItemType">{{billItem.billClassify}}</div>
+                <div v-if="billItem.billQuoteType=='fixed'" class="preItemNav preItemTerm"><span>{{billItem.billFixedPrice}}</span>元/每十万加</div>
+                <div v-else class="preItemNav preItemTerm">竞价</div>
+                <div class="preItemNav preItemIsti">{{billItem.billUserName}}</div>
+                <div v-if="billItem.billMoney<=10000" class="preItemNav preItemMoney">{{billItem.billMoney}}</div>
+                <div v-if="billItem.billMoney>10000" class="preItemNav preItemMoney">{{billItem.billMoney/10000}}万</div>
+                <div class="preItemNav preItemDeadilne">{{billItem.billExpire}}</div>
+                <div v-if="billItem.billQuoteType=='fixed'" class="preItemNav preItemNum">{{(billItem.billMoney-(billItem.billMoney/100000)*billItem.billFixedPrice)/10000}}万</div>
+                <div v-else class="preItemNav preItemNum">{{billItem.quoteAmount}}</div>
+                <div v-if="billItem.billStatus=='publishing'" class="preItemNav preItemNum">待交易</div>
+                <div v-if="billItem.billStatus=='ording'" class="preItemNav preItemNum">已下单</div>
+                <div v-if="billItem.billStatus=='paymenting'" class="preItemNav preItemNum">已付款</div>
+                <div v-if="billItem.billStatus=='endorse'" class="preItemNav preItemNum">已背书</div>
+                <div v-if="billItem.billStatus=='success'" class="preItemNav preItemNum">成功</div>
+                <div v-if="billItem.billStatus=='failure'" class="preItemNav preItemNum">失败</div>
                 <div class="preItemNav preItemOperate">
-                    <a class="preItem_scan" @click="quoteDetail(billOrdItem.quoteId)">查看详情</a>
+                    <a v-if="billStatus=='ordering'" class="preItem_scan" @click="scanOrderDetail(billItem.orderId)">订单详情</a>
+                    <a v-if="billStatus=='finish'" class="preItem_scan" @click="scanOrderDetail(billItem.orderId)">订单详情</a>
                 </div>
             </li>
             <li class="preItem" v-if="billList.length<=0">
-                <div class="preItemNav preItemName">暂无数据</div>
-            </li>
-        </ul>
-        <!-- 已完成的汇票 -->
-        <ul class="preMain" v-if="billStatus=='finish'">
-            <li class="preItem preTitle">
-                <div class="preItemNav preItemName">出票人全称</div>
-                <div class="preItemNav preItemMoney">票面金额(元)</div>
-                <div class="preItemNav preItemDeadline">剩余天数（天）</div>
-                <div class="preItemNav preItemUser">报价用户</div>
-                <div class="preItemNav preItemIntere">报价利率</div>
-                <div class="preItemNav preItemTel">联系电话</div>
-                <div class="preItemNav preItemOperate">操作</div>
-            </li>
-            <li class="preItem" v-for="billFinItem in billList" :key="billFinItem.billId">
-                <div class="preItemNav preItemName">{{billFinItem.billUserName}}</div>
-                <div class="preItemNav preItemMoney">{{billFinItem.billMoney}}</div>
-                <div class="preItemNav preItemDeadline" v-if="countDown(billFinItem.billExpire)>0">{{countDown(billFinItem.billExpire)}}</div>
-                <div class="preItemNav preItemDeadline" v-else>已到期</div>
-                <div class="preItemNav preItemUser">{{billFinItem.userName}}</div>
-                <div class="preItemNav preItemIntere">{{billFinItem.quoteRate}}%</div>
-                <div class="preItemNav preItemTel">{{billFinItem.userPhone}}</div>
-                <div class="preItemNav preItemOperate">
-                    <a class="preItem_scan" @click="finishDetail(billFinItem.quoteId)">查看详情</a>
-                </div>
-            </li>
-            <li class="preItem" v-if="billList.length<=0">
-                <div class="preItemNav preItemName">暂无数据</div>
+                <div class="preItemNav preItemType">暂无数据</div>
             </li>
         </ul>
         <Page 
@@ -125,13 +112,23 @@ export default {
         getBillList:function(current){
             var self = this;
             self.billStatus = self.$route.params.billStatus;
+            var billStatus;          
+            if(self.billStatus=='publishing'){
+                billStatus='待交易'
+            }         
+            if(self.billStatus=='ordering'){
+                billStatus='交易中'
+            }         
+            if(self.billStatus=='finish'){
+                billStatus='交易完成'
+            }  
             //调用接口  获取票据列表
             fetchOutBillList({
-                billStatus:self.billStatus,
+                billStatus:billStatus,
                 currentPage:current,
                 pageSize:8
             },{emulateJSON:true,credentials:true}).then(function(res){
-                // console.log(res)
+                console.log(res)
                 if(res.data.code==200){
                     self.billList = res.data.data.recordList;
                     self.total = res.data.data.totalCount;
@@ -139,6 +136,9 @@ export default {
             },function(error){
                 console.log(error);  
             })
+        },
+        scanOrderDetail:function(orderId){
+            this.$router.push({name:'SaleOrderDet',params:{orderId:orderId}})
         },
         scanDetail:function(billId){
             this.$router.push({name:'SaleDet',params:{billId:billId}})
@@ -175,11 +175,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     .pageBox {
-    display: block;
-    min-width: 128px;
-    padding-bottom: 30px;
-    margin: 30px auto 0;
-    /* float: right; */
+        display: block;
+        min-width: 128px;
+        margin:40px 20px;
+        float: right;
     }
 
     .sale {
@@ -205,7 +204,7 @@ export default {
         height: 58px;
         line-height: 30px;
         padding: 14px 0;
-        margin-bottom: 2px;
+        border-bottom: 1px solid #eee;
         background: white;
     }
 
@@ -214,6 +213,16 @@ export default {
         height: 30px;
         text-align: center;
         float: left;
+    }
+
+    .sale .saleMain .saleItem .saleItemNav:nth-child(3) {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    
+    .sale .saleMain .saleItem .saleItemNav span{
+        color: #f71327;
     }
 
     .sale .saleMain .saleItem .saleItemNum {
@@ -251,6 +260,7 @@ export default {
     .sale .saleMain .saleTitle {
         font-size: 16px;
         background: #fdeaea;
+        color: #333;
     }
 
     
@@ -264,28 +274,30 @@ export default {
         height: 58px;
         line-height: 30px;
         padding: 14px 0;
-        margin-bottom: 2px;
+        border-bottom: 1px solid #eee;
         background: white;
     }
 
     .sale .preMain .preItem .preItemNav {
-        width: 140px;
+        width: 132px;
         height: 30px;
         text-align: center;
         float: left;
+        padding: 0 10px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        padding: 0 10px;
     }
 
-    .sale .preMain .preItem .preItemNav:first-child{
-        width: 180px;
+    .sale .preMain .preItem .preItemNav:nth-child(1),
+    .sale .preMain .preItem .preItemNav:nth-child(7){
+        width: 90px;
     }
 
-    .sale .preMain .preItem .preItemNav:nth-child(5){
-        width: 100px;
+    .sale .preMain .preItem .preItemNav:nth-child(3){
+        width: 142px;
     }
+
 
     .sale .preMain .preItem .preItemOperate a:hover {
         color: #ff8000;
@@ -306,5 +318,6 @@ export default {
         font-size: 16px;
         background: #fdeaea;
         font-weight: 500;
+        color: #333;
     }
 </style>

@@ -6,98 +6,136 @@
             <span>立即审核</span>
         </div>
         <div class="checkDetMain">
-            <!--背书文件-->
-            <div class="checkDetAttach">
-                <h3 class="checkDetAttachTitle">背书文件</h3>
-                <div class="checkDetAttachInfo">
-                    <img v-if="billInfo.billEvidence!=null&&billInfo.billEvidence!=''&&billInfo.billEvidence.indexOf('http://')==-1&&billInfo.billEvidence.indexOf('https://')==-1" :src="'http://'+billInfo.billEvidence"/>
-                    <img v-else :src="billInfo.billEvidence"/>
-                </div>
-            </div>
             <!--审核录入-->
-            <div class="checkDet">
-                <h3 class="checkDetTitle">汇票信息</h3>
+            <div class="checkDetBox">
+                <h3 class="checkDetTitle">汇票审核</h3>
                 <div class="checkDetInfo">
-                    <div class="checkDetInfoRight">
-                        <img v-if="billInfo.billImg!=null&&billInfo.billImg!=''&&billInfo.billImg.indexOf('http://')==-1&&billInfo.billImg.indexOf('https://')==-1" :src="'http://'+billInfo.billImg" @click="viewImg" />
-                        <img v-else :src="billInfo.billImg" @click="viewImg" />
-                        <Modal title="查看大图" v-model="visible" width='1080' class-name="vertical-center-modal">
-                            <img v-if="billInfo.billImg!=null&&billInfo.billImg.indexOf('http://')==-1&&billInfo.billImg.indexOf('https://')==-1&&visible" :src="'http://'+billInfo.billImg" style="width: 100%">
-                            <img v-if="billInfo.billImg!=null&&billInfo.billImg.indexOf('http://')!=-1&&visible" :src="billInfo.billImg" style="width: 100%">
-                        </Modal>
-                    </div>
-                    <ul class="checkDetInfoLeft">
-                        <li class="checkDetInfoItem">
-                            <div class="checkDetInfoItem_label">
-                                票面金额：
+                    <div class="checkDetInfoTitle">票据信息</div>
+                    <ul class="checkDetInfoTop">
+                        <li class="checkDetInfoTopItem checkDetInfoTopItemLeft">
+                            <div class="checkDetInfoTopItem_label">票据号</div>
+                            <div class="checkDetInfoTopItem_text">
+                                <input type="text" placeholder="请输入票据号" v-model="billNo">
                             </div>
-                            <div class="checkDetInfoItem_text">
+                        </li>
+                        <li class="checkDetInfoTopItem checkDetInfoTopItemRight">
+                            <div class="checkDetInfoTopItem_label">承兑人</div>
+                            <div class="checkDetInfoTopItem_text">
+                                <input type="text" v-model="billUserName">
+                            </div>
+                        </li>
+                        <li class="checkDetInfoTopItem checkDetInfoTopItemLeft">
+                            <div class="checkDetInfoTopItem_label">票面金额(元)</div>
+                            <div class="checkDetInfoTopItem_text">
                                 <input type="text" v-model="billMoney">
-                                <span>(万元)</span>
                             </div>
                         </li>
-                        <li class="checkDetInfoItem">
-                            <div class="checkDetInfoItem_label">
-                                票据类型：
-                            </div>
-                            <div class="checkDetInfoItem_text">
-                                <select v-model="billClassify" name="">
+                        <li class="checkDetInfoTopItem checkDetInfoTopItemRight">
+                            <div class="checkDetInfoTopItem_label">承兑机构</div>
+                            <div class="checkDetInfoTopItem_text">
+                                <select v-model="billAcceptOrg" name="">
                                     <option disabled>请选择</option>
-                                    <option value="电票">电票</option>
-                                    <option value="纸票">纸票</option>
+                                    <option v-for="orgItem in orgList"  :key="orgItem">{{orgItem}}</option>
                                 </select>
                             </div>
                         </li>
-                        <li class="checkDetInfoItem checkDetInfoExpire">
-                            <div class="checkDetInfoItem_label">
-                                汇票到期日：
-                            </div>
-                            <div class="checkDetInfoItem_text">
-                                <DatePicker  type="date" format='yyyy-MM-dd' v-model="billExpire" placeholder="请选择汇票到期日" style="width:200px;"></DatePicker>
+                        <li class="checkDetInfoTopItem checkDetInfoTopItemLeft">
+                            <div class="checkDetInfoTopItem_label">一口价</div>
+                            <div class="checkDetInfoTopItem_text" style="text-indent:14px;">
+                                <span>{{billFixedPrice}}</span>元/每十万加
                             </div>
                         </li>
-                        <li class="checkDetInfoItem">
-                            <div class="checkDetInfoItem_label">
-                                背书次数：
-                            </div>
-                            <div class="checkDetInfoItem_text">
-                                <input type="text" v-model="billEndorse">
-                            </div>
-                        </li>
-                        <li class="checkDetInfoItem">
-                            <div class="checkDetInfoItem_label">
-                                汇票瑕疵：
-                            </div>
-                            <div class="checkDetInfoItem_text">
-                                <select v-model="billImgHealth" name="">
-                                    <option disabled>请选择</option>
-                                    <option value="无">无</option>
-                                    <option value="有">有</option>
-                                </select>
+                        <li class="checkDetInfoTopItem checkDetInfoTopItemRight">
+                            <div class="checkDetInfoTopItem_label">到期日期</div>
+                            <div class="checkDetInfoTopItem_text">
+                                <DatePicker  type="date" format='yyyy-MM-dd' v-model="billExpire" placeholder="请选择汇票到期日" style="width:290px;margin:2px 0;"></DatePicker>
                             </div>
                         </li>
                     </ul>
+                    <ul class="checkDetInfoBot">
+                        <li class="checkDetInfoBotItem">
+                            <div class="checkDetInfoTopItem_label">贴现金额（元）</div>
+                            <div class="checkDetInfoTopItem_text" style="text-indent:14px;">
+                                {{billMoney-(billMoney/100000)*billFixedPrice}}
+                            </div>
+                        </li>
+                        <li class="checkDetInfoBotItem">
+                            <div class="checkDetInfoTopItem_label">汇票类型</div>
+                            <div class="checkDetInfoTopItem_text">
+                                <select v-model="billClassify" name="">
+                                    <option disabled>请选择</option>
+                                    <option value="银票">银票</option>
+                                    <option value="商票">商票</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li class="checkDetInfoBotItem">
+                            <div class="checkDetInfoTopItem_label">有无回头:</div>
+                            <div class="checkDetInfoTopItem_text">
+                                <RadioGroup v-model="billBackToBack">
+                                    <Radio label="有回头"></Radio>
+                                    <Radio label="无回头"></Radio>
+                                </RadioGroup>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="checkDetInfoImgTitle">电子汇票截图<span>（点击下图查看大图）</span></div>
+                    <div class="checkDetInfoImgBox">
+                        <dl>
+                            <dt>
+                                <img v-if="billInfo.billImg!=null&&billInfo.billImg.indexOf('http://')==-1&&billInfo.billImg.indexOf('https://')==-1" v-bind:src="'http://'+billInfo.billImg" @click="viewImgFront" />
+                                <img v-else v-bind:src="billInfo.billImg" @click="viewImgFront"/>
+                                <Modal 
+                                    title="查看大图" 
+                                    v-model="visible0" 
+                                    width='1080' 
+                                    ok-text='关闭' 
+                                    cancel-text='' 
+                                    class-name="vertical-center-modal">
+                                    <img v-if="billInfo.billImg!=null&&billInfo.billImg.indexOf('http://')==-1&&billInfo.billImg.indexOf('https://')==-1&&visible0" :src="'http://'+billInfo.billImg" style="width: 100%">
+                                    <img v-if="billInfo.billImg!=null&&billInfo.billImg.indexOf('http')!=-1&&visible0" :src="billInfo.billImg" style="width: 100%">
+                                </Modal>
+                            </dt>
+                            <dd>汇票正面</dd>
+                        </dl>
+                        <dl v-if="billInfo.billEndorseImg!=''&&billInfo.billEndorseImg!=null">
+                            <dt>
+                                <img v-if="billInfo.billEndorseImg!=null&&billInfo.billEndorseImg.indexOf('http://')==-1&&billInfo.billEndorseImg.indexOf('https://')==-1" :src="'http://'+billInfo.billEndorseImg" @click="viewImgBack"/>
+                                <img v-else :src="billInfo.billEndorseImg" @click="viewImgBack()"/>
+                                <Modal 
+                                    title="查看大图" 
+                                    v-model="visible1" 
+                                    width='1080' 
+                                    ok-text='关闭' 
+                                    cancel-text='' 
+                                    class-name="vertical-center-modal">
+                                    <img v-if="billInfo.billEndorseImg!=null&&billInfo.billEndorseImg.indexOf('http://')==-1&&billInfo.billEndorseImg.indexOf('https://')==-1&&visible1" :src="'http://'+billInfo.billEndorseImg" style="width: 100%">
+                                    <img v-if="billInfo.billEndorseImg!=null&&billInfo.billEndorseImg.indexOf('http')!=-1&&visible1" :src="billInfo.billEndorseImg" style="width: 100%">
+                                </Modal>
+                            </dt>
+                            <dd>汇票背书</dd>
+                        </dl>
+                        <dl v-if="billInfo.billEvidence!=''&&billInfo.billEvidence!=null">
+                            <dt>
+                                <img v-if="billInfo.billEvidence!=null&&billInfo.billEvidence.indexOf('http://')==-1&&billInfo.billEvidence.indexOf('https://')==-1" :src="'http://'+billInfo.billEvidence" @click="viewImgBack2"/>
+                                <img v-else :src="billInfo.billEvidence" @click="viewImgBack2()"/>
+                                <Modal 
+                                    title="查看大图" 
+                                    v-model="visible2" 
+                                    width='1080' 
+                                    ok-text='关闭' 
+                                    cancel-text='' 
+                                    class-name="vertical-center-modal">
+                                    <img v-if="billInfo.billEvidence!=null&&billInfo.billEvidence.indexOf('http://')==-1&&billInfo.billEvidence.indexOf('https://')==-1&&visible2" :src="'http://'+billInfo.billEvidence" style="width: 100%">
+                                    <img v-if="billInfo.billEvidence!=null&&billInfo.billEvidence.indexOf('http')!=-1&&visible2" :src="billInfo.billEvidence" style="width: 100%">
+                                </Modal>
+                            </dt>
+                            <dd>汇票背书</dd>
+                        </dl>
+                    </div>
                 </div>
-                <ul class="checkDetInfoList">
-                    <li class="checkDetInfoItem">
-                        <div class="checkDetInfoItem_label">
-                            票据号：
-                        </div>
-                        <div class="checkDetInfoItem_text">
-                            <input type="text" v-model="billNo">
-                        </div>
-                    </li>
-                    <li class="checkDetInfoItem">
-                        <div class="checkDetInfoItem_label">
-                            承兑人全称：
-                        </div>
-                        <div class="checkDetInfoItem_text">
-                            <input type="text" v-model="billUserName">
-                        </div>
-                    </li>
-                </ul>
             </div>
-            <!--票据审核-->
+            <!--审核操作-->
             <div class="checkDetBtn">
                 <a class="checkDetBtnRefer" @click="checkModal">审核未通过</a>
                 <a class="checkDetBtnPass" @click="checkSuccess('validate_success')">审核通过</a>
@@ -135,18 +173,27 @@ export default {
     data () {
         return {
             modal:false,
-            billMoney:'',
-            billClassify:'',
-            billExpire:'',
-            billEndorse:'',
-            billImgHealth:'',
             billNo:'',
             billUserName:'',
+            billMoney:'',
+            billAcceptOrg:'国股',
+            billClassify:'银票',
+            billBackToBack:'无回头',
+            billExpire:'',
+            billImg:'',
+            billEvidence:'',
+            billEndorseImg:'',
+            billFixedPrice:'',
             billId:'',
             billInfo:'',
             failText:'',
             billStatus:'',
-            visible: false
+            visible0: false,
+            visible1: false,
+            visible2: false,
+            orgList:[
+                '国股','城商','三农','村镇','财务公司','其他'
+            ]
         }
     },
     created:function(){
@@ -161,15 +208,19 @@ export default {
                 billId:self.billId
             },{emulateJSON:true,credentials:true}).then(function(res){
                 self.billInfo = res.data.data;
-                self.billMoney = self.billInfo.billMoney;
-                self.billClassify = self.billInfo.billClassify;
-                self.billExpire = self.billInfo.billExpire;
-                self.billEndorse = self.billInfo.billEndorse;
-                self.billImgHealth = self.billInfo.billImgHealth;
                 self.billNo = self.billInfo.billNo;
                 self.billUserName = self.billInfo.billUserName;
+                self.billMoney = self.billInfo.billMoney;
+                self.billFixedPrice = self.billInfo.billFixedPrice;
+                self.billAcceptOrg = self.billInfo.billAcceptOrg;
+                self.billClassify = self.billInfo.billClassify;
+                self.billBackToBack = self.billInfo.billReturn;
+                self.billExpire = self.billInfo.billExpire;
+                self.billImg = self.billInfo.billImg;
+                self.billEndorseImg = self.billInfo.billEndorseImg;
+                self.billEvidence = self.billInfo.billEvidence;
                 self.billStatus = self.billInfo.billStatus;
-                // console.log(self.billInfo)
+                console.log(self.billInfo)
             })
         },
         // 票据审核通过
@@ -177,7 +228,14 @@ export default {
             var self = this;
             self.billId = self.$route.params.billId;
             var billId=self.billId;
-            if(self.billMoney==null||self.billClassify==null||self.billExpire==null||self.billEndorse==null||self.billImgHealth==null||self.billNo==null||self.billUserName==null){
+            // console.log(self.billNo)
+            // console.log(self.billMoney)
+            // console.log(self.billClassify)
+            // console.log(self.changeDate(self.billExpire))
+            // console.log(self.billAcceptOrg)
+            // console.log(self.billBackToBack)
+            // console.log(self.billUserName)
+            if(self.billNo==null||self.billMoney==null||self.billClassify==null||self.billExpire==null||self.billAcceptOrg==null||self.billBackToBack==null||self.billUserName==null){
                 self.$Modal.warning({
                     title:'提示',
                     content:'请将汇票信息填写完整'
@@ -191,18 +249,23 @@ export default {
                 billMoney:self.billMoney,
                 billClassify:self.billClassify,
                 billExpire:self.changeDate(self.billExpire),
-                billEndorse:self.billEndorse,
-                billImgHealth:self.billImgHealth,
+                billAcceptOrg:self.billAcceptOrg,
+                billReturn:self.billReturn,
                 billNo:self.billNo,
                 billUserName:self.billUserName
             });
             // console.log(data)
-            checkBill(data,{emulateJSON:true,withCredentials: true}).then(function(res){
-                // console.log(res);
-                self.$router.push('/in/check/validating');
+            self.$Modal.confirm({
+                title:'提示',
+                content:'您确定收入当前汇票吗？',
+                onOk:function(){
+                    console.log(1);
+                    checkBill(data,{emulateJSON:true,withCredentials: true}).then(function(res){
+                        console.log(res);
+                        self.$router.push('/in/check/validating');
+                    })
+                }
             })
-            
-            
         },
         // 票据审核未通过
         checkFail:function(checkStatus){
@@ -215,13 +278,21 @@ export default {
                 billStatus:checkStatus,
                 billMoney:self.billMoney,
                 billClassify:self.billClassify,
-                billExpire:null,
-                billEndorse:self.billEndorse,
-                billImgHealth:self.billImgHealth,
+                billExpire:self.changeDate(self.billExpire),
+                billAcceptOrg:self.billAcceptOrg,
+                billReturn:self.billReturn,
                 billNo:self.billNo,
-                billUserName:self.billUserName
+                billUserName:self.billUserName,
+                billDesc:self.failText
             });
             // console.log(data)
+            if(self.failText==''){
+                self.$Modal.warning({
+                    title:'提示',
+                    content:'请输入审核失败原因！'
+                })
+                return;
+            }
             checkBill(data,{emulateJSON:true,withCredentials: true}).then(function(res){
                 // console.log(res);
                 self.modal = false;
@@ -244,15 +315,21 @@ export default {
             return  num > 9 ? num : '0'+num 
         },
         // 预览图片
-        viewImg:function(){
-            this.visible = true;
+        viewImgFront:function(){
+            this.visible0 = true;
         },
+        viewImgBack:function(){
+            this.visible1 = true;
+        },
+        viewImgBack2:function(){
+            this.visible2 = true;
+        }
     }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="less" scoped>
     .vertical-center-modal{
         display: flex;
         align-items: center;
@@ -265,171 +342,185 @@ export default {
     .checkDet {
         width: 982px;
         height: auto;
+        .topNav{
+            width: 100%;
+            height: 58px;
+            line-height: 30px;
+            padding: 14px 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .checkDetMain {
+            width: 100%;
+            height: 638px;
+            .checkDetBox {
+                width: 982px;
+                height: auto;
+                padding: 20px 30px 30px;
+                margin: 0 auto;
+                overflow: hidden;
+                .checkDetTitle {
+                    width: 100%;
+                    height: 20px;
+                    line-height: 20px;
+                    font-size: 16px;
+                    text-indent: 10px;
+                    font-weight: 600;
+                    margin-bottom: 15px;
+                    border-left: 5px solid #f71327;
+                }
+                .checkDetInfo {
+                    width: 100%;
+                    height: auto;
+                    overflow: hidden;
+                    border: 1px solid #eee;
+                    .checkDetInfoTitle{
+                        width: 100%;
+                        height: 43px;
+                        line-height: 42px;
+                        text-align: center;
+                        background: #f8f8f8;
+                        border-bottom: 1px solid #eee;
+                    }
+                    .checkDetInfoTop{
+                        width: 100%;
+                        height: 148px;
+                        overflow: hidden;
+                        border-bottom: 1px solid #eee;
+                        .checkDetInfoTopItem{
+                            width: 455px;
+                            height: 50px;
+                            line-height: 50px;
+                            float: left;
+                            overflow: hidden;
+                            border-bottom: 1px solid #eee;
+                            .checkDetInfoTopItem_label{
+                                width: 162px;
+                                text-align: center;
+                                float: left;
+                                border-right: 1px solid #eee;
+                                border-bottom: 1px solid #eee;
+                            }
+                            .checkDetInfoTopItem_text{
+                                width: 292px;
+                                float: left;
+                                border-right: 1px solid #eee;
+                                border-bottom: 1px solid #eee;
+                                span{
+                                    color: #f71327;
+                                }
+                                input{
+                                    width: 291px;
+                                    border: 0;
+                                    text-indent: 14px;
+                                }
+                                select{
+                                    width: 291px;
+                                    height: 48px;
+                                    border: 0;
+                                    text-indent: 14px;
+                                }
+                            }
+                        }
+                        .checkDetInfoTopItemLeft{
+                            margin-right: 10px;
+                            .checkDetInfoTopItem_text{
+                                border-right: 1px solid #eee;
+                            }
+                        }
+                        .checkDetInfoTopItemRight{
+                            .checkDetInfoTopItem_label{
+                                border-left: 1px solid #eee;
+                            }
+                            .checkDetInfoTopItem_text{
+                                border-right: 0;
+                            }
+                        }
+                    }
+                    .checkDetInfoBot{
+                        width: 100%;
+                        height: 48px;
+                        line-height: 48px;
+                        overflow: hidden;
+                        border-bottom: 1px solid #eee;
+                        .checkDetInfoBotItem{
+                            width: 260px;
+                            height: 48px;
+                            float: left;
+                            margin-right: 10px;
+                            .checkDetInfoTopItem_label{
+                                width: 120px;
+                                float: left;
+                                text-align: center;
+                                border-right: 1px solid #eee;
+                            }
+                            .checkDetInfoTopItem_text{
+                                width: 140px;
+                                float: left;
+                                border-right: 1px solid #eee;
+                                select{
+                                    border: 0;
+                                    width: 138px;
+                                    text-indent: 14px;
+                                }
+                            }
+                        }
+                        .checkDetInfoBotItem:nth-child(2){
+                            .checkDetInfoTopItem_label{
+                                border-left: 1px solid #eee;
+                            }
+                        }
+                        .checkDetInfoBotItem:last-child{
+                            width: 380px;
+                            height: 48px;
+                            float: left;
+                            margin: 0;
+                            .checkDetInfoTopItem_label{
+                                border: 0;
+                                border-left: 1px solid #eee;
+                            }
+                            .checkDetInfoTopItem_text{
+                                border: 0;
+                            }
+                        }
+                    }
+                    .checkDetInfoImgTitle{
+                        width: 100%;
+                        height: 43px;
+                        line-height: 42px;
+                        text-align: center;
+                        background: #f8f8f8;
+                        border-bottom: 1px solid #eee;
+                    }
+                    .checkDetInfoImgBox{
+                        width: 100%;
+                        height: 180px;
+                        overflow: hidden;
+                        padding: 38px 44px;
+                        dl{
+                            float: left;
+                            margin-right: 69px;
+                            dt{
+                                margin-bottom: 14px;
+                                img{
+                                    display: block;
+                                    width: 142px;
+                                    height: 80px;
+                                    cursor: pointer;
+                                }
+                            }
+                            dd{
+                                text-align: center;
+                            }
+                        }
+                        dl:last-child{
+                            margin: 0;
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    .topNav{
-        width: 100%;
-        height: 58px;
-        line-height: 30px;
-        padding: 14px 30px;
-        background: white;
-        margin-bottom: 1px;
-    }
-
-    .checkDet .checkDetMain {
-        width: 100%;
-        height: 638px;
-        background: white;
-    }
-
-    .checkDet .checkDetMain .checkDet {
-        width: 982px;
-        height: auto;
-        padding: 20px 30px 30px;
-        margin: 0 auto;
-        overflow: hidden;
-    }
-
-    .checkDet .checkDetMain .checkDet .checkDetTitle {
-        width: 100%;
-        height: 20px;
-        line-height: 20px;
-        font-size: 16px;
-        text-indent: 10px;
-        font-weight: 600;
-        margin-bottom: 15px;
-        border-left: 5px solid #f71327;
-    }
-
-    .checkDet .checkDetMain .checkDet .checkDetInfo {
-        width: 100%;
-        height: auto;
-        overflow: hidden;
-    }
-
-    .checkDet .checkDetMain .checkDet .checkDetInfo .checkDetInfoLeft {
-        width: 318px;
-        height: 302px;
-        float: left;
-    }
-
-    .checkDet .checkDetMain .checkDet .checkDetInfo .checkDetInfoLeft .checkDetInfoItem {
-        width: 100%;
-        height: 46px;
-        line-height: 46px;
-        margin-bottom: 13px;
-        overflow: hidden;
-    }
-
-    .checkDet .checkDetMain .checkDet .checkDetInfo .checkDetInfoLeft .checkDetInfoItem .checkDetInfoItem_label {
-        width: 106px;
-        height: 46px;
-        float: left;
-        text-align: right;
-    }
-
-    .checkDet .checkDetMain .checkDet .checkDetInfo .checkDetInfoLeft .checkDetInfoItem .checkDetInfoItem_text {
-        width: 202px;
-        height: 46px;
-        float: left;
-        border: 1px solid #999;
-        border-radius: 4px;
-    }
-
-    .checkDet .checkDetMain .checkDet .checkDetInfo .checkDetInfoLeft .checkDetInfoItem .checkDetInfoItem_text input,
-    .checkDet .checkDetMain .checkDet .checkDetInfo .checkDetInfoLeft .checkDetInfoItem .checkDetInfoItem_text select{
-        width: 200px;
-        height: 44px;
-        float: left;
-        display: block;
-        border-radius: 4px;
-        border: 0;
-        text-indent: 14px;
-    }
-
-    .checkDet .checkDetMain .checkDet .checkDetInfo .checkDetInfoLeft .checkDetInfoExpire .checkDetInfoItem_text{
-        border: 0;
-    }
-
-    .checkDet .checkDetMain .checkDet .checkDetInfo .checkDetInfoRight {
-        width: 529px;
-        height: 302px;
-        float: left;
-    }
-
-    .checkDet .checkDetMain .checkDet .checkDetInfo .checkDetInfoRight img {
-        display: block;
-        width: 529px;
-        height: 302px;
-    }
-
-    .checkDet .checkDetMain .checkDet .checkDetInfoList{
-        width: 100%;
-        height: 46px;
-        overflow: hidden;
-        margin-top: 20px;
-    }
-
-    .checkDet .checkDetMain .checkDet .checkDetInfoList .checkDetInfoItem{
-        width: 50%;
-        height: 46px;
-        float: left;
-    }
-
-    .checkDet .checkDetMain .checkDet .checkDetInfoList .checkDetInfoItem .checkDetInfoItem_label {
-        width: 106px;
-        height: 46px;
-        float: left;
-        line-height: 46px;
-    }
-
-    .checkDet .checkDetMain .checkDet .checkDetInfoList .checkDetInfoItem .checkDetInfoItem_text {
-        width: 272px;
-        height: 46px;
-        float: left;
-        border: 1px solid #999;
-        border-radius: 4px;
-    }
-
-    .checkDet .checkDetMain .checkDet .checkDetInfoList .checkDetInfoItem .checkDetInfoItem_text input{
-        width: 270px;
-        height: 44px;
-        float: left;
-        display: block;
-        border-radius: 4px;
-        border: 0;
-        text-indent: 14px;
-    }
-
-    .checkDet .checkDetMain .checkDetAttach {
-        width: 982px;
-        height: auto;
-        padding: 20px 30px 0;
-        margin: 0 auto;
-        overflow: hidden;
-    }
-
-    .checkDet .checkDetMain .checkDetAttach .checkDetAttachTitle {
-        width: 100%;
-        height: 20px;
-        line-height: 20px;
-        font-size: 16px;
-        text-indent: 10px;
-        font-weight: 600;
-        margin-bottom: 15px;
-        border-left: 5px solid #f71327;
-    }
-
-    .checkDet .checkDetMain .checkDetAttach .checkDetAttachInfo {
-        padding: 0 10px;
-    }
-
-    .checkDet .checkDetMain .checkDetAttach .checkDetAttachInfo img {
-        display: block;
-        width: 40px;
-        height: 47px;
-        margin-bottom: 10px;
-    }
 
     .checkDet .checkDetMain .checkDetBtn {
         width: 520px;

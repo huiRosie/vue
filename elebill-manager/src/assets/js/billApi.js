@@ -18,6 +18,33 @@ export function fetchPublishBill(query){
     })
 }
 
+// 获取汇票详情
+export function fetchBillDetail(query){
+    return fetch({
+        url:'/manager/bill/center/billinfo',
+        method:'get',
+        params:query
+    })
+}
+
+// 获取订单详情
+export function fetchBillOrderDetail(query){
+    return fetch({
+        url:'/manager/bill/center/orderinfo',
+        method:'get',
+        params:query
+    })
+}
+
+// 获取报价汇票详情
+export function fetchQuoteBillDetail(query){
+    return fetch({
+        url:'/manager/bill/outcenter/quoteinfo',
+        method:'get',
+        params:query
+    })
+}
+
 // 出票中心
 // 获取出票中心汇票列表
 export function fetchOutBillList(query){
@@ -37,7 +64,7 @@ export function fetchQuoteList(query){
     })
 }
 
-//出票中心 竞价列表  预选竞价
+//出票中心 竞价列表  立即下单
 export function fetchPreBill(query){
     return fetch({
         url:'/manager/bill/outcenter/quoteorder',
@@ -46,16 +73,16 @@ export function fetchPreBill(query){
     })
 }
 
-//出票中心 竞价列表  交易失败 交易成功
+//出票中心 竞价列表  撤销竞价
 export function fetchOutTradeBill(query){
     return fetch({
-        url:'/manager/bill/outcenter/quotetrade',
+        url:'/manager/bill/outcenter/quoterevoke',
         method:'post',
         params:query
     })
 }
 
-//出票中心 票据下架  放弃交易
+//出票中心 撤销交易 票据下架  
 export function fetchFailBill(query){
     return fetch({
         url:'/manager/bill/outcenter/billfinish',
@@ -64,32 +91,33 @@ export function fetchFailBill(query){
     })
 }
 
-// 获取汇票详情
-export function fetchBillDetail(query){
+//出票中心 取消交易
+export function fetchRevokeBill(query){
     return fetch({
-        url:'/bill/info',
-        method:'get',
-        params:query
-    })
-}
-
-// 获取报价汇票详情
-export function fetchQuoteBillDetail(query){
-    return fetch({
-        url:'/manager/bill/outcenter/quoteinfo',
-        method:'get',
-        params:query
-    })
-}
-
-// 发布汇票
-export function publishBill(query){
-    return fetch({
-        url:'/bill/publish',
+        url:'/manager/bill/outcenter/orderrevoke',
         method:'post',
-        data:query
+        params:query
     })
 }
+
+//出票中心 撤销竞价
+export function fetchQuoteRevokeBill(query){
+    return fetch({
+        url:'/manager/bill/outcenter/quoterevoke',
+        method:'post',
+        params:query
+    })
+}
+
+//出票中心 票据背书
+export function fetchEndorseBill(query){
+    return fetch({
+        url:'/manager/bill/outcenter/orderendorse',
+        method:'post',
+        params:query
+    })
+}
+
 
 // 收票中心
 // 获取收票中心汇票列表
@@ -98,6 +126,15 @@ export function fetchInBillList(query){
         url:'/manager/bill/incenter',
         method:'get',
         params:query
+    })
+}
+
+//收票中心 交易成功或失败
+export function fetchTradeBill(query){
+    return fetch({
+        url:'/manager/bill/incenter/billtrade',
+        method:'post',
+        data:query
     })
 }
 
@@ -110,14 +147,44 @@ export function checkBill(query){
     })
 }
 
-//收票中心 交易成功或失败
-export function fetchTradeBill(query){
+//收票中心 立即下单
+export function fetchOrderBill(query){
     return fetch({
-        url:'/manager/bill/incenter/billtrade',
+        url:'/manager/bill/incenter/billorder',
         method:'post',
         data:query
     })
 }
+
+//收票中心 完成付款
+export function fetchPaymentBill(query){
+    return fetch({
+        url:'/manager/bill/incenter/billpayment',
+        method:'post',
+        data:query
+    })
+}
+ 
+//收票中心 签收汇票
+export function fetchSignBill(query){
+    return fetch({
+        url:'/manager/bill/incenter/billsign',
+        method:'post',
+        data:query
+    })
+}
+ 
+//收票中心 撤销交易
+export function fetchCancelBill(query){
+    return fetch({
+        url:'/manager/bill/incenter/billrevoke',
+        method:'post',
+        data:query
+    })
+}
+ 
+
+
 
 // 认证审核
 // 用户认证信息列表

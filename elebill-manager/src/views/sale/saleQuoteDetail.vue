@@ -156,15 +156,28 @@ export default {
         // 交易操作 成功 失败
         getOutTradeBill:function(quoteId,tradeStatus){
             var self = this;
-            fetchOutTradeBill({
-                quoteId:quoteId,
-                tradeStatus:tradeStatus,
-                quoteDesc:self.quoteDesc
-            }).then(function(res){
-                // console.log(res)
-                if (res.data.code==200) {
-                    self.$Message.success('操作成功！');
-                    self.$router.push('/out/sale/ordering');
+            var content;
+            if (tradeStatus=='success') {
+                content= '交易成功前请核对您的对公账户是否收到当前汇票款项？';
+            } 
+            if(tradeStatus=='failure'){
+                content = '您确定放弃当前汇票交易吗？'
+            }
+            self.$Modal.confirm({
+                title:'提示',
+                content:content,
+                onOk:function(){
+                    fetchOutTradeBill({
+                        quoteId:quoteId,
+                        tradeStatus:tradeStatus,
+                        quoteDesc:self.quoteDesc
+                    }).then(function(res){
+                        console.log(res)
+                        if (res.data.code==200) {
+                            self.$Message.success('操作成功！');
+                            self.$router.push('/out/sale/ordering');
+                        }
+                    })
                 }
             })
         }
@@ -184,14 +197,12 @@ export default {
         height: 58px;
         line-height: 30px;
         padding: 14px 30px;
-        background: white;
-        margin-bottom: 1px;
+        border-bottom: 1px solid #eee;
     }
 
     .saleQDet .saleQDetMain {
         width: 100%;
         height: 638px;
-        background: white;
     }
 
     .saleQDet .saleQDetMain .saleQDet {

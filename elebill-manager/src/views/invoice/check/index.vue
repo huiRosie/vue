@@ -3,30 +3,42 @@
         <div class="topNav">
             <span>收票中心</span> > 
             <span v-if="billStatus=='validating'">待审核</span>
-            <span v-if="billStatus=='validate_success'">待处理</span>
-            <span v-if="billStatus=='success'">交易成功</span>
-            <span v-if="billStatus=='failure'">交易失败</span>
+            <span v-if="billStatus=='validate_success'">待交易</span>
+            <span v-if="billStatus=='ording'">交易中</span>
+            <span v-if="billStatus=='success'">交易完成</span>
         </div>
         <ul class="checkMain">
             <li class="checkItem checkTitle">
-                <div class="checkItemNav checkItemName">出票人全称</div>
-                <div class="checkItemNav checkItemArea">交易区域</div>
-                <div class="checkItemNav checkItemMoney">票面金额</div>
-                <div class="checkItemNav checkItemDeadline">到期时间</div>
                 <div class="checkItemNav checkItemUp">上传日期</div>
+                <div class="checkItemNav checkItemName">票据类型</div>
+                <div class="checkItemNav checkItemArea">交易方式</div>
+                <div class="checkItemNav checkItemName">承兑机构</div>
+                <div class="checkItemNav checkItemMoney">票面金额(元)</div>
+                <div class="checkItemNav checkItemDeadline">票据状态</div>
                 <div class="checkItemNav checkItemOperate">操作</div>
             </li>
             <li class="checkItem" v-if="billList.length>0" v-for="billItem in billList" :key="billItem.billId">
-                <div class="checkItemNav checkItemName">{{billItem.billUserName}}</div>
-                <div class="checkItemNav checkItemArea">{{billItem.billTradeArea}}</div>
-                <div class="checkItemNav checkItemMoney">{{billItem.billMoney}}</div>
-                <div class="checkItemNav checkItemDeadline">{{billItem.billExpire}}</div>
                 <div class="checkItemNav checkItemUp">{{billItem.publishDate}}</div>
+                <div class="checkItemNav checkItemName">{{billItem.billClassify}}</div>
+                <div v-if="billItem.billQuoteType=='fixed'" class="checkItemNav checkItemArea"><span>{{billItem.billFixedPrice}}</span>元/每十万加</div>
+                <div v-else class="checkItemNav checkItemArea">竞价</div>
+                <div class="checkItemNav checkItemName">{{billItem.billUserName}}</div>
+                <div v-if="billItem.billMoney<=10000" class="checkItemNav checkItemMoney">{{billItem.billMoney}}</div>
+                <div v-if="billItem.billMoney>10000" class="checkItemNav checkItemMoney">{{billItem.billMoney/10000}}万</div>
+                <div v-if="billItem.billStatus=='validating'" class="checkItemNav checkItemDeadline">待审核</div>
+                <div v-if="billItem.billStatus=='validate_success'" class="checkItemNav checkItemDeadline">待交易</div>
+                <div v-if="billItem.billStatus=='ording'" class="checkItemNav checkItemDeadline">待付款</div>
+                <div v-if="billItem.billStatus=='paymenting'" class="checkItemNav checkItemDeadline">待背书</div>
+                <div v-if="billItem.billStatus=='endorse'" class="checkItemNav checkItemDeadline">待签收</div>
+                <div v-if="billItem.billStatus=='success'" class="checkItemNav checkItemDeadline">交易成功</div>
+                <div v-if="billItem.billStatus=='failure'" class="checkItemNav checkItemDeadline">交易失败</div>
                 <div class="checkItemNav checkItemOperate">
                     <a v-if="billItem.billStatus=='validating'" class="checkItem_check" @click="checkBill(billItem.billId)">立即审核</a>
-                    <a v-if="billItem.billStatus=='validate_success'" class="checkItem_check" @click="handelBill(billItem.billId)">立即处理</a>
-                    <a v-if="billItem.billStatus=='success'" class="checkItem_check" @click="handelBill(billItem.billId)">查看详情</a>
-                    <a v-if="billItem.billStatus=='failure'" class="checkItem_check" @click="handelBill(billItem.billId)">查看详情</a>
+                    <a v-if="billItem.billStatus=='validate_success'" class="checkItem_check" @click="handelBill(billItem.billId)">立即下单</a>
+                    <a v-if="billItem.billStatus=='ording'" class="checkItem_check" @click="handelBill(billItem.billId)">订单详情</a>
+                    <a v-if="billItem.billStatus=='paymenting'" class="checkItem_check" @click="handelBill(billItem.billId)">订单详情</a>
+                    <a v-if="billItem.billStatus=='endorse'" class="checkItem_check" @click="handelBill(billItem.billId)">订单详情</a>
+                    <a v-if="billItem.billStatus=='success'||billItem.billStatus=='failure'" class="checkItem_check" @click="handelBill(billItem.billId)">订单详情</a>
                 </div>
             </li>
             <li class="checkItem" v-if="billList.length<=0" >
@@ -66,10 +78,23 @@ export default {
         getBillList:function(current){
             var self = this;
             self.billStatus = self.$route.params.billStatus;
+            var billStatus;
+            if(self.billStatus=='validating'){
+                billStatus= '待审核';
+            }
+            if(self.billStatus=='validate_success'){
+                billStatus= '待交易';
+            }
+            if(self.billStatus=='ording'){
+                billStatus= '交易中';
+            }
+            if(self.billStatus=='success'){
+                billStatus= '交易完成';
+            }
             // console.log(self.billStatus)
             //调用接口  获取票据列表
             fetchInBillList({
-                billStatus:self.billStatus,
+                billStatus:billStatus,
                 currentPage:current,
                 pageSize:8
             }).then(function(res){
@@ -97,9 +122,8 @@ export default {
     .pageBox {
         display: block;
         min-width: 128px;
-        padding-bottom: 30px;
-        margin: 20px auto;
-        /* float: right; */
+        margin:40px 20px;
+        float: right;
     }
 
     .check {
@@ -112,7 +136,6 @@ export default {
         height: 58px;
         line-height: 30px;
         padding: 14px 30px;
-        background: white;
     }
 
     .check .checkMain {
@@ -125,12 +148,11 @@ export default {
         height: 58px;
         line-height: 30px;
         padding: 14px 0;
-        margin-bottom: 2px;
-        background: white;
+        border-bottom: 1px solid #eee;
     }
 
     .check .checkMain .checkItem .checkItemNav {
-        width: 162px;
+        width: 122px;
         height: 30px;
         text-align: center;
         float: left;
@@ -139,6 +161,15 @@ export default {
         white-space: nowrap;
         padding: 0 10px;
     }
+    
+    .check .checkMain .checkItem .checkItemNav:nth-child(3){
+        width: 152px;
+    }
+
+    .check .checkMain .checkItem .checkItemNav:nth-child(4){
+        width: 220px;
+    }
+
 
     .check .checkMain .checkItem .checkItemOperate a {
         display: block;
@@ -169,5 +200,6 @@ export default {
         font-size: 16px;
         background: #fdeaea;
         font-weight: 500;
+        color: #333;
     }
 </style>

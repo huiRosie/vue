@@ -1,5 +1,6 @@
 <template>
     <div class="accountInfo">
+        <h2 class="accountInfoTitle">账户信息</h2>
         <div class="personInfo">
             <div class="perInfoTop">
                 <h2 class="perInfoTitle">个人信息</h2>
@@ -11,7 +12,7 @@
                 <li class="perInfoItem">
                     <div class="perInfoItem_label">昵称：</div>
                     <div class="perInfoItem_text" v-text="userName"></div>
-                    <div class="perInfoItem_des">
+                    <div v-if="(/^[1][3578][0-9]{9}$/).test(userName)" class="perInfoItem_des">
                         （默认为手机号）
                     </div>
                 </li>
@@ -29,6 +30,15 @@
                     </div>
                 </li>
                 <li class="perInfoItem">
+                    <div class="perInfoItem_label">微信：</div>
+                    <div class="perInfoItem_text" v-if="wexin!=''">
+                        {{wexin}}
+                    </div>
+                    <div class="perInfoItem_text" style="fontsize:12px;color:#878787;" v-if="wexin==''||wexin==null">
+                        未填写
+                    </div>
+                </li>
+                <li class="perInfoItem">
                     <div class="perInfoItem_label">邮箱：</div>
                     <div class="perInfoItem_text" v-if="userEmail!=''">
                         {{userEmail}}
@@ -41,12 +51,12 @@
         </div>
         <div class="identInfo">
             <div class="identInfoTop">
-                <h2 class="identInfoTitle">个人信息</h2>
+                <h2 class="identInfoTitle">认证信息</h2>
             </div>
             <ul class="identInfoList">
                 <li class="identInfoItem">
                     <div class="identInfoItem_label">个人认证：</div>
-                    <div v-if="userAuth ==''||userAuth ==null">
+                    <div v-if="userAuth ==''||userAuth ==null||userAuth =='unauth'">
                         <div class="identInfoItem_text">
                             未认证
                         </div>
@@ -75,7 +85,7 @@
                 </li>
                 <li class="identInfoItem">
                     <div class="identInfoItem_label">企业认证：</div>
-                    <div v-if="companyAuth ==''||companyAuth ==null">
+                    <div v-if="companyAuth ==''||companyAuth ==null||companyAuth =='unauth'">
                         <div class="identInfoItem_text">
                             未认证
                         </div>
@@ -118,6 +128,7 @@ export default {
             realName:'',
             userName:'',
             userPhone:'',
+            wexin:'',
             userEmail:'',
             blCompanyName:'',
             companyAuth:'',
@@ -132,18 +143,13 @@ export default {
         getUserInfo:function(){
             var self = this;
             self.$http.get(globalData.data.Ip+'/user/info',{credentials:true}).then(function(res){ 
-                console.log(res);   
-                if(res.data.data=='用户未登录'){
-                    self.$Modal.warning({
-                        title: '提示',
-                        content: '您还未登录，请您登录后再查看，谢谢！',
-                        onOk: function(){
-                            self.$router.push('/login');
-                        },
-                    })
+                console.log(res);    
+                if(res.data.code==555){
+                    self.$router.push('/login');
                 }
                 self.userName = res.data.data.userName;                          
                 self.userPhone = res.data.data.userPhone;                          
+                self.wexin = res.data.data.wexin;                          
                 self.userEmail = res.data.data.userEmail;         
                 self.realName = res.data.data.realName;                 
                 self.companyAuth = res.data.data.companyAuth;         
@@ -162,12 +168,19 @@ export default {
         height: auto;
     }
 
+    .accountInfo .accountInfoTitle{
+        width: 982;
+        height: 58px;
+        line-height: 58px;
+        padding: 0 20px;
+        border-bottom: 1px solid #eee;
+    }
+
     .accountInfo .personInfo {
         padding: 20px;
         width: 982px;
         height: 254px;
-        background: white;
-        margin-bottom: 1px;
+        border-bottom: 1px solid #eee;
     }
 
     .accountInfo .personInfo .perInfoTop {

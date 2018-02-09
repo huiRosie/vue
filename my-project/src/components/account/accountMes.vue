@@ -13,6 +13,17 @@
                     </div>
                 </a>
             </div>
+            <div class="page">
+                <Page 
+                ref="pages"
+                class="pageBox" 
+                :total="total" 
+                v-if="total>8"
+                :current="current"
+                :pageSize="8"
+                @on-change="getMesList"
+                ></Page>
+            </div>
         </div>
     </div>
 </template>
@@ -24,19 +35,28 @@ export default {
     name: 'AccountMes',
     data () {
         return {
-            mesList:[]
+            mesList:[],
+            total:0,
+            current:1
         }
     },
     created:function(){
-        this.getMesList()
+        this.getMesList(1)
     },
     methods:{
         // 调取接口，获取消息列表
-        getMesList(){
+        getMesList(current){
             var self = this;
-            self.$http.get(globalData.data.Ip+'/user/message/page',{credentials:true}).then(function(res){ 
-                console.log(res);   
-                self.mesList = res.data.data.recordList;                     
+            self.$http.get(globalData.data.Ip+'/user/message/page',{params:{
+                pageSize:8,
+                currentPage:current
+            },credentials:true}).then(function(res){ 
+                console.log(res);    
+                if(res.data.code==555){
+                    self.$router.push('/login');
+                }
+                self.mesList = res.data.data.recordList;                      
+                self.total = res.data.data.totalCount;                    
             })
         },
         readMesDet:function(mesId){
@@ -48,6 +68,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+    .pageBox {
+        display: block;
+        min-width: 128px;
+        margin: 40px 20px;
+        float: right;
+    }
+
     .accountMes {
         width: 982px;
         height: auto;
@@ -58,14 +85,12 @@ export default {
         height: 58px;
         line-height: 58px;
         padding: 0 20px;
-        margin-bottom: 1px;
-        background: white;
+        border-bottom: 1px solid #eee;
     }
 
     .accountMes .accMesMain {
         width: 100%;
         height: auto;
-        background: white;
     }
 
     .accountMes .accMesMain .accMesList {

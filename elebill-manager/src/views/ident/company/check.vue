@@ -94,7 +94,7 @@
             <!-- 立即审核 -->
             <div class="checkBtn">
                 <a class="checkBtnFail" @click="bidModal">认证失败</a>
-                <a class="checkBtnSuccess" @click="companyCheck('success')">认证成功</a>
+                <a class="checkBtnSuccess" @click="identSuccess()">认证成功</a>
                 <!-- 点击出现弹框 -->
                 <Modal
                     v-model="modal"
@@ -152,8 +152,26 @@ export default {
             this.modal = true;
         },
         identFail:function(){
+            if(this.companyAuthDesc==''){
+                this.modal = true;
+                this.$Modal.warning({
+                    title:'提示',
+                    content:'请输入认证失败原因！'
+                })
+                return;
+            };
             this.modal = false;
             this.companyCheck('failure');
+        },
+        identSuccess:function(){
+            var self = this;
+            self.$Modal.confirm({
+                title:'提示',
+                content:'认证成功前请核实当前企业信息是否无误？',
+                onOk:function(){
+                    self.companyCheck('success')
+                }
+            })
         },
         companyCheck:function(companyAuth){
             var self = this;
@@ -254,7 +272,7 @@ export default {
     }
 
     .check .checkMain .checkAttach {
-        width: 1220px;
+        width: 943px;
         height: auto;
         padding: 0 30px 30px;
         margin: 0 auto;

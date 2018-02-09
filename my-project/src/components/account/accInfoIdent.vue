@@ -88,7 +88,7 @@
                                     :on-format-error="handleFormatError"
                                     :on-exceeded-size="handleMaxSize" 
                                     type="drag"
-                                    action="http://192.168.11.26/common/upload"
+                                    action="./common/upload"
                                     style="display:inline-block;width:320px;" >
                                     <div style="width:320px;height:198px;line-height:236px;">
                                         <Icon type="ios-plus-empty" class="addIcon" size="60" ></Icon>
@@ -123,15 +123,23 @@ export default {
             // 上传成功
             handleSuccess (res,file,fileList) {
                 this.uploadFrontList = fileList;
-                file.url = "http://"+res.data;
+                // console.log(res.data)
+                if(res.data.indexOf('http://')==-1&&res.data.indexOf('https://')==-1){
+                    file.url = "http://"+res.data;
+                }else{
+                    file.url = res.data;
+                }
                 file.name = res.data;
-                this.frontImg = res.data;
+                this.frontImg = file.url;
             },
             handleSuccessBack (res, file,fileList) {
                 this.uploadBackList = fileList;
-                file.url = "http://"+res.data;
-                file.name = res.data;
-                this.backImg = res.data;
+                if(res.data.indexOf('http://')==-1&&res.data.indexOf('https://')==-1){
+                    file.url = "http://"+res.data;
+                }else{
+                    file.url = res.data;
+                }
+                this.backImg = file.url;
             },
             // 删除照片
             handleRemoveFront () {
@@ -168,8 +176,8 @@ export default {
                     });
                     return;
                 }
-                if(self.idCode==''){
-                    const content = '<p>请输入您的身份证号！</p>';
+                if((/^[0-9]{17}[0-9,xX]{1}$/).test(self.idCode)){
+                    const content = '<p>请正确输入您的身份证号！</p>';
                     this.$Modal.warning({
                         title: title,
                         content: content
@@ -184,19 +192,11 @@ export default {
                     });
                     return;
                 }
-                // if(self.backImg==''){
-                //     const content = '<p>请上传您的身份证反面图片！</p>';
-                //     this.$Modal.info({
-                //         title: title,
-                //         content: content
-                //     });
-                //     return;
-                // }  
                 // 调取接口  个人认证
                 self.$http.post(globalData.data.Ip+'/user/auth/user',
                     {
                         realName:self.realName,
-                        idcard:self.idcard,
+                        idcard:self.idCode,
                         idcardImg:self.frontImg,
                         idcardbgImg:self.backImg
                     },{emulateJSON:true,credentials:true}).then(function(res){ 
@@ -229,15 +229,13 @@ export default {
         height: 58px;
         line-height: 58px;
         padding: 0 20px;
-        margin-bottom: 1px;
-        background: white;
+        border-bottom: 1px solid #eee;
     }
 
     .accInfoIdent .accInfoIdentMain {
         width: 100%;
         height: auto;
         overflow: hidden;
-        background: white;
     }
 
     .accInfoIdent .accInfoIdentMain .accInfoIdentLeft {

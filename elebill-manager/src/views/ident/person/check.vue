@@ -42,6 +42,14 @@
                             {{userInfo.userEmail}}
                         </div>
                     </li>
+                    <li class="checkInfoItem">
+                        <div class="checkInfoItem_label">
+                            身份证号：
+                        </div>
+                        <div class="checkInfoItem_text">
+                            {{userInfo.idcard}}
+                        </div>
+                    </li>
                 </ul>
             </div>
             <!--认证信息-->
@@ -66,7 +74,7 @@
             <!-- 立即审核 -->
             <div class="checkBtn">
                 <a class="checkBtnFail" @click="bidModal">认证失败</a>
-                <a class="checkBtnSuccess" @click="personCheck('success')">认证成功</a>
+                <a class="checkBtnSuccess" @click="identSuccess()">认证成功</a>
                 <!-- 点击出现弹框 -->
                 <Modal
                     v-model="modal"
@@ -124,8 +132,26 @@ export default {
             this.modal = true
         },
         identFail:function(){
+            if(this.userAuthDesc==''){
+                this.modal = true;
+                this.$Modal.warning({
+                    title:'提示',
+                    content:'请输入认证失败原因！'
+                })
+                return;
+            };
             this.modal = false;
             this.personCheck('failure');
+        },
+        identSuccess:function(){
+            var self = this;
+            self.$Modal.confirm({
+                title:'提示',
+                content:'认证成功前请核实当前用户信息是否无误？',
+                onOk:function(){
+                    self.personCheck('success')
+                }
+            })
         },
         personCheck:function(userAuth){
             var self = this;
@@ -155,8 +181,7 @@ export default {
         height: 58px;
         line-height: 30px;
         padding: 14px 30px;
-        background: white;
-        margin-bottom: 1px;
+        border-bottom: 1px solid #eee;
     }
 
     .check .checkMain {
@@ -168,7 +193,7 @@ export default {
     .check .checkMain .check {
         width: 982px;
         height: auto;
-        padding: 20px 30px;
+        padding: 15px 30px 5px;
         margin: 0 auto;
         overflow: hidden;
     }
@@ -224,9 +249,9 @@ export default {
     }
 
     .check .checkMain .checkAttach {
-        width: 1220px;
+        width: 983px;
         height: auto;
-        padding: 0 30px 30px;
+        padding: 0 30px 20px;
         margin: 0 auto;
         overflow: hidden;
     }
@@ -238,7 +263,7 @@ export default {
         font-size: 16px;
         text-indent: 10px;
         font-weight: 600;
-        margin-bottom: 25px;
+        margin-bottom: 15px;
         border-left: 5px solid #f71327;
     }
 
@@ -273,7 +298,6 @@ export default {
         width: 520px;
         height: 108px;
         margin: 0 auto;
-        padding-bottom: 50px;
     }
 
     .check .checkMain .checkBtn .checkBtnFail, 

@@ -13,10 +13,10 @@
                   <router-link class="topSearIn topSearItem" to="/in/check/validating">收票中心</router-link>
                 </div>
                 <div class="topBNav">
-                    <router-link style="display:none;" class="topBNav_mes topBNav_item" to="">
+                    <router-link  class="topBNav_mes topBNav_item" style="display:none;" to="/user/noticeList">
                       <Icon class="topBNavMes" type="chatbubble-working"></Icon>
                     </router-link>
-                    <router-link class="topBNav_name topBNav_item" style="display:none;" to="/user/userInfo">黑不溜秋</router-link>
+                    <router-link class="topBNav_name topBNav_item" style="display:none;"  to="/user/userInfo">黑不溜秋</router-link>
                     <router-link class="topBNav_pass topBNav_item" style="display:none;" to="/user/pwd">修改登录密码</router-link>
                     <a class="topBNav_loginout topBNav_item" @click="loginOut()" >退出登录</a>
                 </div>
@@ -30,7 +30,7 @@
     name: 'top',
     data() { 
       return {
-        oheight:' ' 
+          
       }
     },
     methods: { 
@@ -44,18 +44,19 @@
 
 <style>
     .top {
-        width: 100%;
+        min-width: 1280px;
         height:76px;
         background: #fff;
     }
 
     .top .topB {
-        width: 100%;
+        min-width: 1280px;
         height: 76px;
     }
 
     .top .topB .topBBox {
         width: 1280px;
+        height: 76px;
         margin: 0 auto;
     }
 

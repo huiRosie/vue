@@ -28,7 +28,7 @@
                 <div class="identCompItemNav identCompItemPhone">{{companyItem.userPhone}}</div>
                 <div v-if="companyItem.blCompanyName==null||companyItem.blCompanyName==''" class="identCompItemNav identCompItemEmail">未填写</div>
                 <div v-if="companyItem.blCompanyName!=null" class="identCompItemNav identCompItemEmail">{{companyItem.blCompanyName}}</div>
-                <div v-if="companyItem.companyAuth=='unauth'" class="identCompItemNav identCompItemStatus">未认证</div>
+                <div v-if="companyItem.companyAuth=='unauth'||companyItem.companyAuth=='null'" class="identCompItemNav identCompItemStatus">未认证</div>
                 <div v-if="companyItem.companyAuth=='authing'" class="identCompItemNav identCompItemStatus">待审核</div>
                 <div v-if="companyItem.companyAuth=='success'" class="identCompItemNav identCompItemStatus">已认证</div>
                 <div v-if="companyItem.companyAuth=='failure'" class="identCompItemNav identCompItemStatus">认证失败</div>
@@ -42,6 +42,15 @@
                 <div class="identCompItemNav identCompItemName">暂无数据</div>
             </li>
         </ul>
+        <Page 
+        ref="pages"
+        class="pageBox" 
+        :total="total" 
+        v-if="total>8"
+        :current="current"
+        :pageSize="8"
+        @on-change="getComList"
+        ></Page>
     </div>
 </template>
 
@@ -113,6 +122,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+    .pageBox {
+        display: block;
+        min-width: 128px;
+        padding-bottom: 30px;
+        margin:40px 20px;
+        float: right;
+    }
+
     .identComp {
         width: 982px;
         height: auto;
@@ -151,12 +168,14 @@ export default {
     .topNavRight .topNavRightItemActive{
         color: white;
         border: 0;
+        line-height: 32px;
         background: #f71327;
     }
 
     .topNavRight .topNavRightItem:hover{
         color: white;
         border: 0;
+        line-height: 32px;
         background: #f71327;
     }
 
@@ -170,8 +189,7 @@ export default {
         height: 58px;
         line-height: 30px;
         padding: 14px 0;
-        margin-bottom: 2px;
-        background: white;
+        border-bottom: 1px solid #eee;
     }
 
     .identComp .identCompMain .identCompItem .identCompItemNav {
@@ -179,6 +197,18 @@ export default {
         height: 30px;
         text-align: center;
         float: left;
+    }
+
+    .identComp .identCompMain .identCompItem .identCompItemNav:nth-child(3) {
+        width: 180px;
+    }
+
+    .identComp .identCompMain .identCompItem .identCompItemNav:nth-child(4) {
+        width: 193px;
+    }
+
+    .identComp .identCompMain .identCompItem .identCompItemNav:last-child {
+        width: 120px;
     }
 
     .identComp .identCompMain .identCompItem .identCompItemOperate a {
@@ -199,5 +229,6 @@ export default {
     .identComp .identCompMain .identCompTitle {
         font-size: 16px;
         background: #fdeaea;
+        color: #333;
     }
 </style>

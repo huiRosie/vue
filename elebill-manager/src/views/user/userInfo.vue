@@ -91,8 +91,7 @@ export default {
         height: 58px;
         line-height: 30px;
         padding: 14px 30px;
-        background: white;
-        margin-bottom: 2px;
+        border-bottom: 1px solid #eee;
     }
 
     .userInfo .personInfo {

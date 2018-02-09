@@ -45,6 +45,17 @@
                             未填写
                         </div>
                     </li>
+                    <li class="detailInfoItem">
+                        <div class="detailInfoItem_label">
+                            身份证号：
+                        </div>
+                        <div v-if="userInfo.idcard!=null" class="detailInfoItem_text">
+                            {{userInfo.idcard}}
+                        </div>
+                        <div v-else class="detailInfoItem_text">
+                            未填写
+                        </div>
+                    </li>
                 </ul>
             </div>
             <!--认证信息-->
@@ -130,14 +141,12 @@ export default {
         height: 58px;
         line-height: 30px;
         padding: 14px 30px;
-        background: white;
-        margin-bottom: 1px;
+        border-bottom: 1px solid #eee;
     }
 
     .detail .detailMain {
         width: 100%;
         height: 638px;
-        background: white;
     }
 
     .detail .detailMain .detail {
@@ -156,7 +165,7 @@ export default {
         text-indent: 10px;
         font-weight: 600;
         margin-bottom: 15px;
-        border-left: 5px solid #ff8000;
+        border-left: 5px solid #f71327;
     }
 
     .detail .detailMain .detail .detailInfo {
@@ -199,9 +208,9 @@ export default {
     }
 
     .detail .detailMain .detailAttach {
-        width: 1220px;
+        width: 982px;
         height: auto;
-        padding: 0 30px 50px;
+        padding: 0 30px 30px;
         margin: 0 auto;
         overflow: hidden;
     }
@@ -214,7 +223,7 @@ export default {
         text-indent: 10px;
         font-weight: 600;
         margin-bottom: 25px;
-        border-left: 5px solid #ff8000;
+        border-left: 5px solid #f71327;
     }
 
     .detail .detailMain .detailAttach .detailAttachInfo {
@@ -279,7 +288,7 @@ export default {
         line-height: 58px;
         text-align: center;
         color: white;
-        background: #ff8000;
+        background: #f71327;
         font-size: 16px;
         border-radius: 4px;
     }

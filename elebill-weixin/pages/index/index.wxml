@@ -1,0 +1,53 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="top">
+    <view class='topTitle'>
+      <view class='topTitleText'>实时库存</view>
+      <view class='topTitleTime'>{{currentTime}}</view>
+    </view>
+    <view class='topBill'>
+       <!-- <text class="topMoneyNum">500.08</text>
+      <text class="topMoneyUnit">万元</text> -->
+      <text class="topBillDot">当前分类</text> 
+      <text class="topBIllNum">{{totalNum}}</text>
+      <text class="topBillUnit">张</text>
+    </view>
+  </view>
+  <view class="main">
+    <view class='billCondition'>
+      <!-- <picker wx:for="{{dataList}}" wx:for-item="itm"  wx:for-index="idx" bindchange="bindPickerChange" value="{{itm.index}}" data-selectValue="{{idx}}" range="{{itm.list}}" range-key="{{'name'}}">  
+          <view class="picker">  
+            {{itm.list[itm.index].name}}  
+          </view>  
+      </picker>   -->
+      <picker bindchange="bindPickerChange" value="{{typeList[typeIndex].id}}" data-selectValue="{{typeList[typeIndex].value}}" range="{{typeList}}" range-key="{{'name'}}">  
+          <view class="picker">  
+            {{typeList[typeIndex].name}}  
+          </view>  
+      </picker>  
+      <picker bindchange="bindPickerChange2" value="{{moneyList[moneyIndex].id}}" data-selectValue='{{moneyList[moneyIndex].value}}' range="{{moneyList}}" range-key="{{'name'}}">  
+          <view class="picker">  
+            {{moneyList[moneyIndex].name}}  
+          </view>  
+      </picker>  
+      <picker bindchange="bindPickerChange3" value="{{orgList[orgIndex].id}}" data-selectValue='{{orgList[orgIndex].value}}' range="{{orgList}}" range-key="{{'name'}}">  
+          <view class="picker">  
+            {{orgList[orgIndex].name}}  
+          </view>  
+      </picker>  
+      <picker bindchange="bindPickerChange4" value="{{dateList[dateIndex].id}}" data-selectValue="{{dateList[dateIndex].value}}" range="{{dateList}}" range-key="{{'name'}}">  
+          <view class="picker">  
+            {{dateList[dateIndex].name}}  
+          </view>  
+      </picker>  
+    </view> 
+    <view class='billListBox'>
+      <import src='../../components/billList/billList.wxml' />
+      <template is="billList" data = "{{billList}}" />
+    </view>
+  </view>
+  <view class='bottom'>
+    <!-- <view class='aboutUs' catchtap='viewAbout'>关于我们</view> -->
+    <view class='contactUs' catchtap='phoneCall'>联系我们</view>
+  </view>
+</view>

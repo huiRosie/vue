@@ -117,14 +117,12 @@ export default {
         height: 58px;
         line-height: 58px;
         padding: 0 20px;
-        margin-bottom: 1px;
-        background: white;
+        border-bottom: 1px solid #eee;
     }
 
     .changePass .changePassMain {
         width: 100%;
         height: auto;
-        background: white;
     }
 
     .changePass .changePassMain .changePassTop {

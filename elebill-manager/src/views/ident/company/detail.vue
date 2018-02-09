@@ -156,14 +156,12 @@ export default {
         height: 58px;
         line-height: 30px;
         padding: 14px 30px;
-        background: white;
-        margin-bottom: 1px;
+        border-bottom: 1px solid #eee;
     }
 
     .detail .detailMain {
         width: 100%;
         height: 638px;
-        background: white;
     }
 
     .detail .detailMain .detailMainCont{
@@ -227,7 +225,7 @@ export default {
     }
 
     .detail .detailMain .detailAttach {
-        width: 1220px;
+        width: 943px;
         height: auto;
         padding: 0 30px 30px;
         margin: 0 auto;

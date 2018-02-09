@@ -1,0 +1,105 @@
+/**index.wxss**/
+@import '../../components/billList/billList.wxss' ;
+
+.top {
+  width: 100%;
+  height: 180rpx;
+  color: #fff;
+  background: #f71327;
+}
+
+.topTitle{
+  width: 100%;
+  height: 40rpx;
+  line-height: 40rpx;
+  font-size: 32rpx;
+  padding-top: 30rpx;
+}
+
+.topTitleText{
+  float: left;
+  padding-left: 20rpx;
+}
+
+.topTitleTime{
+  float: right;
+  padding-right: 20rpx;
+}
+
+.topBill{
+  padding:30rpx 20rpx;
+}
+
+.topMoneyNum,.topBIllNum{
+  font-size: 48rpx;
+  padding-right: 20rpx;
+}
+
+.topBillDot{
+  padding: 0 10rpx;
+  font-size: 28rpx;
+}
+
+.topMoneyUnit,.topBillUnit{
+  font-size: 32rpx;
+}
+
+.main{
+  width: 100%;
+  height: 100%;
+  margin-bottom: 100rpx;
+}
+
+.billCondition{
+  width: 100%;
+  height: 40rpx;
+  line-height: 40rpx;
+  overflow: hidden;
+  background: #eee;
+  font-size: 28rpx;
+  padding: 20rpx 0;
+}
+
+.picker{
+  float: left;
+  width: 25%;
+  border-right: 1rpx solid #ccc;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+picker:last-child{
+  border-right: 0;
+}
+
+.billListBox{
+  width: 100%;
+  height:870rpx;
+  overflow-y: scroll;
+}
+
+/*底部  */
+.bottom{
+  width: 100%;
+  height: 100rpx;
+  line-height: 100rpx;
+  background: #eee;
+  position: fixed;
+  bottom: 0;
+}
+
+.aboutUs{
+  float: left;
+  width: 20%;
+  font-size: 28rpx;
+  text-align: center;
+}
+
+.contactUs{
+  width: 100%;
+  height: 100rpx;
+  line-height: 100rpx;
+  text-align: center;
+  color: #fff;
+  background: #f71327;
+}

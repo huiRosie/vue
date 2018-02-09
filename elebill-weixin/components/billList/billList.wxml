@@ -1,0 +1,43 @@
+<template name="billList">
+  <block wx:if="{{billList.length>0}}" wx:for="{{billList}}" wx:key="billList" wx:for-item="billItem" class='billList'>
+    <view class='billItem' data-id='{{billItem.billId}}' catchtap='viewBillDetail'>
+      <view class='billItemType billItemType_s' wx:if="{{billItem.billClassify=='商票'}}" >
+        {{billItem.billClassify}}
+      </view>
+      <view class='billItemType billItemType_y' wx:if="{{billItem.billClassify=='银票'}}" >
+        {{billItem.billClassify}}
+      </view>
+      <view class='billItemCenter'>
+        <view class='billUserName'>
+          {{billItem.billUserName}}
+        </view>
+        <view class='billMoneyBox'>
+          <view class='billMoney'>
+            {{billItem.billMoney/10000}}万
+          </view>
+          <view class='billLeftDays'>
+            剩{{billItem.leftDays}}天
+          </view>
+          <view class='billExpire'>
+            {{billItem.billExpire}}到期
+          </view>
+        </view>
+        <view class='billFixed' wx:if="{{billItem.billQuoteType=='fixed'}}">
+          一口价：
+          <text class='billFixedMoney'>{{billItem.billFixedPrice}}</text>
+          元/每十万扣
+        </view>
+        <view class='billFixed' wx:else>
+          一口价：
+          <text class='billFixedMoney'>— —</text>
+        </view>
+      </view>
+    </view>
+  </block>
+  <view wx:if="{{billListBottom==true}}" class='billItemAll'>
+      加载已完成
+  </view>
+  <view wx:if="{{billList.length==0}}" class='billItemNone'>
+      暂无数据~~
+  </view>
+</template>

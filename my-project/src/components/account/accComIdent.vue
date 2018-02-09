@@ -85,9 +85,13 @@ export default {
             this.uploadList = fileList;
             // console.log(this.uploadBackList)
             // console.log(res.data)
-            file.url = "http://"+res.data;
-            file.name = "http://"+res.data;
-            this.companyImg = "http://"+res.data;
+            if(res.data.indexOf('http://')==-1&&res.data.indexOf('https://')==-1){
+                file.url = "http://"+res.data;
+            }else{
+                file.url = res.data;
+            }
+            file.name = res.data;
+            this.companyImg = file.url;
             // console.log(file.url)
         },
         // 删除照片
@@ -163,15 +167,13 @@ export default {
         height: 58px;
         line-height: 58px;
         padding: 0 20px;
-        margin-bottom: 1px;
-        background: white;
+        border-bottom: 1px solid #eee;
     }
 
     .accComIdent .accComIdentMain {
         width: 100%;
         height: auto;
         overflow: hidden;
-        background: white;
     }
 
     .accComIdent .accComIdentMain .accComIdentRight {

@@ -29,7 +29,10 @@
                 <div class="saleQListItemNav saleQListItemTel">联系电话</div>
                 <div class="saleQListItemNav saleQListItemOperate">操作</div>
             </li>
-            <li class="saleQListItem" v-for="billItem in billList" :key="billItem.billId">
+            <li class="saleQListItem" v-if="billList.length==0">
+                <div class="saleQListItemNav saleQListItemName">暂无数据</div>
+            </li>
+            <li class="saleQListItem" v-if="billList.length>0" v-for="billItem in billList" :key="billItem.billId">
                 <div class="saleQListItemNav saleQListItemName">{{billItem.userName}}</div>
                 <div class="saleQListItemNav saleQListItemRate">{{billItem.quoteRate}}%</div>
                 <div class="saleQListItemNav saleQListItemAdd">￥{{billItem.quoteIncrement}}</div>
@@ -37,14 +40,14 @@
                 <div class="saleQListItemNav saleQListItemDiscount">￥{{billItem.quoteAmount}}</div>
                 <div class="saleQListItemNav saleQListItemTel">{{billItem.userPhone}}</div>
                 <div class="saleQListItemNav saleQListItemOperate">
-                    <a class="saleQListItem_fail" v-if="billItem.quoteStatus=='run'" @click="failBill(billItem.quoteId,'failure')">交易失败</a>
-                    <a class="saleQListItem_fail" v-if="billItem.quoteStatus=='ording'" @click="failBill(billItem.quoteId,'failure')">交易失败</a>
-                    <a class="saleQListItem_fail" v-if="billItem.quoteStatus=='fail'" disabled>交易失败</a>
-                    <a class="saleQListItem_offer" v-if="billItem.quoteStatus=='run'&&quoteStatus=='publishing'" @click="preBill(billItem.quoteId)">预选报价</a>
-                    <a class="saleQListItem_offer" v-if="billItem.quoteStatus=='run'&&quoteStatus=='run'" @click="preBill(billItem.quoteId)">预选报价</a>
-                    <a class="saleQListItem_offer" v-if="billItem.quoteStatus=='run'&&quoteStatus=='ording'" disabled>预选报价</a>
-                    <a class="saleQListItem_offer" v-if="billItem.quoteStatus=='ording'" disabled>已预选</a>
-                    <a class="saleQListItem_offer" v-if="billItem.quoteStatus=='fail'" disabled>已关闭</a>
+                    <a class="saleQListItem_fail" v-if="billItem.quoteStatus=='run'" @click="failBill(billItem.quoteId)">撤销竞价</a>
+                    <a class="saleQListItem_fail" v-if="billItem.quoteStatus=='ording'" @click="failBill(billItem.quoteId)">撤销竞价</a>
+                    <a class="saleQListItem_fail" v-if="billItem.quoteStatus=='fail'" disabled>撤销竞价</a>
+                    <a class="saleQListItem_offer" v-if="billItem.quoteStatus=='run'&&quoteStatus=='publishing'" @click="preBill(billItem.quoteId)">立即下单</a>
+                    <a class="saleQListItem_offer" v-if="billItem.quoteStatus=='run'&&quoteStatus=='run'" @click="preBill(billItem.quoteId)">立即下单</a>
+                    <a class="saleQListItem_offer" v-if="billItem.quoteStatus=='run'&&quoteStatus=='ording'" disabled>立即下单</a>
+                    <a class="saleQListItem_offer" v-if="billItem.quoteStatus=='ording'" disabled>已下单</a>
+                    <a class="saleQListItem_offer" v-if="billItem.quoteStatus=='fail'" disabled>已拒绝</a>
                 </div>
             </li>
         </ul>
@@ -107,39 +110,49 @@ export default {
                 pageSize:7,
                 currentPage:current
             }).then(function(res){
-                // console.log(res.data.data)
+                console.log(res.data.data)
                 self.billList = res.data.data.recordList;
                 self.total = res.data.data.totalCount;
             })
         },
-        // 预选报价
+        // 立即下单
         preBill:function(quoteId){
             var self = this;
-            // console.log(quoteId)
-            fetchPreBill({
-                quoteId:quoteId
-            }).then(function(res){
-                // console.log(res)
-                if(res.data.code==200){
-                    self.$Message.success('操作成功！');
-                    self.getQuoteList();
+            self.$Modal.confirm({
+                title:'提示',
+                content:'您确定要预选当前报价吗？',
+                onOk:function(){
+                    fetchPreBill({
+                        quoteId:quoteId
+                    }).then(function(res){
+                        // console.log(res)
+                        if(res.data.code==200){
+                            self.$Message.success('操作成功！');
+                            self.$router.push('/out/sale/ordering');
+                        }
+                    })
                 }
             })
         },
-        failBill:function(quoteId,tradeStatus){
+        // 撤销竞价
+        failBill:function(quoteId){
             var self = this;
-            fetchOutTradeBill({
-                quoteId:quoteId,
-                tradeStatus:tradeStatus,
-                quoteDesc:self.quoteDesc
-            }).then(function(res){
-                // console.log(res)
-                if(res.data.code==200){
-                    self.$Message.success('操作成功！');
-                    self.getQuoteList();
+            self.$Modal.confirm({
+                title:'提示',
+                content:'您确定放弃当前报价吗？',
+                onOk:function(){
+                    fetchOutTradeBill({
+                        quoteId:quoteId,
+                        quoteDesc:self.quoteDesc
+                    }).then(function(res){
+                        // console.log(res)
+                        if(res.data.code==200){
+                            self.$Message.success('操作成功！');
+                            self.getQuoteList();
+                        }
+                    })
                 }
             })
-
         },
         // 倒计时
         countDown:function(countDate){
@@ -166,9 +179,8 @@ export default {
     .pageBox {
         display: block;
         min-width: 128px;
-        padding-bottom: 30px;
-        margin: 40px auto 0;
-        /* float: right; */
+        margin:40px 20px;
+        float: right;
     }
 
     .saleQList {
@@ -218,7 +230,7 @@ export default {
         height: 58px;
         line-height: 30px;
         padding: 14px 0;
-        margin-bottom: 2px;
+        border-bottom: 1px solid #eee;
         background: white;
     }
 

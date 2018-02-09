@@ -62,11 +62,11 @@ export default new Router({
           name:'SaleQDet',
           component: _import('sale/saleQuoteDetail')  
         },       
-        // 出票中心已完成汇票详情
+        // 出票中心交易中汇票详情
         { 
-          path: 'saleFDet/:quoteId', 
-          name:'SaleFDet',
-          component: _import('sale/saleFinishDetail')  
+          path: 'saleOrderDet/:orderId', 
+          name:'SaleOrderDet',
+          component: _import('sale/saleOrderDetail')  
         },
       ]
     },      
@@ -162,6 +162,11 @@ export default new Router({
           path:'pwd',
           name:'修改登录密码',
           component:_import('user/changePass') 
+        },
+        {
+          path:'noticeList',
+          name:'NoticeList',
+          component:_import('user/notice/noticeList') 
         },
       ]
     }

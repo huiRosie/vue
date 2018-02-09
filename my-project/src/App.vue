@@ -14,7 +14,7 @@
                 <ul class="topTRight">
                     <li class="topTRightGreet"><span>欢迎您！</span></li>
                     <li class="topTRightPerson">
-                        <router-link class="topTRightPersonLink" to="/acc">账户中心</router-link>
+                        <router-link class="topTRightPersonLink" to="/acc/set/accInfo">账户中心</router-link>
                     </li>
                     <li class="topTRightLogin">
                         <router-link v-if="loginStatus=='登录'" class="topTRightLoginLink" to="/login" >{{loginStatus}}</router-link>
@@ -30,8 +30,9 @@
                 </h1>
                 <div class="topBNav">
                     <router-link class="topBNav_index topBNav_item" to="/index">首页</router-link>
-                    <router-link class="topBNav_out topBNav_item" to="/bill/out">我要贴现</router-link>
+                    <router-link class="topBNav_out topBNav_item" to="/bill/out">我要出票</router-link>
                     <router-link class="topBNav_in topBNav_item" to="/bill/in">我要收票</router-link>
+                    <router-link class="topBNav_in topBNav_item" to="/bill/log">交易记录</router-link>
                     <router-link class="topBNav_us topBNav_item" to="/us">联系我们</router-link>
                 </div>
             </div>
@@ -57,7 +58,8 @@
               <router-link class="bottomNavItem_link" to="/aide">汇票助手</router-link>
             </li>
           </ul>
-          <p class="bottomLeftCopyright">Copyright © 2002-2011. 武汉华四投资顾问有限公司 版权所有 Power by Mereca 鄂ICP备14007080号-1</p>
+          <p class="bottomLeftCopyright">Copyright © 2017-2018. 武汉华四投资顾问有限公司 | 武汉小墨科技有限公司 版权所有 Power by Mereca 鄂ICP备16019978号-3
+</p>
         </div>
         <div class="bottomRight">
           <p class="bottomRightTel">客服热线（工作日9:00~17:30）</p>
@@ -90,7 +92,7 @@ export default {
         content:'您确定要退出登录吗？',
         onOk:function(){
           self.$http.get(globalData.data.Ip+'/user/logouted',{emulateJSON:true,credentials:true}).then(function(res){ 
-            console.log(res);   
+            // console.log(res);   
             self.loginStatus = '登录';
             // 删除存储的登录信息
             globalData.methods.deleteItem('loginStatus');
@@ -100,9 +102,10 @@ export default {
       })
     },
     getData:function(){
+      this.getUserInfo();
+      // 判断的登录与否
       var data = localStorage.getItem('loginStatus');
       var dataObj = JSON.parse(data);
-      // console.log(dataObj)
       if(data==null){
           this.loginStatus = '登录';
           return;
@@ -114,6 +117,20 @@ export default {
       }else{
         this.loginStatus = '退出登录';
       }
+    },
+    //  调取接口，获取用户认证信息
+    getUserInfo:function(){
+        var self = this;
+        self.$http.get(globalData.data.Ip+'/user/info',{credentials:true}).then(function(res){ 
+            // console.log(res);   
+            self.userName = res.data.data.userName;                          
+            self.userPhone = res.data.data.userPhone;                          
+            self.userEmail = res.data.data.userEmail;                          
+            self.userAuth = res.data.data.userAuth;                          
+            self.companyAuth = res.data.data.companyAuth;
+            localStorage.setItem('eleUserAuth',self.userAuth);                         
+            localStorage.setItem('eleCompanyAuth',self.companyAuth);            
+        })
     },
   },
   watch: {
@@ -240,7 +257,7 @@ export default {
 .wrap .container {
   width: 100%;
   margin-top: 116px;
-  min-height: 729px;
+  min-height: 750px;
   background: #f1f1f1;
 }
 

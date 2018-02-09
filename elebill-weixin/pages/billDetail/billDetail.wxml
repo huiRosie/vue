@@ -1,0 +1,34 @@
+<!--billDetail.wxml-->
+<view class="container">
+  <view class='main'>
+    <view class='billItem'>
+      <view class='billItem_label'>票据号</view>
+      <view class='billItem_text'>{{billDetail.billNo}}</view>
+    </view>
+    <view class='billItem'>
+      <view class='billItem_label'>承兑人全称</view>
+      <view class='billItem_text'>{{billDetail.billUserName}}</view>
+    </view>
+    <view class='billItem'>
+      <view class='billItem_label'>票面金额（元）</view>
+      <view class='billItem_text'>{{billDetail.billMoney/10000}}万</view>
+    </view>
+    <view class='billItem'>
+      <view class='billItem_label'>票据到期日</view>
+      <view class='billItem_text'>{{billDetail.billExpire}}</view>
+    </view>
+    <view class='billItem'>
+      <view class='billItem_label'>剩余天数</view>
+      <view class='billItem_text'>{{billDetail.leftDays}}</view>
+    </view>
+    <view class='billItem'>
+      <view class='billItem_label'>一口价</view>
+      <view wx:if="{{billDetail.billQuoteType=='fixed'}}" class='billItem_text billFixed_text'>{{billDetail.billFixedPrice}}</view>
+      <view wx:else class='billItem_text billFixed_text'>— —</view>
+    </view>
+  </view>
+  <view class='bottom'>
+    <!-- <view class='aboutUs'>关于我们</view> -->
+    <view class='contactUs' catchtap='phoneCall'>联系我们</view>
+  </view>
+</view>
