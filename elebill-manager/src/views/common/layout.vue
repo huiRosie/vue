@@ -71,12 +71,13 @@
 <style>
     .wrap {
         width:100%;
-        height: auto;
+        height: 100%;
+        overflow: hidden;
     }
 
     .wrap .container {
         min-width: 1280px;
-        min-height: 769px;
+        min-height: 797px;
         background: #f1f1f1;
         padding: 41px 0 42px;
     }

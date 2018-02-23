@@ -6,15 +6,15 @@
                 <div class="aideMainTop">
                     <div class="aideLeft">
                         <div class="aideLeftCheck">
-                            <div class="aideLeftCheckItem">
+                            <!-- <div class="aideLeftCheckItem">
                                 <input type="radio" name="payType" v-model="checked" id="" value="按利息计算" /> <label>按利息计算</label>
-                            </div>
+                            </div> -->
                             <div class="aideLeftCheckItem">
                                 <input type="radio" name="payType" v-model="checked" id="" value="每十万计算" /> <label>每十万计算</label>
                             </div>
                         </div>
                         <!-- 按利息计算 -->
-                        <ul v-if="checked=='按利息计算'" class="aideLeftList">
+                        <!-- <ul  v-if="checked=='按利息计算'" class="aideLeftList">
                             <li class="sideLeftItem">
                                 <div class="aideLeftItem_label">
                                     <span>*</span>票面金额：
@@ -50,25 +50,13 @@
                                 <div class="aideLeftItem_label">
                                     <span>*</span>贴现日：
                                 </div>
-                                <DatePicker  type="date" format='yyyy-MM-dd' v-model="billTradeDate" placeholder="请选择汇票贴现日" style="width:240px;height:46px;padding:7px 0;"></DatePicker>
-                                <!-- <div class="aideLeftItem_text">
-                                    <input type="text" v-model="billTradeDate" name="" id="" value="" />
-                                </div>
-                                <div class="aideLeftItem_date">
-                                    <img src="../../../assets/calender.png"/>
-                                </div> -->
+                                <DatePicker  type="date" format='yyyy-MM-dd' v-model="billTradeDate" placeholder="请选择汇票贴现日" style="width:240px;height:46px;"></DatePicker>
                             </li>
                             <li class="sideLeftItem">
                                 <div class="aideLeftItem_label">
                                     <span>*</span>到期日：
                                 </div>
-                                <DatePicker  type="date" format='yyyy-MM-dd' v-model="billDeadline" placeholder="请选择汇票到期日" style="width:240px;height:46px;padding:7px 0;"></DatePicker>
-                                <!-- <div class="aideLeftItem_text">
-                                    <input type="text" v-model="billDeadline" name="" id="" value="" />
-                                </div>
-                                <div class="aideLeftItem_date">
-                                    <img src="../../../assets/calender.png"/>
-                                </div> -->
+                                <DatePicker  type="date" format='yyyy-MM-dd' v-model="billDeadline" placeholder="请选择汇票到期日" style="width:240px;height:46px;"></DatePicker>
                             </li>
                             <li class="sideLeftItem">
                                 <div class="aideLeftItem_label">
@@ -109,7 +97,7 @@
                                     
                                 </div>
                             </li>
-                        </ul>
+                        </ul> -->
                         <!-- 每十万计算 -->
                         <ul v-if="checked=='每十万计算'" class="aideLeftList">
                             <li class="sideLeftItem">
@@ -136,13 +124,13 @@
                                 <div class="aideLeftItem_label">
                                     <span>*</span>贴现日：
                                 </div>
-                                <DatePicker  type="date" format='yyyy-MM-dd' v-model="billTradeDate" placeholder="请选择汇票贴现日" style="width:240px;height:46px;padding:7px 0;"></DatePicker>
+                                <DatePicker  type="date" format='yyyy-MM-dd' v-model="billTradeDate" placeholder="请选择汇票贴现日" style="width:240px;height:46px;"></DatePicker>
                             </li>
                             <li class="sideLeftItem">
                                 <div class="aideLeftItem_label">
                                     <span>*</span>到期日：
                                 </div>
-                                <DatePicker  type="date" format='yyyy-MM-dd' v-model="billDeadline" placeholder="请选择汇票到期日" style="width:240px;height:46px;padding:7px 0;"></DatePicker>
+                                <DatePicker  type="date" format='yyyy-MM-dd' v-model="billDeadline" placeholder="请选择汇票到期日" style="width:240px;height:46px;"></DatePicker>
                             </li>
                             <li class="sideLeftItem">
                                 <div class="aideLeftItem_label">
@@ -275,7 +263,7 @@ export default {
     name: 'Aide',
     data () {
         return {
-            checked:'按利息计算',
+            checked:'每十万计算',
             billMoney:'',
             billRate:'',
             billRateType:'年利率',
@@ -297,15 +285,23 @@ export default {
             const title = '提示';
             if(self.billMoney==''){
                 const content = '<p>请输入票面金额！</p>';
-                this.$Modal.info({
+                this.$Modal.warning({
                     title: title,
                     content: content
                 });
                 return;
             }
+            // if(self.billRate==''){
+            //     const content = '<p>请输入利率！</p>';
+            //     this.$Modal.warning({
+            //         title: title,
+            //         content: content
+            //     });
+            //     return;
+            // }
             if(self.billRate==''){
-                const content = '<p>请输入利率！</p>';
-                this.$Modal.info({
+                const content = '<p>请输入每10万贴息！</p>';
+                this.$Modal.warning({
                     title: title,
                     content: content
                 });
@@ -313,7 +309,7 @@ export default {
             }
             if(self.billTradeDate==''){
                 const content = '<p>请选择汇票贴现日！</p>';
-                this.$Modal.info({
+                this.$Modal.warning({
                     title: title,
                     content: content
                 });
@@ -321,40 +317,44 @@ export default {
             }
             if(self.billDeadline==''){
                 const content = '<p>请选择汇票到期日！</p>';
-                this.$Modal.info({
+                this.$Modal.warning({
                     title: title,
                     content: content
                 });
                 return;
             }
-            if(self.billChange==''){
-                const content = '<p>请输入汇票手续费！</p>';
-                this.$Modal.info({
-                    title: title,
-                    content: content
-                });
-                return;
-            }
-            if(self.billSearMoney==''){
-                const content = '<p>请输入查询费！</p>';
-                this.$Modal.info({
-                    title: title,
-                    content: content
-                });
-                return;
-            }
+            // if(self.billChange==''){
+            //     const content = '<p>请输入汇票手续费！</p>';
+            //     this.$Modal.warning({
+            //         title: title,
+            //         content: content
+            //     });
+            //     return;
+            // }
+            // if(self.billSearMoney==''){
+            //     const content = '<p>请输入查询费！</p>';
+            //     this.$Modal.warning({
+            //         title: title,
+            //         content: content
+            //     });
+            //     return;
+            // }
             // 转换日期格式
             var linedates = self.billDeadline;
             self.billDeadline = globalData.methods.changeVueDate(linedates,'yyyy-MM-dd');
             var tradedates = self.billTradeDate;
             self.billTradeDate = globalData.methods.changeVueDate(tradedates,'yyyy-MM-dd');
-            console.log(self.billTradeDate)
-            console.log(self.billDeadline)
-            console.log(self.billRateType)
-            console.log(self.billType)
-            self.billAdjustDate = Math.abs(self.billDeadline.substring(8,10)-self.billTradeDate.substring(8,10))+1;
-            self.billInterestDate = Math.abs(self.billDeadline.substring(8,10)-self.billTradeDate.substring(8,10))+1;
-            console.log(self.billAdjustDate)
+            self.billRateMoney = (self.billMoney/10)*self.billRate;
+            self.billRateMoney = (self.billMoney/10)*self.billRate;
+            self.billDiscountMoney = self.billMoney*10000 - self.billRateMoney;
+            // console.log(self.billTradeDate)
+            // console.log(self.billDeadline)
+            // console.log(self.billRateType)
+            // console.log(self.billType)
+            // self.billAdjustDate = Math.abs(self.billDeadline.substring(8,10)-self.billTradeDate.substring(8,10))+1;
+            // self.billInterestDate = Math.abs(self.billDeadline.substring(8,10)-self.billTradeDate.substring(8,10))+1;
+            // console.log(self.billAdjustDate)
+
         },
         empty(){
             var self = this;

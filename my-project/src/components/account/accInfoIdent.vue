@@ -61,41 +61,6 @@
                                 </Upload>
                     </div>
                 </div>
-                <!-- <div class="accInfoIdentLeftIdback">
-                    <div class="accInfoIdentLeftIdback_label">
-                        身份证反面：
-                    </div>
-                    <div class="accInfoIdentLeftIdback_img">
-                        <div class="demo-upload-list" v-if="uploadBackList.length >0">
-                                    <template v-if="uploadBackList[0].status === 'finished'">
-                                        <img :src="uploadBackList[0].url">
-                                        <div class="demo-upload-list-cover">
-                                            <Icon type="ios-trash-outline" @click.native="handleRemoveBack"></Icon>
-                                        </div>
-                                    </template>
-                                    <template v-else>
-                                        <Progress v-if="uploadBackList[0].showProgress" :percent="uploadBackList[0].percentage" hide-info></Progress>
-                                    </template>
-                                </div>
-                                <Upload
-                                    v-if="uploadBackList.length == 0" 
-                                    ref="uploadBack" 
-                                    :show-upload-list="false"
-                                    :default-file-list="uploadBackList"
-                                    :on-success="handleSuccessBack"
-                                    :format="['jpg','jpeg','png']"
-                                    :max-size="2048"
-                                    :on-format-error="handleFormatError"
-                                    :on-exceeded-size="handleMaxSize" 
-                                    type="drag"
-                                    action="./common/upload"
-                                    style="display:inline-block;width:320px;" >
-                                    <div style="width:320px;height:198px;line-height:236px;">
-                                        <Icon type="ios-plus-empty" class="addIcon" size="60" ></Icon>
-                                    </div>
-                                </Upload>
-                    </div>
-                </div> -->
                 <div class="accInfoIdentLeftBtn">
                     <a class="accInfoIdentLeftBtnSubmit" @click="accInfoIdent()">提交申请</a>
                 </div>
@@ -114,7 +79,6 @@ export default {
             realName:'',
             idCode:'',
             frontImg:'',
-            backImg:'idcardimg',
             uploadFrontList: [],
             // uploadBackList: []
         }
@@ -132,36 +96,23 @@ export default {
                 file.name = res.data;
                 this.frontImg = file.url;
             },
-            handleSuccessBack (res, file,fileList) {
-                this.uploadBackList = fileList;
-                if(res.data.indexOf('http://')==-1&&res.data.indexOf('https://')==-1){
-                    file.url = "http://"+res.data;
-                }else{
-                    file.url = res.data;
-                }
-                this.backImg = file.url;
-            },
             // 删除照片
             handleRemoveFront () {
                 this.uploadFrontList.splice(this.uploadFrontList[0], 1);
                 this.frontImg = '';
             },
-            handleRemoveBack () {
-                this.uploadBackList.splice(this.uploadBackList[0], 1);
-                this.backImg = '';
-            },
             // 上传失败
             handleFormatError (file) {
                 this.$Notice.warning({
-                    title: 'The file format is incorrect',
-                    desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+                    title: '提示',
+                    desc: '您上传的文件' + file.name + ' 格式不对,请选择jpg,jpeg,png这三种格式。'
                 });
             },
             // 图片大小不能超过2M
             handleMaxSize (file) {
                 this.$Notice.warning({
-                    title: 'Exceeding file size limit',
-                    desc: 'File  ' + file.name + ' is too large, no more than 2M.'
+                    title: '提示',
+                    desc: '您上传的文件 ' + file.name + ' 太大, 请不要超过2M！'
                 });
             },
             // 个人认证
@@ -177,6 +128,8 @@ export default {
                     return;
                 }
                 if((/^[0-9]{17}[0-9,xX]{1}$/).test(self.idCode)){
+                    
+                }else{
                     const content = '<p>请正确输入您的身份证号！</p>';
                     this.$Modal.warning({
                         title: title,
@@ -198,13 +151,12 @@ export default {
                         realName:self.realName,
                         idcard:self.idCode,
                         idcardImg:self.frontImg,
-                        idcardbgImg:self.backImg
                     },{emulateJSON:true,credentials:true}).then(function(res){ 
                         console.log(res)
                         if(res.data.code==200){
                             self.$Message.success('个人认证成功，请等待审核!');
                             self.$router.push('/acc/set/accInfo');
-                        }                         
+                        }
                     },function(error){
                         console.log(error);  
                 })

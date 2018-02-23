@@ -41,12 +41,12 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .wrap .bottom {
     min-width: 1280px;
-    height: 128px;
+    height: 100px;
     color: white;
     background: #323232;
     .bottomBox {
       width: 1280px;
-      height: 128px;
+      height: 100px;
       margin: 0 auto;
       padding-top: 40px;
       overflow: hidden;

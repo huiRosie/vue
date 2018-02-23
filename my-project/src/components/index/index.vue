@@ -13,7 +13,7 @@
         <!--在售银票列表-->
         <BillList></BillList>
         <!--合作伙伴-->
-        <Partner></Partner>
+        <!-- <Partner></Partner> -->
     </div>
 </template>
 

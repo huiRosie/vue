@@ -85,16 +85,19 @@
                             <dt>
                                 <img v-if="billInfo.billImg!=null&&billInfo.billImg.indexOf('http://')==-1&&billInfo.billImg.indexOf('https://')==-1" v-bind:src="'http://'+billInfo.billImg" @click="viewImgFront" />
                                 <img v-else v-bind:src="billInfo.billImg" @click="viewImgFront"/>
-                                <Modal 
-                                    title="查看大图" 
-                                    v-model="visible0" 
-                                    width='1080' 
-                                    ok-text='关闭' 
-                                    cancel-text='' 
-                                    class-name="vertical-center-modal">
-                                    <img v-if="billInfo.billImg!=null&&billInfo.billImg.indexOf('http://')==-1&&billInfo.billImg.indexOf('https://')==-1&&visible0" :src="'http://'+billInfo.billImg" style="width: 100%">
-                                    <img v-if="billInfo.billImg!=null&&billInfo.billImg.indexOf('http')!=-1&&visible0" :src="billInfo.billImg" style="width: 100%">
-                                </Modal>
+                                <div class="dragBox" v-if="visible0" @mousedown="drag">
+                                    <div class="dragBoxTitle">
+                                        <div class="dragBoxTip">查看大图</div>
+                                        <div class="dragBoxClose" @click="close">X</div>
+                                    </div>
+                                    <div class="dragBoxImg">
+                                        <img v-if="billInfo.billImg!=null&&billInfo.billImg.indexOf('http://')==-1&&billInfo.billImg.indexOf('https://')==-1&&visible0" :src="'http://'+billInfo.billImg" style="width: 100%">
+                                        <img v-if="billInfo.billImg!=null&&billInfo.billImg.indexOf('http')!=-1&&visible0" :src="billInfo.billImg" style="width: 100%">
+                                    </div>
+                                    <div class="dragBoxBottom">
+                                        <div class="dragBoxClose" @click="close">关闭</div>
+                                    </div>
+                                </div>
                             </dt>
                             <dd>汇票正面</dd>
                         </dl>
@@ -102,16 +105,19 @@
                             <dt>
                                 <img v-if="billInfo.billEndorseImg!=null&&billInfo.billEndorseImg.indexOf('http://')==-1&&billInfo.billEndorseImg.indexOf('https://')==-1" :src="'http://'+billInfo.billEndorseImg" @click="viewImgBack"/>
                                 <img v-else :src="billInfo.billEndorseImg" @click="viewImgBack()"/>
-                                <Modal 
-                                    title="查看大图" 
-                                    v-model="visible1" 
-                                    width='1080' 
-                                    ok-text='关闭' 
-                                    cancel-text='' 
-                                    class-name="vertical-center-modal">
-                                    <img v-if="billInfo.billEndorseImg!=null&&billInfo.billEndorseImg.indexOf('http://')==-1&&billInfo.billEndorseImg.indexOf('https://')==-1&&visible1" :src="'http://'+billInfo.billEndorseImg" style="width: 100%">
-                                    <img v-if="billInfo.billEndorseImg!=null&&billInfo.billEndorseImg.indexOf('http')!=-1&&visible1" :src="billInfo.billEndorseImg" style="width: 100%">
-                                </Modal>
+                                <div class="dragBox" v-if="visible1" @mousedown="drag">
+                                    <div class="dragBoxTitle">
+                                        <div class="dragBoxTip">查看大图</div>
+                                        <div class="dragBoxClose" @click="close1">X</div>
+                                    </div>
+                                    <div class="dragBoxImg">
+                                        <img v-if="billInfo.billEndorseImg!=null&&billInfo.billEndorseImg.indexOf('http://')==-1&&billInfo.billEndorseImg.indexOf('https://')==-1&&visible1" :src="'http://'+billInfo.billEndorseImg" style="width: 100%">
+                                        <img v-if="billInfo.billEndorseImg!=null&&billInfo.billEndorseImg.indexOf('http')!=-1&&visible1" :src="billInfo.billEndorseImg" style="width: 100%">
+                                    </div>
+                                    <div class="dragBoxBottom">
+                                        <div class="dragBoxClose" @click="close1">关闭</div>
+                                    </div>
+                                </div>
                             </dt>
                             <dd>汇票背书</dd>
                         </dl>
@@ -119,16 +125,19 @@
                             <dt>
                                 <img v-if="billInfo.billEvidence!=null&&billInfo.billEvidence.indexOf('http://')==-1&&billInfo.billEvidence.indexOf('https://')==-1" :src="'http://'+billInfo.billEvidence" @click="viewImgBack2"/>
                                 <img v-else :src="billInfo.billEvidence" @click="viewImgBack2()"/>
-                                <Modal 
-                                    title="查看大图" 
-                                    v-model="visible2" 
-                                    width='1080' 
-                                    ok-text='关闭' 
-                                    cancel-text='' 
-                                    class-name="vertical-center-modal">
-                                    <img v-if="billInfo.billEvidence!=null&&billInfo.billEvidence.indexOf('http://')==-1&&billInfo.billEvidence.indexOf('https://')==-1&&visible2" :src="'http://'+billInfo.billEvidence" style="width: 100%">
-                                    <img v-if="billInfo.billEvidence!=null&&billInfo.billEvidence.indexOf('http')!=-1&&visible2" :src="billInfo.billEvidence" style="width: 100%">
-                                </Modal>
+                                <div class="dragBox" v-if="visible2" @mousedown="drag">
+                                    <div class="dragBoxTitle">
+                                        <div class="dragBoxTip">查看大图</div>
+                                        <div class="dragBoxClose" @click="close2">X</div>
+                                    </div>
+                                    <div class="dragBoxImg">
+                                        <img v-if="billInfo.billEvidence!=null&&billInfo.billEvidence.indexOf('http://')==-1&&billInfo.billEvidence.indexOf('https://')==-1&&visible2" :src="'http://'+billInfo.billEvidence" style="width: 100%">
+                                        <img v-if="billInfo.billEvidence!=null&&billInfo.billEvidence.indexOf('http')!=-1&&visible2" :src="billInfo.billEvidence" style="width: 100%">
+                                    </div>
+                                    <div class="dragBoxBottom">
+                                        <div class="dragBoxClose" @click="close2">关闭</div>
+                                    </div>
+                                </div>
                             </dt>
                             <dd>汇票背书</dd>
                         </dl>
@@ -191,6 +200,7 @@ export default {
             visible0: false,
             visible1: false,
             visible2: false,
+            visible3: false,
             orgList:[
                 '国股','城商','三农','村镇','财务公司','其他'
             ]
@@ -228,13 +238,6 @@ export default {
             var self = this;
             self.billId = self.$route.params.billId;
             var billId=self.billId;
-            // console.log(self.billNo)
-            // console.log(self.billMoney)
-            // console.log(self.billClassify)
-            // console.log(self.changeDate(self.billExpire))
-            // console.log(self.billAcceptOrg)
-            // console.log(self.billBackToBack)
-            // console.log(self.billUserName)
             if(self.billNo==null||self.billMoney==null||self.billClassify==null||self.billExpire==null||self.billAcceptOrg==null||self.billBackToBack==null||self.billUserName==null){
                 self.$Modal.warning({
                     title:'提示',
@@ -272,7 +275,6 @@ export default {
             var self = this;
             self.billId = self.$route.params.billId;
             var billId=self.billId;
-            // console.log(billId);
             var data = self.$qs.stringify({
                 billId:billId,
                 billStatus:checkStatus,
@@ -285,7 +287,6 @@ export default {
                 billUserName:self.billUserName,
                 billDesc:self.failText
             });
-            // console.log(data)
             if(self.failText==''){
                 self.$Modal.warning({
                     title:'提示',
@@ -323,6 +324,37 @@ export default {
         },
         viewImgBack2:function(){
             this.visible2 = true;
+        },
+        close:function(){
+            this.visible0 = false;
+        },
+        close1:function(){
+            this.visible1 = false;
+        },
+        close2:function(){
+            this.visible2 = false;
+        },
+        drag:function(e){
+            // console.log(e)
+            var oDiv=e.path[1];
+            // console.log(oDiv);
+            // console.log(e.clientX);
+            // console.log(e.clientY);
+            // console.log(oDiv.offsetLeft);
+            // console.log(oDiv.offsetTop);
+            var disX = e.clientX -oDiv.offsetLeft -540;
+            var disY = e.clientY - oDiv.offsetTop -285;
+            document.onmousemove=function(e){
+                e.preventDefault();
+                var l = e.clientX-disX;
+                var t = e.clientY-disY;
+                oDiv.style.left = l+'px';
+                oDiv.style.top = t+'px';
+            }
+            document.onmouseup=function(){
+                document.onmousemove=null;
+                document.onmouseup=null;
+            }
         }
     }
 }
@@ -330,18 +362,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-    .vertical-center-modal{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .vertical-center-modal .ivu-modal{
-            top: 0;
-    }
-
     .checkDet {
         width: 982px;
         height: auto;
+        overflow: hidden;
         .topNav{
             width: 100%;
             height: 58px;
@@ -514,6 +538,64 @@ export default {
                         }
                         dl:last-child{
                             margin: 0;
+                        }
+                        .dragBox{
+                            width: 1080px;
+                            height: 570px;
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            margin-top: -285px;
+                            margin-left: -540px;
+                            z-index: 99;
+                            border:1px solid #ccc;
+                            border-radius: 5px;
+                            background: #fff;
+                            cursor: move;
+                            .dragBoxTitle{
+                                width: 100%;
+                                height: 50px;
+                                line-height: 50px;
+                                border-bottom: 1px solid #ccc;
+                                .dragBoxTip{
+                                    float: left;
+                                    padding-left: 20px;
+                                }
+                                .dragBoxClose{
+                                    float: right;
+                                    padding-right: 20px;
+                                    cursor: pointer;
+                                    font-size: 20px;
+                                    color: #ccc;
+                                }
+                            }
+                            .dragBoxImg{
+                                width: 1078px;
+                                height: 458px;
+                                padding: 20px;
+                                img{
+                                    width: 100%;
+                                    height: 100%;
+                                }
+                            }
+                            .dragBoxBottom{
+                                width: 100%;
+                                height: 60px;
+                                line-height: 40px;
+                                border-top: 1px solid #ccc;
+                                .dragBoxClose{
+                                    float: right;
+                                    cursor: pointer;
+                                    width: 80px;
+                                    height: 40px;
+                                    line-height: 40px;
+                                    text-align: center;
+                                    background: #f71327;
+                                    color: #fff;
+                                    border-radius: 4px;
+                                    margin:10px 20px;
+                                }
+                            }
                         }
                     }
                 }
