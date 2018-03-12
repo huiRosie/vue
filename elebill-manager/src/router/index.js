@@ -22,12 +22,12 @@ export default new Router({
     // 发布汇票
     {
       path:'/out/pub',
-      name:'发布汇票',
+      name:'Publish',
       component:Layout,
       children:[
         {
           path:'/',
-          name:'发布汇票',
+          name:'Publish',
           component:_import('sale/pubBill')
         }
       ]
@@ -35,13 +35,13 @@ export default new Router({
     // 出票中心
     {
       path: '/out/sale/:billStatus',
-      name: '出售中的汇票',
+      name: 'Sale',
       component: Layout,
       children: [
         // 出票中心列表
         { 
           path: '/', 
-          name:'首页',
+          name:'Index',
           component: _import('sale/index') 
         },
         // 出票中心详情
@@ -73,7 +73,7 @@ export default new Router({
     //收票中心
     {
       path: '/in/check/:billStatus',
-      name: '待审核',
+      name: 'Uncheck',
       component: Layout,
       children:[
         //收票中心列表
@@ -99,12 +99,12 @@ export default new Router({
     //个人认证审核
     {
       path:'/ident/pers',
-      name:'认证审核',
+      name:'IdentPers',
       component:Layout,
       children:[
         {
           path:'/',
-          name:'用户认证信息',
+          name:'PerIdent',
           component:_import('ident/person/index') 
         },
         {
@@ -122,12 +122,12 @@ export default new Router({
     // 企业认证
     {
       path:'/ident/comp',
-      name:'认证审核',
+      name:'IdentComp',
       component:Layout,
       children:[
         {
           path:'/',
-          name:'企业认证信息',
+          name:'CompIdent',
           component:_import('ident/company/index') 
         },
         {
@@ -142,25 +142,38 @@ export default new Router({
         },
       ]
     },
+    // 风投相册
+    {
+      path:'/ident/secu',
+      name:'SecurityImg',
+      component:Layout,
+      children:[
+        {
+          path:'/',
+          name:'Security',
+          component:_import('ident/security/index')
+        }
+      ]
+    },
     //用户中心
     {
       path:'/user',
-      name:'用户中心',
+      name:'User',
       component:Layout,
       children:[
         {
           path:'userInfo',
-          name:'用户信息',
+          name:'UserInfo',
           component:_import('user/userInfo') 
         },
         {
           path:'edit',
-          name:'用户信息编辑',
+          name:'UserEdit',
           component:_import('user/userInfoEdit') 
         },
         {
           path:'pwd',
-          name:'修改登录密码',
+          name:'UserPsw',
           component:_import('user/changePass') 
         },
         {

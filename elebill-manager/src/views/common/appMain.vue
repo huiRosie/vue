@@ -18,7 +18,7 @@
 <style>
     .indexRight {
         width: 982px;
-        height: 696px;
+        height: 754px;
         float: left;
         background: white;
     }

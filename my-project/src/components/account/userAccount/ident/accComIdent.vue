@@ -17,6 +17,38 @@
                         <input type="text" v-model="companyName" name="" id="" value="" />
                     </div>
                 </div>
+                <div class="accComIdentRightName">
+                    <div class="accComIdentRightName_label">
+                        法人身份证号：
+                    </div>
+                    <div class="accComIdentRightName_text">
+                        <input type="text" v-model="companyIdNum" name="" id="" value="" />
+                    </div>
+                </div>
+                <div class="accComIdentRightName">
+                    <div class="accComIdentRightName_label">
+                        企业账户：
+                    </div>
+                    <div class="accComIdentRightName_text">
+                        <input type="text" v-model="companyAccount" name="" id="" value="" />
+                    </div>
+                </div>
+                <div class="accComIdentRightName">
+                    <div class="accComIdentRightName_label">
+                        开户银行：
+                    </div>
+                    <div class="accComIdentRightName_text">
+                        <input type="text" v-model="companyBank" name="" id="" value="" />
+                    </div>
+                </div>
+                <div class="accComIdentRightName">
+                    <div class="accComIdentRightName_label">
+                        支付行号：
+                    </div>
+                    <div class="accComIdentRightName_text">
+                        <input type="text" v-model="companyBankNo" name="" id="" value="" />
+                    </div>
+                </div>
                 <div class="accComIdentRightLicense">
                     <div class="accComIdentRightLicense_label">
                         营业执照：
@@ -63,7 +95,7 @@
 </template>
 
 <script>
-import globalData from '../globalData'
+import globalData from '../../../globalData'
 
 export default {
     name: 'AccComIdent',
@@ -72,6 +104,10 @@ export default {
             visible: false,
             uploadList:[],
             companyName:'',
+            companyIdNum:'',
+            companyAccount:'',
+            companyBank:'',
+            companyBankNo:'',
             companyImg:''
         }
     },
@@ -83,8 +119,6 @@ export default {
         handleSuccess (res, file,fileList) {
             // console.log(res)
             this.uploadList = fileList;
-            // console.log(this.uploadBackList)
-            // console.log(res.data)
             if(res.data.indexOf('http://')==-1&&res.data.indexOf('https://')==-1){
                 file.url = "http://"+res.data;
             }else{
@@ -102,23 +136,57 @@ export default {
         // 上传失败
         handleFormatError (file) {
             this.$Notice.warning({
-                title: 'The file format is incorrect',
-                desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+                title: '提示',
+                desc: '您上传的文件 ' + file.name + ' 格式不正确, 请选择jpg 或png格式的文件上传。'
             });
         },
         // 图片大小不能超过2M
         handleMaxSize (file) {
             this.$Notice.warning({
-                title: 'Exceeding file size limit',
-                desc: 'File  ' + file.name + ' is too large, no more than 2M.'
+                title: '提示',
+                desc: '您上传的文件 ' + file.name + ' 太大，请不要超过2M。'
             });
         },
         submit(){
             var self = this;
+            const title = '提示';
             if(self.companyName==''){
-                const title = '提示';
                 const content = '<p>请输入企业全称！</p>';
-                this.$Modal.info({
+                this.$Modal.warning({
+                    title: title,
+                    content: content
+                });
+                return;
+            }
+            if((/^[0-9]{17}[0-9,xX]{1}$/).test(self.companyIdNum)){
+                
+            }else{
+                const content = '<p>请正确输入法人身份证号！</p>';
+                this.$Modal.warning({
+                    title: title,
+                    content: content
+                });
+                return;
+            }
+            if(self.companyAccount==''){
+                const content = '<p>请输入企业账号！</p>';
+                this.$Modal.warning({
+                    title: title,
+                    content: content
+                });
+                return;
+            }
+            if(self.companyBank==''){
+                const content = '<p>请输入开户银行！</p>';
+                this.$Modal.warning({
+                    title: title,
+                    content: content
+                });
+                return;
+            }
+            if(self.companyBankNo==''){
+                const content = '<p>请输入支付行号！</p>';
+                this.$Modal.warning({
                     title: title,
                     content: content
                 });
@@ -127,7 +195,7 @@ export default {
             if(self.companyImg==''){
                 const title = '提示';
                 const content = '<p>请上传企业营业执照！</p>';
-                this.$Modal.info({
+                this.$Modal.warning({
                     title: title,
                     content: content
                 });
@@ -137,6 +205,10 @@ export default {
             self.$http.post(globalData.data.Ip+'/user/auth/company',
                 {
                     blCompanyName:self.companyName,
+                    blOwnerCard:self.companyIdNum,
+                    blAccount:self.companyAccount,
+                    blBank:self.companyBank,
+                    blPaycard:self.companyBankNo,
                     businessLicence:self.companyImg
                 },{emulateJSON:true,withCredentials:true}).then(function(res){ 
                     console.log(res)
@@ -172,14 +244,15 @@ export default {
 
     .accComIdent .accComIdentMain {
         width: 100%;
-        height: auto;
-        overflow: hidden;
+        height: 638px;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 
     .accComIdent .accComIdentMain .accComIdentRight {
         width: 431px;
         height: auto;
-        padding: 50px 0;
+        padding: 20px 0;
         margin: 0 auto;
     }
 
@@ -204,7 +277,7 @@ export default {
 
     .accComIdent .accComIdentMain .accComIdentRight .accComIdentRightName .accComIdentRightName_label {
         float: left;
-        width: 84px;
+        width: 100px;
         margin-right: 10px;
     }
 
@@ -234,7 +307,7 @@ export default {
 
     .accComIdent .accComIdentMain .accComIdentRight .accComIdentRightLicense .accComIdentRightLicense_label {
         float: left;
-        width: 84px;
+        width: 100px;
         height: 46px;
         line-height: 46px;
         margin-right: 10px;

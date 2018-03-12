@@ -31,19 +31,19 @@ export default {
       //创建和初始化地图函数：
 		initMap() {
 			this.createMap(); //创建地图
+			console.log(map)
 			this.setMapEvent(); //设置地图事件
 			// this.addMapControl(); //向地图添加控件
 			this.addMarker(); //向地图中添加marker
+			// this.addMapOverlay();//向地图添加覆盖物
 		},
-
 		//创建地图函数：
 		createMap() {
 			var map = new BMap.Map("dituContent"); //在百度地图容器中创建一个地图
-			var point = new BMap.Point(114.428188, 30.478188); //定义一个中心点坐标
+			var point = new BMap.Point(114.42779,30.477933); //定义一个中心点坐标
 			map.centerAndZoom(point, 15); //设定地图的中心点和坐标并将地图显示在地图容器中
 			window.map = map; //将map变量存储在全局
 		},
-
 		//地图事件设置函数：
 		setMapEvent(){
 			map.enableDragging(); //启用地图拖拽事件，默认启用(可不写)
@@ -72,8 +72,40 @@ export default {
 			// });
 			// map.addControl(ctrl_sca);
 		},
-
+		addClickHandler(target,window){
+			target.addEventListener("click",function(){
+				target.openInfoWindow(window);
+			});
+		},
 		//标注点数组
+		addMapOverlay(){
+			var markers = [
+				{
+					content:"武汉市洪山区光谷大道41号现代光谷世贸中心A座1108",
+					title:"武汉小墨科技有限公司",
+					imageOffset: {width:-46,height:-21},
+					position:{lat:30.477891,lng:114.427354}
+				}
+			];
+			for(var index = 0; index < markers.length; index++ ){
+				var point = new BMap.Point(markers[index].position.lng,markers[index].position.lat);
+				var marker = new BMap.Marker(point,{
+					icon:new BMap.Icon("https://api.map.baidu.com/lbsapi/createmap/images/icon.png",new BMap.Size(20,25),{
+						imageOffset: new BMap.Size(markers[index].imageOffset.width,markers[index].imageOffset.height)
+					})
+				});
+				var label = new BMap.Label(markers[index].title,{offset: new BMap.Size(25,5)});
+				var opts = {
+				width: 200,
+				title: markers[index].title,
+				enableMessage: false
+				};
+				var infoWindow = new BMap.InfoWindow(markers[index].content,opts);
+				marker.setLabel(label);
+				this.addClickHandler(marker,infoWindow);
+				map.addOverlay(marker);
+			};
+		},
 		//创建marker
 		addMarker() {
             var markerArr = this.markerArr;

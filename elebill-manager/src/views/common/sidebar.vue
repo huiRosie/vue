@@ -24,6 +24,7 @@
             </div>
             <router-link class="indexSubNav" to="/ident/pers">· 用户认证信息</router-link>
             <router-link class="indexSubNav" to="/ident/comp">· 企业认证信息</router-link>
+            <router-link class="indexSubNav" to="/ident/secu/">· 风投相册</router-link>
         </div>
     </div>
 </template>
@@ -75,7 +76,7 @@ export default {
 <style>
     .indexLeft {
         width: 280px;
-        height: 696px;
+        height: 754px;
         float: left;
         margin-right: 18px;
         background: white;

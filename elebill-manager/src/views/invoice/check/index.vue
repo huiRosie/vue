@@ -24,7 +24,7 @@
                 <div v-else class="checkItemNav checkItemArea">竞价</div>
                 <div class="checkItemNav checkItemName">{{billItem.billUserName}}</div>
                 <div v-if="billItem.billMoney<=10000" class="checkItemNav checkItemMoney">{{billItem.billMoney}}</div>
-                <div v-if="billItem.billMoney>10000" class="checkItemNav checkItemMoney">{{billItem.billMoney/10000}}万</div>
+                <div v-if="billItem.billMoney>10000" class="checkItemNav checkItemMoney">{{parseFloat((billItem.billMoney/10000).toFixed(6))}}万</div>
                 <div v-if="billItem.billStatus=='validating'" class="checkItemNav checkItemDeadline">待审核</div>
                 <div v-if="billItem.billStatus=='validate_success'" class="checkItemNav checkItemDeadline">待交易</div>
                 <div v-if="billItem.billStatus=='ording'" class="checkItemNav checkItemDeadline">待付款</div>
@@ -49,9 +49,9 @@
         ref="pages"
         class="pageBox" 
         :total="total" 
-        v-if="total>8"
+        v-if="total>9"
         :current="current"
-        :pageSize="8"
+        :pageSize="9"
         @on-change="getBillList"
         ></Page>
     </div>
@@ -96,7 +96,7 @@ export default {
             fetchInBillList({
                 billStatus:billStatus,
                 currentPage:current,
-                pageSize:8
+                pageSize:9
             }).then(function(res){
                 console.log(res)
                 if(res.data.code==200){

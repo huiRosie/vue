@@ -83,64 +83,45 @@
                     <div class="checkDetInfoImgBox">
                         <dl>
                             <dt>
-                                <img v-if="billInfo.billImg!=null&&billInfo.billImg.indexOf('http://')==-1&&billInfo.billImg.indexOf('https://')==-1" v-bind:src="'http://'+billInfo.billImg" @click="viewImgFront" />
-                                <img v-else v-bind:src="billInfo.billImg" @click="viewImgFront"/>
-                                <div class="dragBox" v-if="visible0" @mousedown="drag">
-                                    <div class="dragBoxTitle">
-                                        <div class="dragBoxTip">查看大图</div>
-                                        <div class="dragBoxClose" @click="close">X</div>
-                                    </div>
-                                    <div class="dragBoxImg">
-                                        <img v-if="billInfo.billImg!=null&&billInfo.billImg.indexOf('http://')==-1&&billInfo.billImg.indexOf('https://')==-1&&visible0" :src="'http://'+billInfo.billImg" style="width: 100%">
-                                        <img v-if="billInfo.billImg!=null&&billInfo.billImg.indexOf('http')!=-1&&visible0" :src="billInfo.billImg" style="width: 100%">
-                                    </div>
-                                    <div class="dragBoxBottom">
-                                        <div class="dragBoxClose" @click="close">关闭</div>
-                                    </div>
-                                </div>
+                                <img v-if="billInfo.billImg!=null&&billInfo.billImg.indexOf('http://')==-1&&billInfo.billImg.indexOf('https://')==-1" v-bind:src="'http://'+billInfo.billImg" @click="viewImgBack(billInfo.billImg)" />
+                                <img v-else v-bind:src="billInfo.billImg" @click="viewImgBack(billInfo.billImg)"/>
                             </dt>
                             <dd>汇票正面</dd>
                         </dl>
-                        <dl v-if="billInfo.billEndorseImg!=''&&billInfo.billEndorseImg!=null">
-                            <dt>
-                                <img v-if="billInfo.billEndorseImg!=null&&billInfo.billEndorseImg.indexOf('http://')==-1&&billInfo.billEndorseImg.indexOf('https://')==-1" :src="'http://'+billInfo.billEndorseImg" @click="viewImgBack"/>
-                                <img v-else :src="billInfo.billEndorseImg" @click="viewImgBack()"/>
-                                <div class="dragBox" v-if="visible1" @mousedown="drag">
-                                    <div class="dragBoxTitle">
-                                        <div class="dragBoxTip">查看大图</div>
-                                        <div class="dragBoxClose" @click="close1">X</div>
-                                    </div>
-                                    <div class="dragBoxImg">
-                                        <img v-if="billInfo.billEndorseImg!=null&&billInfo.billEndorseImg.indexOf('http://')==-1&&billInfo.billEndorseImg.indexOf('https://')==-1&&visible1" :src="'http://'+billInfo.billEndorseImg" style="width: 100%">
-                                        <img v-if="billInfo.billEndorseImg!=null&&billInfo.billEndorseImg.indexOf('http')!=-1&&visible1" :src="billInfo.billEndorseImg" style="width: 100%">
-                                    </div>
-                                    <div class="dragBoxBottom">
-                                        <div class="dragBoxClose" @click="close1">关闭</div>
-                                    </div>
-                                </div>
-                            </dt>
-                            <dd>汇票背书</dd>
-                        </dl>
                         <dl v-if="billInfo.billEvidence!=''&&billInfo.billEvidence!=null">
                             <dt>
-                                <img v-if="billInfo.billEvidence!=null&&billInfo.billEvidence.indexOf('http://')==-1&&billInfo.billEvidence.indexOf('https://')==-1" :src="'http://'+billInfo.billEvidence" @click="viewImgBack2"/>
-                                <img v-else :src="billInfo.billEvidence" @click="viewImgBack2()"/>
-                                <div class="dragBox" v-if="visible2" @mousedown="drag">
-                                    <div class="dragBoxTitle">
-                                        <div class="dragBoxTip">查看大图</div>
-                                        <div class="dragBoxClose" @click="close2">X</div>
-                                    </div>
-                                    <div class="dragBoxImg">
-                                        <img v-if="billInfo.billEvidence!=null&&billInfo.billEvidence.indexOf('http://')==-1&&billInfo.billEvidence.indexOf('https://')==-1&&visible2" :src="'http://'+billInfo.billEvidence" style="width: 100%">
-                                        <img v-if="billInfo.billEvidence!=null&&billInfo.billEvidence.indexOf('http')!=-1&&visible2" :src="billInfo.billEvidence" style="width: 100%">
-                                    </div>
-                                    <div class="dragBoxBottom">
-                                        <div class="dragBoxClose" @click="close2">关闭</div>
-                                    </div>
-                                </div>
+                                <img v-if="billInfo.billEvidence!=null&&billInfo.billEvidence.indexOf('http://')==-1&&billInfo.billEvidence.indexOf('https://')==-1" :src="'http://'+billInfo.billEvidence" @click="viewImgBack(billInfo.billEvidence)"/>
+                                <img v-else :src="billInfo.billEvidence" @click="viewImgBack(billInfo.billEvidence)"/>
                             </dt>
                             <dd>汇票背书</dd>
                         </dl>
+                        <dl v-if="billEndorseImg!=''&&billEndorseImg!=null&&billEndorseImg.length==1"  >
+                            <dt>
+                                <img v-if="billEndorseImg!=null&&billEndorseImg[0].indexOf('http://')==-1&&billEndorseImg[0].indexOf('https://')==-1" :src="'http://'+billEndorseImg[0]" @click="viewImgBack(billEndorseImg[0])"/>
+                                <img v-else :src="billEndorseImg[0]" @click="viewImgBack(billEndorseImg[0])"/>
+                            </dt>
+                            <dd>汇票背书</dd>
+                        </dl>
+                        <dl v-for="(imgItem,index) in billEndorseImg" :key="index"  v-if="billEndorseImg.length>1">
+                            <dt>
+                                <img v-if="imgItem!=null&&imgItem.indexOf('http://')==-1&&imgItem.indexOf('https://')==-1" :src="'http://'+imgItem" @click="viewImgBack(imgItem)"/>
+                                <img v-else :src="imgItem" @click="viewImgBack(imgItem)"/>
+                            </dt>
+                            <dd>汇票背书</dd>
+                        </dl>
+                        <div class="dragBox" v-if="visible" @mousedown="drag">
+                            <div class="dragBoxTitle">
+                                <div class="dragBoxTip">查看大图</div>
+                                <div class="dragBoxClose" @click="close">X</div>
+                            </div>
+                            <div class="dragBoxImg">
+                                <img v-if="imgSrc.indexOf('http://')==-1&&imgSrc.indexOf('https://')==-1" :src="'http://'+imgSrc" style="width: 100%">
+                                <img v-else :src="imgSrc" style="width: 100%">
+                            </div>
+                            <div class="dragBoxBottom">
+                                <div class="dragBoxClose" @click="close">关闭</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -197,10 +178,8 @@ export default {
             billInfo:'',
             failText:'',
             billStatus:'',
-            visible0: false,
-            visible1: false,
-            visible2: false,
-            visible3: false,
+            visible: false,
+            imgSrc:'',
             orgList:[
                 '国股','城商','三农','村镇','财务公司','其他'
             ]
@@ -227,7 +206,7 @@ export default {
                 self.billBackToBack = self.billInfo.billReturn;
                 self.billExpire = self.billInfo.billExpire;
                 self.billImg = self.billInfo.billImg;
-                self.billEndorseImg = self.billInfo.billEndorseImg;
+                self.billEndorseImg = (res.data.data.billEndorseImg).split(',');
                 self.billEvidence = self.billInfo.billEvidence;
                 self.billStatus = self.billInfo.billStatus;
                 console.log(self.billInfo)
@@ -262,7 +241,6 @@ export default {
                 title:'提示',
                 content:'您确定收入当前汇票吗？',
                 onOk:function(){
-                    console.log(1);
                     checkBill(data,{emulateJSON:true,withCredentials: true}).then(function(res){
                         console.log(res);
                         self.$router.push('/in/check/validating');
@@ -316,23 +294,12 @@ export default {
             return  num > 9 ? num : '0'+num 
         },
         // 预览图片
-        viewImgFront:function(){
-            this.visible0 = true;
-        },
-        viewImgBack:function(){
-            this.visible1 = true;
-        },
-        viewImgBack2:function(){
-            this.visible2 = true;
+        viewImgBack:function(imgSrc){
+            this.visible = true;
+            this.imgSrc = imgSrc;
         },
         close:function(){
-            this.visible0 = false;
-        },
-        close1:function(){
-            this.visible1 = false;
-        },
-        close2:function(){
-            this.visible2 = false;
+            this.visible = false;
         },
         drag:function(e){
             // console.log(e)
@@ -518,8 +485,9 @@ export default {
                     .checkDetInfoImgBox{
                         width: 100%;
                         height: 180px;
-                        overflow: hidden;
-                        padding: 38px 44px;
+                        overflow-x: hidden;
+                        overflow-y: auto;
+                        padding: 20px 44px;
                         dl{
                             float: left;
                             margin-right: 69px;
@@ -536,7 +504,7 @@ export default {
                                 text-align: center;
                             }
                         }
-                        dl:last-child{
+                        dl:nth-child(3),dl:nth-child(6){
                             margin: 0;
                         }
                         .dragBox{

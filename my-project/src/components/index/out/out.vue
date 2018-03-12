@@ -81,15 +81,6 @@
                                         <Icon type="ios-plus-empty" class="addIcon" size="60" ></Icon>
                                     </div>
                                 </Upload>
-                                <!-- 预览图片 -->
-                                <Modal 
-                                    title="预览大图" 
-                                    v-model="visible"
-                                    ok-text='关闭' 
-                                    cancel-text=''  
-                                    width='1080'>
-                                    <img :src="imgName" v-if="visible" style="width: 100%">
-                                </Modal>
                             </div>
                         </div>
                         <div class="outUploadBack">
@@ -97,7 +88,6 @@
                                 <div class="outUploadBack_labelmain">
                                     汇票背书：
                                 </div>
-                                <p class="outUploadBack_labelsub">(背书面，最多可上传2张)</p>
                             </div>
                             <div class="outUploadBack_txt">
                                 <div class="demo-upload-list" v-if="uploadBackList.length >0" v-for="imgItem in uploadBackList" :key="imgItem.url">
@@ -113,7 +103,6 @@
                                     </template>
                                 </div>
                                 <Upload
-                                    v-if="uploadBackList.length <= 1" 
                                     ref="uploadBack" 
                                     :show-upload-list="false"
                                     :default-file-list="uploadBackList"
@@ -129,17 +118,17 @@
                                         <Icon type="ios-plus-empty" class="addIcon" size="60" ></Icon>
                                     </div>
                                 </Upload>
-                                <!-- 预览图片 -->
-                                <Modal 
-                                    title="预览大图" 
-                                    v-model="visible"
-                                    ok-text='关闭' 
-                                    cancel-text=''  
-                                    width='1080'>
-                                    <img :src="imgName" v-if="visible" style="width:100%;">
-                                </Modal> 
                             </div>
                         </div>
+                        <!-- 预览图片 -->
+                        <Modal 
+                            title="预览大图" 
+                            v-model="visible"
+                            ok-text='关闭' 
+                            cancel-text=''  
+                            width='1080'>
+                            <img :src="imgName" v-if="visible" style="width:100%;">
+                        </Modal> 
                         <div class="outBillOrg outBillItem">
                             <div class="outBillOrg_label outBillItem_label">
                                 承兑机构：
@@ -167,12 +156,16 @@
                         </div>
                         <div class="outBackToBack outBillItem">
                             <div class="outBackToBack_label outBillItem_label">
-                                有无回头：
+                                有无瑕疵：
                             </div>
                             <div class="outBackToBack_txt outBillItem_txt">
                                 <RadioGroup v-model="billBackToBack">
-                                    <Radio label="有回头"></Radio>
-                                    <Radio label="无回头"></Radio>
+                                    <Radio label="无瑕疵"></Radio>
+                                    <Radio label="回头"></Radio>
+                                    <Radio label="重复"></Radio>
+                                    <Radio label="质押"></Radio>
+                                    <Radio label="保证"></Radio>
+                                    <Radio label="瑕疵"></Radio>
                                 </RadioGroup>
                             </div>
                         </div>
@@ -205,8 +198,8 @@
 </template>
 
 <script>
-    import globalData from '../globalData'
-    import adresData from '../../assets/js/addressData'
+    import globalData from '../../globalData'
+    import adresData from '../../../assets/js/addressData'
 
     export default {
         name: 'Out',
@@ -217,10 +210,10 @@
                 billMoneyChange:'',
                 billExpire:'',
                 billFrontImg:'',
-                billBackImg:'',
+                billEndorseImg:'',
                 billEvidence:'',
                 billType:'银票',
-                billBackToBack:'无回头',
+                billBackToBack:'无瑕疵',
                 billOrg:'国股',
                 billFixed:'',
                 defaultList: [],
@@ -239,7 +232,6 @@
             handleSuccess (res,file,fileList) {
                 // console.log(res)
                 this.uploadFrontList = fileList;
-                // console.log(this.uploadFrontList)
                 if(res.data.indexOf('http://')==-1&&res.data.indexOf('https://')==-1){
                     file.url = "http://"+res.data;
                 }else{
@@ -261,10 +253,16 @@
                 }
                 file.name = res.data;
                 if(fileList.length==1){
-                    this.billBackImg = fileList[0].url;
+                    this.billEndorseImg = fileList[0].url;
                 }else{
-                    this.billEvidence = fileList[1].url;
-                }
+                    this.billEndorseImg = '';
+                    this.billEvidence = fileList[0].url;
+                    for(let i=1;i<fileList.length;i++){
+                        var newUrl = fileList[i].url;
+                        this.billEndorseImg += newUrl+',';
+                    }
+                    this.billEndorseImg =(this.billEndorseImg.substring(this.billEndorseImg.length-1)==',')?this.billEndorseImg.substring(0,this.billEndorseImg.length-1):this.billEndorseImg;
+                    }
             },
             // 预览
             handleView (name) {
@@ -278,31 +276,27 @@
             },
             handleRemoveBack (imgItem) {
                 this.uploadBackList.splice(this.uploadBackList.indexOf(imgItem),1);
-                // console.log(this.billBackImg)
+                // console.log(this.billEndorseImg)
                 // console.log(this.billEvidence)
             },
             // 上传失败
             handleFormatError (file) {
                 this.$Notice.warning({
-                    title: 'The file format is incorrect',
-                    desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+                    title: '提示',
+                    desc: '您上传的文件 ' + file.name + ' 格式不正确, 请选择jpg 或png格式的文件上传。'
                 });
             },
             // 图片大小不能超过2M
             handleMaxSize (file) {
                 this.$Notice.warning({
-                    title: 'Exceeding file size limit',
-                    desc: 'File  ' + file.name + ' is too large, no more than 2M.'
+                    title: '提示',
+                    desc: '您上传的文件 ' + file.name + ' 太大，请不要超过2M。'
                 });
             },
             // 发布汇票
             publishBill(){
                 var self = this;
                 const title = '提示';
-                // console.log(self.billOrg)
-                // console.log(self.billBackToBack)
-                // console.log(self.billFixed)
-                // return
                 if(self.billUserName==''){
                     const content = '<p>请输入承兑人全称！</p>';
                     this.$Modal.warning({
@@ -339,7 +333,7 @@
                     });
                     return;
                 }
-                if(self.billBackImg==''){
+                if(self.billEndorseImg==''){
                     const content = '<p>请上传汇票背书图片！</p>';
                     this.$Modal.warning({
                         title: title,
@@ -354,7 +348,7 @@
                         billMoney:self.billMoney,
                         billExpire:self.billExpire,
                         billImg:self.billFrontImg,
-                        billEndorseImg:self.billBackImg,
+                        billEndorseImg:self.billEndorseImg,
                         billEvidence:self.billEvidence,
                         billClassify:self.billType,
                         billAcceptOrg:self.billOrg,
@@ -443,7 +437,7 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less" scoped>
+<style lang="less" scoped> 
     /* 上传按钮 */
     .demo-upload-list{
         display:inline-block;
@@ -456,7 +450,7 @@
         background: transparent;
         position: relative;
         box-shadow: 0 1px 1px rgba(0,0,0,.2);
-        margin-right: 20px;
+        margin:0 20px 20px 0;
         float: left;
         img{
             width: 100%;
@@ -477,6 +471,10 @@
                 margin: 0 2px;
             }
         }
+    }
+    .demo-upload-list:nth-child(4),
+    .demo-upload-list:nth-child(8){
+        margin-right: 0;
     }
     .demo-upload-list:hover .demo-upload-list-cover{
         display: block;
@@ -627,7 +625,7 @@
                         }
                         .outUploadBack {
                             width: 100%;
-                            height: 160px;
+                            height: auto;
                             margin-bottom: 24px;
                             overflow: hidden;
                             .outUploadBack_label {
@@ -642,8 +640,8 @@
                                 }
                             }
                             .outUploadBack_txt {
-                                width: auto;
-                                height: 135px;
+                                width: 1020px;
+                                height: auto;
                                 float: left;
                                 cursor: pointer;
                                 .addIcon{
@@ -652,12 +650,11 @@
                             }
                         }
                         .outBillItem{
-                            width: 50%;
+                            width: 100%;
                             height: 47px;
                             line-height: 47px;
                             margin-bottom: 24px;
                             overflow: hidden;
-                            float: left;
                             .outBillItem_label {
                                 width: 120px;
                                 height: 47px;

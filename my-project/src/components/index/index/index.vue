@@ -18,12 +18,12 @@
 </template>
 
 <script>
-    import globalData from '../globalData'
-    import Partner from '../components/index/partner'
-    import Banner from '../components/index/banner'
+    import globalData from '../../globalData'
+    import Partner from '../../components/index/partner'
+    import Banner from '../../components/index/banner'
     // import FourFeature from '../components/index/fourFeature'
-    import Flow from '../components/index/flow'
-    import BillList from '../components/index/billList'
+    import Flow from '../../components/index/flow'
+    import BillList from '../../components/bill/billList'
 
     export default {
         name: 'Index1',

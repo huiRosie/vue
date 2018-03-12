@@ -17,7 +17,7 @@
                 <div v-else class="accBuyItemNav accBuyItemTerm">竞价</div>
                 <div class="accBuyItemNav accBuyItemIsti">{{billItem.billUserName}}</div>
                 <div v-if="billItem.billMoney<=10000" class="accBuyItemNav accBuyItemMoney">{{billItem.billMoney}}</div>
-                <div v-if="billItem.billMoney>10000" class="accBuyItemNav accBuyItemMoney">{{billItem.billMoney/10000}}万</div>
+                <div v-if="billItem.billMoney>10000" class="accBuyItemNav accBuyItemMoney">{{parseFloat((billItem.billMoney/10000).toFixed(6))}}万</div>
                 <div class="accBuyItemNav accBuyItemPub">{{billItem.billCreateDate.substring(0,11)}}</div>
                 <div class="accBuyItemNav accBuyItemOffer">{{((billItem.billMoney-(billItem.billMoney/100000)*billItem.billFixedPrice)/10000).toFixed(2)}}万</div>
                 <div v-if="billItem.billStatus=='ording'" class="accBuyItemNav accBuyItemOffer">已下单</div>

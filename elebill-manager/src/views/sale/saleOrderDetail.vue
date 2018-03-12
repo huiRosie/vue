@@ -71,7 +71,7 @@
                                             {{billData.billMoney}}
                                         </div>
                                         <div v-if="billData.billMoney>10000" class="saleOrderDetBillInfoItem_text">
-                                            {{billData.billMoney/10000}}万
+                                            {{parseFloat((billData.billMoney/10000).toFixed(6))}}万
                                         </div>
                                     </li>
                                     <li class="saleOrderDetBillInfoItem">
@@ -95,10 +95,10 @@
                                     </li>
                                     <li class="saleOrderDetBillInfoItem">
                                         <div class="saleOrderDetBillInfoItem_label">
-                                            贴现金额：
+                                            贴现金额(元)：
                                         </div>
                                         <div v-if="billData.billQuoteType=='fixed'" class="saleOrderDetBillInfoItem_text">
-                                            <span>{{((billData.billMoney-(billData.billMoney/100000)*billData.billFixedPrice)/10000).toFixed(2)}}</span>万元
+                                            <span>{{parseFloat(((billData.billMoney-(billData.billMoney/100000)*billData.billFixedPrice)/10000).toFixed(6))}}</span>万
                                         </div>
                                         <div v-else class="inDetBillInfoItem_text">
                                             买家参与竞价后可了解详情
@@ -111,55 +111,42 @@
                                 <div class="saleOrderDetBillImgBox">
                                     <dl>
                                         <dt>
-                                            <img v-if="billData.billImg!=null&&billData.billImg.indexOf('http://')==-1&&billData.billImg.indexOf('https://')==-1" v-bind:src="'http://'+billData.billImg" @click="viewImgFront" />
-                                            <img v-else v-bind:src="billData.billImg" @click="viewImgFront"/>
-                                            <Modal 
-                                                title="查看大图" 
-                                                v-model="visible0" 
-                                                width='1080' 
-                                                ok-text='关闭' 
-                                                cancel-text='' 
-                                                class-name="vertical-center-modal">
-                                                <img v-if="billData.billImg!=null&&billData.billImg.indexOf('http://')==-1&&billData.billImg.indexOf('https://')==-1&&visible0" :src="'http://'+billData.billImg" style="width: 100%">
-                                                <img v-if="billData.billImg!=null&&billData.billImg.indexOf('http')!=-1&&visible0" :src="billData.billImg" style="width: 100%">
-                                            </Modal>
+                                            <img v-if="billData.billImg!=null&&billData.billImg.indexOf('http://')==-1&&billData.billImg.indexOf('https://')==-1" v-bind:src="'http://'+billData.billImg" @click="viewImgBack(billData.billImg)" />
+                                            <img v-else v-bind:src="billData.billImg" @click="viewImgBack(billData.billImg)"/>
                                         </dt>
                                         <dd>汇票正面</dd>
                                     </dl>
-                                    <dl v-if="billData.billEndorseImg!=''&&billData.billEndorseImg!=null">
-                                        <dt>
-                                            <img v-if="billData.billEndorseImg!=null&&billData.billEndorseImg.indexOf('http://')==-1&&billData.billEndorseImg.indexOf('https://')==-1" :src="'http://'+billData.billEndorseImg" @click="viewImgBack"/>
-                                            <img v-else :src="billData.billEndorseImg" @click="viewImgBack()"/>
-                                            <Modal 
-                                                title="查看大图" 
-                                                v-model="visible1" 
-                                                width='1080' 
-                                                ok-text='关闭' 
-                                                cancel-text='' 
-                                                class-name="vertical-center-modal">
-                                                <img v-if="billData.billEndorseImg!=null&&billData.billEndorseImg.indexOf('http://')==-1&&billData.billEndorseImg.indexOf('https://')==-1&&visible1" :src="'http://'+billData.billEndorseImg" style="width: 100%">
-                                                <img v-if="billData.billEndorseImg!=null&&billData.billEndorseImg.indexOf('http')!=-1&&visible1" :src="billData.billEndorseImg" style="width: 100%">
-                                            </Modal>
-                                        </dt>
-                                        <dd>汇票背书</dd>
-                                    </dl>
                                     <dl v-if="billData.billEvidence!=''&&billData.billEvidence!=null">
                                         <dt>
-                                            <img v-if="billData.billEvidence!=null&&billData.billEvidence.indexOf('http://')==-1&&billData.billEvidence.indexOf('https://')==-1" :src="'http://'+billData.billEvidence" @click="viewImgBack2()"/>
-                                            <img v-else :src="billData.billEvidence" @click="viewImgBack2()"/>
-                                            <Modal 
-                                                title="查看大图" 
-                                                v-model="visible2" 
-                                                width='1080' 
-                                                ok-text='关闭' 
-                                                cancel-text='' 
-                                                class-name="vertical-center-modal">
-                                                <img v-if="billData.billEvidence!=null&&billData.billEvidence.indexOf('http://')==-1&&billData.billEvidence.indexOf('https://')==-1&&visible2" :src="'http://'+billData.billEvidence" style="width: 100%">
-                                                <img v-if="billData.billEvidence!=null&&billData.billEvidence.indexOf('http')!=-1&&visible2" :src="billData.billEvidence" style="width: 100%">
-                                            </Modal>
+                                            <img v-if="billData.billEvidence!=null&&billData.billEvidence.indexOf('http://')==-1&&billData.billEvidence.indexOf('https://')==-1" :src="'http://'+billData.billEvidence" @click="viewImgBack(billData.billEvidence)"/>
+                                            <img v-else :src="billData.billEvidence" @click="viewImgBack(billData.billEvidence)"/>
                                         </dt>
                                         <dd>汇票背书</dd>
                                     </dl>
+                                    <dl v-if="billEndorseImg!=''&&billEndorseImg!=null&&billEndorseImg.length==1"  >
+                                        <dt>
+                                            <img v-if="billEndorseImg!=null&&billEndorseImg[0].indexOf('http://')==-1&&billEndorseImg[0].indexOf('https://')==-1" :src="'http://'+billEndorseImg[0]" @click="viewImgBack(billEndorseImg[0])"/>
+                                            <img v-else :src="billEndorseImg[0]" @click="viewImgBack(billEndorseImg[0])"/>
+                                        </dt>
+                                        <dd>汇票背书</dd>
+                                    </dl>
+                                    <dl v-if="billEndorseImg.length>1" v-for="(imgItem,index) in billEndorseImg" :key="index" >
+                                        <dt>
+                                            <img v-if="imgItem!=null&&imgItem.indexOf('http://')==-1&&imgItem.indexOf('https://')==-1" :src="'http://'+imgItem" @click="viewImgBack(imgItem)"/>
+                                            <img v-else :src="imgItem" @click="viewImgBack(imgItem)"/>
+                                        </dt>
+                                        <dd>汇票背书</dd>
+                                    </dl>
+                                    <Modal 
+                                        title="查看大图" 
+                                        v-model="visible" 
+                                        width='1080' 
+                                        ok-text='关闭' 
+                                        cancel-text='' 
+                                        class-name="vertical-center-modal">
+                                        <img v-if="imgSrc!=null&&imgSrc.indexOf('http://')==-1&&imgSrc.indexOf('https://')==-1" :src="'http://'+imgSrc" style="width: 100%">
+                                        <img v-if="imgSrc!=null&&imgSrc.indexOf('http')!=-1" :src="imgSrc" style="width: 100%">
+                                    </Modal>
                                 </div>
                             </div>
                             <div class="saleOrderDetBillInfoRight">
@@ -239,9 +226,9 @@ export default {
         return {
             billId:'',
             billData:'',
-            visible0:false,
-            visible1:false,
-            visible2:false
+            visible:false,
+            billEndorseImg:'',
+            imgSrc:''
         }
     },
     created:function(){
@@ -257,6 +244,9 @@ export default {
                 console.log(res);
                 self.billData = res.data.data;
                 self.billId = res.data.data.billId;
+                self.billEndorseImg = (res.data.data.billEndorseImg).split(',');
+                console.log((self.billEndorseImg))
+                // console.log((self.billEndorseImg).length)
             })
         },
         giveUp:function(billId){
@@ -300,15 +290,10 @@ export default {
         routerBack:function(){
             this.$router.go(-1);
         },
-        viewImgFront:function(){
-            this.visible0 = true;
+        viewImgBack:function(imgSrc){
+            this.visible = true;
+            this.imgSrc = imgSrc;
         },
-        viewImgBack:function(){
-            this.visible1 = true;
-        },
-        viewImgBack2:function(){
-            this.visible2 = true;
-        }
     }
 }
 </script>
@@ -417,8 +402,9 @@ export default {
                                 .saleOrderDetBillImgBox{
                                     width: 652px;
                                     height: 208px;
-                                    overflow: hidden;
-                                    padding: 38px 44px;
+                                    overflow-x: hidden;
+                                    overflow-y: auto;
+                                    padding: 20px 44px;
                                     dl{
                                         float: left;
                                         margin-right: 69px;
@@ -435,7 +421,7 @@ export default {
                                             text-align: center;
                                         }
                                     }
-                                    dl:last-child{
+                                    dl:nth-child(3),dl:nth-child(6){
                                         margin: 0;
                                     }
                                 }

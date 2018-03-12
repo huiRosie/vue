@@ -182,9 +182,6 @@ export function fetchCancelBill(query){
         data:query
     })
 }
- 
-
-
 
 // 认证审核
 // 用户认证信息列表
@@ -256,6 +253,36 @@ export function fetchEditAdminInfo(query){
 export function fetchChangePwd(query){
     return fetch({
         url:'/user/info/changePwd',
+        method:'post',
+        params:query
+    })
+}
+
+// 认证审核
+// 风投相册 列表
+export function securityList(query){
+    return fetch({
+        url:'/manager/billimg/list',
+        method:'get',
+        params:query
+    })
+}
+
+// 认证审核
+// 风投相册 上传照片
+export function securityUpload(query){
+    return fetch({
+        url:'/manager/billimg/upload',
+        method:'post',
+        params:query
+    })
+}
+
+// 认证审核
+// 风投相册 照片删除
+export function securityDelete(query){
+    return fetch({
+        url:'/manager/billimg/delete',
         method:'post',
         params:query
     })

@@ -6,6 +6,9 @@ import router from './router'
 import App from './App'
 // import iView from 'iview'
 import 'iview/dist/styles/iview.css'
+import qs from 'qs'
+
+Vue.prototype.$qs = qs
 
 Vue.use(VueResource)
 

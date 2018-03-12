@@ -1,13 +1,23 @@
 import fetch from './fetch'
 
-// 获取汇票列表
-export function fetchBillList(query){
+// 获取汇票列表   首页
+export function fetchIndexBillList(query){
+    return fetch({
+        url:'/index/main',
+        method:'get',
+        data:query
+    })
+}
+
+// 获取汇票列表   我要收票   交易记录
+export function fetchInBillList(query){
     return fetch({
         url:'/bill/page',
         method:'post',
         data:query
     })
 }
+
 
 // 获取汇票详情
 export function getBillDetail(query){

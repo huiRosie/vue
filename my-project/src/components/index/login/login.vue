@@ -56,7 +56,9 @@ export default {
         phone: '',
         password:'',
         passwordTip:'密码输入错误',
-        username:''
+        username:'',
+        userAuth:'',
+        companyAuth:''
         }
     },
     methods:{
@@ -84,6 +86,11 @@ export default {
                         // 登录成功，存储登录信息
                         globalData.methods.setData('loginStatus','已登录');
                         self.$Message.success('登录成功');
+                        // 登录成功存储认证信息                       
+                        self.userAuth = res.data.data.userAuth;                          
+                        self.companyAuth = res.data.data.companyAuth;
+                        localStorage.setItem('eleUserAuth',self.userAuth);                         
+                        localStorage.setItem('eleCompanyAuth',self.companyAuth);       
                     } else {
                         this.$refs.loginPassword_tip.style.display = 'block'
                         self.passwordTip = res.data.data; 

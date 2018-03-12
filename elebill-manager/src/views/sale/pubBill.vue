@@ -6,189 +6,192 @@
         </div>
         <div class="pubBillMain">
             <!--汇票信息-->
-                <div class="pubBill">
-                    <h3 class="pubBillTitle">汇票信息录入</h3>
-                    <div class="pubBillInfo">
-                        <div class="pubBillInfoTop">
-                            <ul class="pubBillInfoLeft">
-                                <li class="pubBillInfoItem">
-                                    <div class="pubBillInfoItem_label">
-                                        票据号：
-                                    </div>
-                                    <div class="pubBillInfoItem_text">
-                                        <input v-model="billNo" type="text">
-                                    </div>
-                                </li>
-                                <li class="pubBillInfoItem">
-                                    <div class="pubBillInfoItem_label">
-                                        承兑人全称：
-                                    </div>
-                                    <div class="pubBillInfoItem_text">
-                                        <input v-model="billUserName" type="text">
-                                    </div>
-                                </li>
-                                <li class="pubBillInfoItem pubBillInfoMoney">
-                                    <div class="pubBillInfoItem_label">
-                                        票面金额(元)：
-                                    </div>
-                                    <div class="pubBillInfoItem_text">
-                                        <input v-model="billMoney" type="text">
-                                        <span>(万元)</span>
-                                    </div>
-                                </li>
-                                <li class="pubBillInfoItem pubBillInfoExpire">
-                                    <div class="pubBillInfoItem_label">
-                                        汇票到期日：
-                                    </div>
-                                    <div class="pubBillInfoItem_text pubBillInfoDatepicker">
-                                        <DatePicker  type="date" format='yyyy-MM-dd' v-model="billExpire" placeholder="请选择汇票到期日" style="width:220px;height:43px;"></DatePicker>
-                                    </div>
-                                </li>
-                                <li class="pubBillInfoItem pubBillInfoOrg">
-                                    <div class="pubBillInfoItem_label">
-                                        承兑机构：
-                                    </div>
-                                    <div class="pubBillInfoItem_text">
-                                        <select v-model="billAcceptOrg" name="">
-                                            <option disabled>请选择</option>
-                                            <option v-for="orgItem in orgList"  :key="orgItem">{{orgItem}}</option>
-                                        </select>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div class="pubBillInfoRight">
-                                <div class="pubBillInfoImg_label">
-                                    上传汇票
+            <div class="pubBill">
+                <h3 class="pubBillTitle">汇票信息录入</h3>
+                <div class="pubBillInfo">
+                    <div class="pubBillInfoTop">
+                        <ul class="pubBillInfoLeft">
+                            <li class="pubBillInfoItem">
+                                <div class="pubBillInfoItem_label">
+                                    票据号：
                                 </div>
-                                <div class="pubBillInfoImg_txt">
-                                    <div class="pubBillImg_alt">汇票正面:</div>
-                                    <div class="demo-upload-list" v-if="uploadFrontList.length >0" >
-                                        <template v-if="uploadFrontList[0].status ==='finished'">
-                                            <img :src="uploadFrontList[0].url">
-                                            <div class="demo-upload-list-cover">
-                                                <Icon type="ios-eye-outline" @click.native="handleView(uploadFrontList[0].url)"></Icon>
-                                                <Icon type="ios-trash-outline" @click.native="handleRemoveFront"></Icon>
-                                            </div>
-                                        </template>
-                                        <template v-else>
-                                            <Progress v-if="uploadFrontList[0].showProgress" :percent="uploadFrontList[0].percentage" hide-info></Progress>
-                                        </template>
-                                    </div>
-                                    <Upload
-                                        v-if="uploadFrontList.length == 0" 
-                                        ref="uploadFront"
-                                        :show-upload-list="true"
-                                        :default-file-list="uploadFrontList"
-                                        :on-success="handleSuccess"
-                                        :format="['jpg','jpeg','png']"
-                                        :max-size="2048"
-                                        :on-format-error="handleFormatError"
-                                        :on-exceeded-size="handleMaxSize" 
-                                        type="drag"
-                                        action="/common/upload"
-                                        style="display:block;width:142px;" >
-                                        <div style="width:142px;height:90px;line-height:116px;">
-                                            <Icon type="ios-plus-empty" class="addIcon" size="60" ></Icon>
-                                        </div>
-                                    </Upload>
-                                    <!-- 预览图片 -->
-                                    <Modal 
-                                        title="预览大图" 
-                                        width="1080"
-                                        v-model="visible">
-                                        <img :src="imgName" v-if="visible" style="width: 100%">
-                                    </Modal>
+                                <div class="pubBillInfoItem_text">
+                                    <input v-model="billNo" type="text">
                                 </div>
-                                <!--背书图片-->
-                                <div class="pubBillBack">
-                                    <div class="pubBillImg_alt">汇票反面:</div>
-                                    <div class="demo-upload-list" v-for="pubBillBackImg in uploadBackList" :key="pubBillBackImg.url" v-if="uploadBackList.length >0" >
-                                        <template v-if="uploadBackList[0].status ==='finished'">
-                                            <img :src="pubBillBackImg.url">
-                                            <div class="demo-upload-list-cover">
-                                                <Icon type="ios-eye-outline" @click.native="handleViewBack(pubBillBackImg.url)"></Icon>
-                                                <Icon type="ios-trash-outline" @click.native="handleRemoveBack(pubBillBackImg.url)"></Icon>
-                                            </div>
-                                        </template>
-                                        <template v-else>
-                                            <Progress v-if="uploadBackList[0].showProgress" :percent="uploadBackList[0].percentage" hide-info></Progress>
-                                        </template>
-                                    </div>
-                                    <Upload
-                                        class="uploadFile_btn" 
-                                        v-if="uploadBackList.length < 2" 
-                                        ref="uploadFile" 
-                                        :show-upload-list="false"
-                                        :default-file-list="uploadBackList"
-                                        :on-success="handleSuccessBack" 
-                                        :max-size="2048"
-                                        :on-format-error="handleFormatError"
-                                        :on-exceeded-size="handleMaxSize" 
-                                        type="drag"
-                                        action="/common/upload"
-                                        style="display:inline-block;width:142px;" >
-                                        <div style="width:142px;height:90px;line-height:116px;">
-                                            <Icon type="ios-plus-empty" class="addIcon" size="60" ></Icon>
-                                        </div>
-                                    </Upload>
-                                    <!-- 预览图片 -->
-                                    <Modal 
-                                        title="预览大图" 
-                                        width="1080"
-                                        v-model="visible1">
-                                        <img :src="imgName" v-if="visible1" style="width: 100%">
-                                    </Modal>
+                            </li>
+                            <li class="pubBillInfoItem">
+                                <div class="pubBillInfoItem_label">
+                                    承兑人全称：
                                 </div>
+                                <div class="pubBillInfoItem_text">
+                                    <input v-model="billUserName" type="text">
+                                </div>
+                            </li>
+                            <li class="pubBillInfoItem pubBillInfoMoney">
+                                <div class="pubBillInfoItem_label">
+                                    票面金额(元)：
+                                </div>
+                                <div class="pubBillInfoItem_text">
+                                    <input v-model="billMoney" type="text">
+                                    <span>(万元)</span>
+                                </div>
+                            </li>
+                            <li class="pubBillInfoItem pubBillInfoExpire">
+                                <div class="pubBillInfoItem_label">
+                                    汇票到期日：
+                                </div>
+                                <div class="pubBillInfoItem_text pubBillInfoDatepicker">
+                                    <DatePicker  type="date" format='yyyy-MM-dd' v-model="billExpire" placeholder="请选择汇票到期日" style="width:220px;height:43px;"></DatePicker>
+                                </div>
+                            </li>
+                            <li class="pubBillInfoItem pubBillInfoOrg">
+                                <div class="pubBillInfoItem_label">
+                                    承兑机构：
+                                </div>
+                                <div class="pubBillInfoItem_text">
+                                    <select v-model="billAcceptOrg" name="">
+                                        <option disabled>请选择</option>
+                                        <option v-for="orgItem in orgList"  :key="orgItem">{{orgItem}}</option>
+                                    </select>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="pubBillInfoBottom">
+                        <div class="pubBillType pubBillItem">
+                            <div class="pubBillType_label pubBillItem_label">
+                                汇票类型：
+                            </div>
+                            <div class="pubBillType_txt pubBillItem_txt">
+                                    <RadioGroup v-model="billType">
+                                    <Radio label="银票"></Radio>
+                                    <Radio label="商票"></Radio>
+                                </RadioGroup>
                             </div>
                         </div>
-                        <div class="pubBillInfoBottom">
-                            <div class="pubBillType pubBillItem">
-                                <div class="pubBillType_label pubBillItem_label">
-                                    汇票类型：
-                                </div>
-                                <div class="pubBillType_txt pubBillItem_txt">
-                                     <RadioGroup v-model="billType">
-                                        <Radio label="银票"></Radio>
-                                        <Radio label="商票"></Radio>
-                                    </RadioGroup>
-                                </div>
+                        <div class="pubBackToBack pubBillItem">
+                            <div class="pubBackToBack_label pubBillItem_label">
+                                有无瑕疵：
                             </div>
-                            <div class="pubBackToBack pubBillItem">
-                                <div class="pubBackToBack_label pubBillItem_label">
-                                    有无回头：
-                                </div>
-                                <div class="pubBackToBack_txt pubBillItem_txt">
-                                    <RadioGroup v-model="billBackToBack">
-                                        <Radio label="有回头"></Radio>
-                                        <Radio label="无回头"></Radio>
-                                    </RadioGroup>
-                                </div>
+                            <div class="pubBackToBack_txt pubBillItem_txt">
+                                <RadioGroup v-model="billBackToBack">
+                                    <Radio label="无瑕疵"></Radio>
+                                    <Radio label="回头"></Radio>
+                                    <Radio label="重复"></Radio>
+                                    <Radio label="质押"></Radio>
+                                    <Radio label="保证"></Radio>
+                                    <Radio label="瑕疵"></Radio>
+                                </RadioGroup>
                             </div>
-                            <div class="pubBillBidMoney pubBillItem">
-                                <div class="pubBillBidMoney_label pubBillItem_label">
-                                    交易方式：
+                        </div>
+                        <div class="pubBillBidMoney pubBillItem">
+                            <div class="pubBillBidMoney_label pubBillItem_label">
+                                交易方式：
+                            </div>
+                            <div class="pubBillBidMoney_txt pubBillItem_txt">
+                                <RadioGroup v-model="billQuoteType">
+                                    <Radio label="竞价"></Radio>
+                                    <Radio label="一口价"></Radio>
+                                </RadioGroup>
+                            </div>
+                            <div v-if="billQuoteType=='一口价'" class="pubBillBidMoneySelect">
+                                <div class="pubBillBidMoneySelect_Box">
+                                    <input type="number" v-model="billBidMoney" class="pubBillBidMoneySelectBox_ipt" >
+                                    <span>元</span>
                                 </div>
-                                <div class="pubBillBidMoney_txt pubBillItem_txt">
-                                    <RadioGroup v-model="billQuoteType">
-                                        <Radio label="竞价"></Radio>
-                                        <Radio label="一口价"></Radio>
-                                    </RadioGroup>
-                                </div>
-                                <div v-if="billQuoteType=='一口价'" class="pubBillBidMoneySelect">
-                                    <div class="pubBillBidMoneySelect_Box">
-                                        <input type="number" v-model="billBidMoney" class="pubBillBidMoneySelectBox_ipt" >
-                                        <span>元</span>
-                                    </div>
-                                    <div class="pubBillBidMoneySelect_sub">/每十万扣</div>
-                                </div>
+                                <div class="pubBillBidMoneySelect_sub">/每十万扣</div>
                             </div>
                         </div>
                     </div>
+                    <div class="pubBillInfoRight">
+                        <div class="pubBillInfoImg_label">
+                            上传汇票
+                        </div>
+                        <div class="pubBillInfoImg_txt">
+                            <div class="pubBillImg_alt">汇票正面:</div>
+                            <div class="demo-upload-list" v-if="uploadFrontList.length >0" >
+                                <template v-if="uploadFrontList[0].status ==='finished'">
+                                    <img :src="uploadFrontList[0].url">
+                                    <div class="demo-upload-list-cover">
+                                        <Icon type="ios-eye-outline" @click.native="handleView(uploadFrontList[0].url)"></Icon>
+                                        <Icon type="ios-trash-outline" @click.native="handleRemoveFront"></Icon>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <Progress v-if="uploadFrontList[0].showProgress" :percent="uploadFrontList[0].percentage" hide-info></Progress>
+                                </template>
+                            </div>
+                            <Upload
+                                v-if="uploadFrontList.length == 0" 
+                                ref="uploadFront"
+                                :show-upload-list="true"
+                                :default-file-list="uploadFrontList"
+                                :on-success="handleSuccess"
+                                :format="['jpg','jpeg','png']"
+                                :max-size="2048"
+                                :on-format-error="handleFormatError"
+                                :on-exceeded-size="handleMaxSize" 
+                                type="drag"
+                                action="/common/upload"
+                                style="display:block;width:142px;" >
+                                <div style="width:142px;height:90px;line-height:116px;">
+                                    <Icon type="ios-plus-empty" class="addIcon" size="60" ></Icon>
+                                </div>
+                            </Upload>
+                            <!-- 预览图片 -->
+                            <Modal 
+                                title="预览大图" 
+                                width="1080"
+                                v-model="visible">
+                                <img :src="imgName" v-if="visible" style="width: 100%">
+                            </Modal>
+                        </div>
+                        <!--背书图片-->
+                        <div class="pubBillBack">
+                            <div class="pubBillImg_alt">汇票反面:</div>
+                            <div class="demo-upload-list" v-for="pubBillBackImg in uploadBackList" :key="pubBillBackImg.url" v-if="uploadBackList.length >0" >
+                                <template v-if="uploadBackList[0].status ==='finished'">
+                                    <img :src="pubBillBackImg.url">
+                                    <div class="demo-upload-list-cover">
+                                        <Icon type="ios-eye-outline" @click.native="handleViewBack(pubBillBackImg.url)"></Icon>
+                                        <Icon type="ios-trash-outline" @click.native="handleRemoveBack(pubBillBackImg.url)"></Icon>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <Progress v-if="uploadBackList[0].showProgress" :percent="uploadBackList[0].percentage" hide-info></Progress>
+                                </template>
+                            </div>
+                            <Upload
+                                class="uploadFile_btn" 
+                                ref="uploadFile" 
+                                :show-upload-list="false"
+                                :default-file-list="uploadBackList"
+                                :on-success="handleSuccessBack" 
+                                :max-size="2048"
+                                :on-format-error="handleFormatError"
+                                :on-exceeded-size="handleMaxSize" 
+                                type="drag"
+                                action="/common/upload"
+                                style="display:inline-block;width:142px;" >
+                                <div style="width:142px;height:88px;line-height:116px;">
+                                    <Icon type="ios-plus-empty" class="addIcon" size="60" ></Icon>
+                                </div>
+                            </Upload>
+                            <!-- 预览图片 -->
+                            <Modal 
+                                title="预览大图" 
+                                width="1080"
+                                v-model="visible1">
+                                <img :src="imgName" v-if="visible1" style="width: 100%">
+                            </Modal>
+                        </div>
+                    </div>
                 </div>
-                <!--我要竞价-->
-                <div class="pubBillBtn">
-                    <a class="pubBillBtnPub" @click="publishBill">立即发布</a>
-                </div>
+            </div>
+            <!--立即发布-->
+            <div class="pubBillBtn">
+                <a class="pubBillBtnPub" @click="publishBill">立即发布</a>
+            </div>
         </div>
     </div>
 </template>
@@ -212,7 +215,7 @@ export default {
             billExpire:'',
             billAcceptOrg:'',
             billType:'银票',
-            billBackToBack:'无回头',
+            billBackToBack:'无瑕疵',
             billQuoteType:'一口价',
             billBidMoney:'0.00',
             billImg:'',
@@ -251,10 +254,15 @@ export default {
             if(fileList.length==1){
                 this.billEndorseImg = fileList[0].url;
             }else{
-                this.billEvidence = fileList[1].url;
+                this.billEndorseImg = '';
+                this.billEvidence = fileList[0].url;
+                for(let i=1;i<fileList.length;i++){
+                    var newUrl = fileList[i].url;
+                    this.billEndorseImg += newUrl+',';
+                }
+                this.billEndorseImg =(this.billEndorseImg.substring(this.billEndorseImg.length-1)==',')?this.billEndorseImg.substring(0,this.billEndorseImg.length-1):this.billEndorseImg;
+                // console.log(this.billEndorseImg)
             }
-            // console.log(this.billEndorseImg)
-            // console.log(this.billEvidence)
         },
         // 预览
         handleView (name) {
@@ -294,7 +302,7 @@ export default {
             const title = '提示';
             if(self.billNo==''){
                 const content = '<p>请输入票据号！</p>';
-                this.$Modal.warning({
+                self.$Modal.warning({
                     title: title,
                     content: content
                 });
@@ -302,7 +310,7 @@ export default {
             }
             if(self.billUserName==''){
                 const content = '<p>请输入承兑人全称！</p>';
-                this.$Modal.warning({
+                self.$Modal.warning({
                     title: title,
                     content: content
                 });
@@ -310,7 +318,7 @@ export default {
             }
             if(self.billMoney==''){
                 const content = '<p>请输入票面金额！</p>';
-                this.$Modal.warning({
+                self.$Modal.warning({
                     title: title,
                     content: content
                 });
@@ -318,7 +326,7 @@ export default {
             }
             if(self.billExpire==''){
                 const content = '<p>请选择汇票到期日！</p>';
-                this.$Modal.warning({
+                self.$Modal.warning({
                     title: title,
                     content: content
                 });
@@ -330,7 +338,7 @@ export default {
             // console.log(this.billDeadline);
             if(self.billAcceptOrg==''){
                 const content = '<p>请选择承兑机构！</p>';
-                this.$Modal.warning({
+                self.$Modal.warning({
                     title: title,
                     content: content
                 });
@@ -338,7 +346,7 @@ export default {
             }
             if(self.billType==''){
                 const content = '<p>请选择汇票类型！</p>';
-                this.$Modal.warning({
+                self.$Modal.warning({
                     title: title,
                     content: content
                 });
@@ -346,7 +354,7 @@ export default {
             }
             if(self.billBackToBack==''){
                 const content = '<p>请选择有无背！</p>';
-                this.$Modal.warning({
+                self.$Modal.warning({
                     title: title,
                     content: content
                 });
@@ -354,7 +362,7 @@ export default {
             }
             if(self.billQuoteType==''){
                 const content = '<p>请选择交易方式！</p>';
-                this.$Modal.warning({
+                self.$Modal.warning({
                     title: title,
                     content: content
                 });
@@ -369,7 +377,7 @@ export default {
             }
             if(self.billQuoteType=='fixed'&&self.billBidMoney==''){
                 const content = '<p>请输入一口价价格！</p>';
-                this.$Modal.warning({
+                self.$Modal.warning({
                     title: title,
                     content: content
                 });
@@ -377,7 +385,7 @@ export default {
             }
             if(self.billImg==''){
                 const content = '<p>请上传汇票正面图片！</p>';
-                this.$Modal.warning({
+                self.$Modal.warning({
                     title: title,
                     content: content
                 });
@@ -385,7 +393,7 @@ export default {
             }
             if(self.billEndorseImg==''){
                 const content = '<p>请上传汇票背书文件！</p>';
-                this.$Modal.warning({
+                self.$Modal.warning({
                     title: title,
                     content: content
                 });
@@ -407,7 +415,7 @@ export default {
                 billFixedPrice:self.billBidMoney
             };
             fetchPublishBill(data,{emulateJSON:true,withCredentials:true}).then(function(res){
-                // console.log(res)
+                console.log(res)
                  if(res.data.code==200){
                     self.$Message.success('发布成功');
                     self.$router.push('/out/sale/publishing');
@@ -500,12 +508,13 @@ export default {
             width: 100%;
             height: 638px;
             background: white;
+            overflow-y: scroll;
+            overflow-x: hidden;
             .pubBill {
                 width: 982px;
                 height: auto;
-                padding: 10px 30px;
+                padding: 10px 30px 0;
                 margin: 0 auto;
-                overflow: hidden;
                 .pubBillTitle {
                     width: 100%;
                     height: 20px;
@@ -519,7 +528,6 @@ export default {
                 .pubBillInfo {
                     width: 100%;
                     height: auto;
-                    overflow: hidden;
                     .pubBillInfoTop{
                         width: 100%;
                         height: auto;
@@ -527,7 +535,6 @@ export default {
                         .pubBillInfoLeft {
                             width: 430px;
                             height: auto;
-                            float: left;
                             .pubBillInfoItem {
                                 width: 100%;
                                 height:46px;
@@ -588,67 +595,36 @@ export default {
                                 }
                             }
                         }
-                        .pubBillInfoRight {
-                            width: 386px;
-                            height: 280px;
-                            float: left;
-                            padding-left:50px;
-                            .pubBillInfoImg_label{
-                                width: 386px;
-                                height: 30px;
-                                font-weight: 600;
-                                line-height: 20px;
-                                padding-bottom: 10px;
-                            }
-                            .pubBillInfoImg_txt{
-                                height: 130px;
-                            }
-                            img {
-                                display: block;
-                                width: 142px;
-                                height: 90px;
-                            }
-                            .pubBillImg_alt{
-                                width: 142px;
-                                height: 30px;
-                                line-height: 30px;
-                            }
-                            .addIcon{
-                                color: #ccc;
-                            }
-                        }
                     }
                     .pubBillInfoBottom{
                         width: 100%;
-                        height: 100px;
+                        height: 181px;
                         .pubBillItem{
-                            width: 50%;
+                            width: 100%;
                             height: 47px;
                             line-height: 47px;
-                            margin-bottom: 24px;
                             overflow: hidden;
-                            float: left;
                             .pubBillItem_label {
-                                width: 120px;
+                                width: 100px;
                                 height: 47px;
-                                margin-right: 14px;
                                 float: left;
                             }
                             .pubBillItem_txt {
                                 width: auto;
                                 height: 47px;
                                 float: left;
-                                text-align: center;
+                                text-align: left;
                                 border-radius: 4px;
                                 .ivu-radio-group{
                                     .ivu-radio-group-item{
-                                        margin-right: 50px;
+                                        width: 100px;
                                     }
                                 }
                             }
                         }
                         .pubBillBidMoney{
                             width: 100%;
+                            margin: 20px 0;
                             .pubBillBidMoneySelect{
                                 float: left;
                                 .pubBillBidMoneySelect_Box{
@@ -675,6 +651,37 @@ export default {
                                     margin-left: 10px;
                                 }
                             }
+                        }
+                    }
+                    .pubBillInfoRight {
+                        width: 100%;
+                        height: auto;
+                        padding-bottom: 20px;
+                        .pubBillInfoImg_label{
+                            width: 100%;
+                            height: 30px;
+                            font-weight: 600;
+                            line-height: 20px;
+                            padding-bottom: 10px;
+                        }
+                        .pubBillInfoImg_txt{
+                            height: 130px;
+                        }
+                        .pubBillBack{
+                            height: auto;
+                        }
+                        img {
+                            display: block;
+                            width: 142px;
+                            height: 90px;
+                        }
+                        .pubBillImg_alt{
+                            width: 142px;
+                            height: 30px;
+                            line-height: 30px;
+                        }
+                        .addIcon{
+                            color: #ccc;
                         }
                     }
                 }

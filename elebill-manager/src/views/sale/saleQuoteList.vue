@@ -12,7 +12,7 @@
             </li>
             <li class="saleQListMainTopItem">
                 <div class="saleQListMainTopItem_label">票面金额（元）：</div>
-                <div class="saleQListMainTopItem_text">￥{{billInfo.billMoney}}</div>
+                <div class="saleQListMainTopItem_text">￥{{parseFloat((billInfo.billMoney/10000).toFixed(6))}}万</div>
             </li>
             <li class="saleQListMainTopItem">
                 <div class="saleQListMainTopItem_label">剩余天数（天）：</div>
@@ -24,8 +24,8 @@
                 <div class="saleQListItemNav saleQListItemName">用户名称</div>
                 <div class="saleQListItemNav saleQListItemRate">报价利率</div>
                 <div class="saleQListItemNav saleQListItemAdd">每十万加（元）</div>
-                <div class="saleQListItemNav saleQListItemInterest">贴息金额</div>
-                <div class="saleQListItemNav saleQListItemDiscount">贴现金额</div>
+                <div class="saleQListItemNav saleQListItemInterest">贴息金额（元）</div>
+                <div class="saleQListItemNav saleQListItemDiscount">贴现金额（元）</div>
                 <div class="saleQListItemNav saleQListItemTel">联系电话</div>
                 <div class="saleQListItemNav saleQListItemOperate">操作</div>
             </li>
@@ -37,7 +37,7 @@
                 <div class="saleQListItemNav saleQListItemRate">{{billItem.quoteRate}}%</div>
                 <div class="saleQListItemNav saleQListItemAdd">￥{{billItem.quoteIncrement}}</div>
                 <div class="saleQListItemNav saleQListItemInterest">￥{{billItem.quoteDiscountAmount}}</div>
-                <div class="saleQListItemNav saleQListItemDiscount">￥{{billItem.quoteAmount}}</div>
+                <div class="saleQListItemNav saleQListItemDiscount">￥{{parseFloat((billItem.quoteAmount/10000).toFixed(6))}}万</div>
                 <div class="saleQListItemNav saleQListItemTel">{{billItem.userPhone}}</div>
                 <div class="saleQListItemNav saleQListItemOperate">
                     <a class="saleQListItem_fail" v-if="billItem.quoteStatus=='run'" @click="failBill(billItem.quoteId)">撤销竞价</a>

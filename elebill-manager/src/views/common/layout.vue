@@ -72,7 +72,6 @@
     .wrap {
         width:100%;
         height: 100%;
-        overflow: hidden;
     }
 
     .wrap .container {
@@ -85,7 +84,7 @@
     .wrap .container .indexMain {
         width: 1280px;
         margin: 0 auto;
-        min-height: 696px;
+        min-height: 754px;
         /* position: relative; */
     }
 

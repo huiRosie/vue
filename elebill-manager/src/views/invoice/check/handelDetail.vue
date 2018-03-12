@@ -123,7 +123,7 @@
                                         贴现金额：
                                     </div>
                                     <div v-if="billData.billQuoteType=='fixed'" class="handelDetBillInfoItem_text">
-                                        <span>{{((billData.billMoney-(billData.billMoney/100000)*billData.billFixedPrice)/10000).toFixed(2)}}</span>万元
+                                        <span>{{parseFloat(((billData.billMoney-(billData.billMoney/100000)*billData.billFixedPrice)/10000).toFixed(6))}}</span>万元
                                     </div>
                                     <div v-else class="inDetBillInfoItem_text">
                                         买家参与竞价后可了解详情
@@ -136,55 +136,42 @@
                             <div class="handelDetBillImgBox">
                                 <dl>
                                     <dt>
-                                        <img v-if="billData.billImg!=null&&billData.billImg.indexOf('http://')==-1&&billData.billImg.indexOf('https://')==-1" v-bind:src="'http://'+billData.billImg" @click="viewImgFront" />
-                                        <img v-else v-bind:src="billData.billImg" @click="viewImgFront"/>
-                                        <Modal 
-                                            title="查看大图" 
-                                            v-model="visible0" 
-                                            width='1080' 
-                                            ok-text='关闭' 
-                                            cancel-text='' 
-                                            class-name="vertical-center-modal">
-                                            <img v-if="billData.billImg!=null&&billData.billImg.indexOf('http://')==-1&&billData.billImg.indexOf('https://')==-1&&visible0" :src="'http://'+billData.billImg" style="width: 100%">
-                                            <img v-if="billData.billImg!=null&&billData.billImg.indexOf('http')!=-1&&visible0" :src="billData.billImg" style="width: 100%">
-                                        </Modal>
+                                        <img v-if="billData.billImg!=null&&billData.billImg.indexOf('http://')==-1&&billData.billImg.indexOf('https://')==-1" v-bind:src="'http://'+billData.billImg" @click="viewImgBack(billData.billImg)" />
+                                        <img v-else v-bind:src="billData.billImg" @click="viewImgBack(billData.billImg)"/>
                                     </dt>
                                     <dd>汇票正面</dd>
                                 </dl>
-                                <dl v-if="billData.billEndorseImg!=''&&billData.billEndorseImg!=null">
-                                    <dt>
-                                        <img v-if="billData.billEndorseImg!=null&&billData.billEndorseImg.indexOf('http://')==-1&&billData.billEndorseImg.indexOf('https://')==-1" :src="'http://'+billData.billEndorseImg" @click="viewImgBack"/>
-                                        <img v-else :src="billData.billEndorseImg" @click="viewImgBack()"/>
-                                        <Modal 
-                                            title="查看大图" 
-                                            v-model="visible1" 
-                                            width='1080' 
-                                            ok-text='关闭' 
-                                            cancel-text='' 
-                                            class-name="vertical-center-modal">
-                                            <img v-if="billData.billEndorseImg!=null&&billData.billEndorseImg.indexOf('http://')==-1&&billData.billEndorseImg.indexOf('https://')==-1&&visible1" :src="'http://'+billData.billEndorseImg" style="width: 100%">
-                                            <img v-if="billData.billEndorseImg!=null&&billData.billEndorseImg.indexOf('http')!=-1&&visible1" :src="billData.billEndorseImg" style="width: 100%">
-                                        </Modal>
-                                    </dt>
-                                    <dd>汇票背书</dd>
-                                </dl>
                                 <dl v-if="billData.billEvidence!=''&&billData.billEvidence!=null">
                                     <dt>
-                                        <img v-if="billData.billEvidence!=null&&billData.billEvidence.indexOf('http://')==-1&&billData.billEvidence.indexOf('https://')==-1" :src="'http://'+billData.billEvidence" @click="viewImgBack2"/>
-                                        <img v-else :src="billData.billEvidence" @click="viewImgBack2()"/>
-                                        <Modal 
-                                            title="查看大图" 
-                                            v-model="visible2" 
-                                            width='1080' 
-                                            ok-text='关闭' 
-                                            cancel-text='' 
-                                            class-name="vertical-center-modal">
-                                            <img v-if="billData.billEvidence!=null&&billData.billEvidence.indexOf('http://')==-1&&billData.billEvidence.indexOf('https://')==-1&&visible2" :src="'http://'+billData.billEvidence" style="width: 100%">
-                                            <img v-if="billData.billEvidence!=null&&billData.billEvidence.indexOf('http')!=-1&&visible2" :src="billData.billEvidence" style="width: 100%">
-                                        </Modal>
+                                        <img v-if="billData.billEvidence!=null&&billData.billEvidence.indexOf('http://')==-1&&billData.billEvidence.indexOf('https://')==-1" :src="'http://'+billData.billEvidence" @click="viewImgBack(billData.billEvidence)"/>
+                                        <img v-else :src="billData.billEvidence" @click="viewImgBack(billData.billEvidence)"/>
                                     </dt>
                                     <dd>汇票背书</dd>
                                 </dl>
+                                <dl v-if="billEndorseImg!=''&&billEndorseImg!=null&&billEndorseImg.length==1"  >
+                                    <dt>
+                                        <img v-if="billEndorseImg!=null&&billEndorseImg[0].indexOf('http://')==-1&&billEndorseImg[0].indexOf('https://')==-1" :src="'http://'+billEndorseImg[0]" @click="viewImgBack(billEndorseImg[0])"/>
+                                        <img v-else :src="billEndorseImg[0]" @click="viewImgBack(billEndorseImg[0])"/>
+                                    </dt>
+                                    <dd>汇票背书</dd>
+                                </dl>
+                                <dl v-for="(imgItem,index) in billEndorseImg" :key="index"  v-if="billEndorseImg.length>1">
+                                    <dt>
+                                        <img v-if="imgItem!=null&&imgItem.indexOf('http://')==-1&&imgItem.indexOf('https://')==-1" :src="'http://'+imgItem" @click="viewImgBack(imgItem)"/>
+                                        <img v-else :src="imgItem" @click="viewImgBack(imgItem)"/>
+                                    </dt>
+                                    <dd>汇票背书</dd>
+                                </dl>
+                                <Modal 
+                                    title="查看大图" 
+                                    v-model="visible" 
+                                    width='1080' 
+                                    ok-text='关闭' 
+                                    cancel-text='' 
+                                    class-name="vertical-center-modal">
+                                    <img v-if="imgSrc.indexOf('http://')==-1&&imgSrc.indexOf('https://')==-1" :src="'http://'+imgSrc" style="width: 100%">
+                                    <img v-if="imgSrc.indexOf('http')!=-1" :src="imgSrc" style="width: 100%">
+                                </Modal>
                             </div>
                         </div>
                         <div class="handelDetBillInfoRight">
@@ -238,107 +225,6 @@
                 </div>
             </div>
         </div>
-            <!-- <div class="handelDet">
-                <h3 class="handelDetTitle">汇票信息</h3>
-                <div class="handelDetInfo">
-                    <ul class="handelDetInfoLeft">
-                        <li class="handelDetInfoItem">
-                            <div class="handelDetInfoItem_label">
-                                票据号：
-                            </div>
-                            <div class="handelDetInfoItem_text">
-                                {{billInfo.billNo}}
-                            </div>
-                        </li>
-                        <li class="handelDetInfoItem">
-                            <div class="handelDetInfoItem_label">
-                                承兑人全称：
-                            </div>
-                            <div class="handelDetInfoItem_text">
-                                {{billInfo.billUserName}}
-                            </div>
-                        </li>
-                        <li class="handelDetInfoItem">
-                            <div class="handelDetInfoItem_label">
-                                票据类型：
-                            </div>
-                            <div class="handelDetInfoItem_text">
-                                {{billInfo.billClassify}}
-                            </div>
-                        </li>
-                        <li class="handelDetInfoItem">
-                            <div class="handelDetInfoItem_label">
-                                票面金额(元)：
-                            </div>
-                            <div class="handelDetInfoItem_text">
-                                {{billInfo.billMoney}}
-                            </div>
-                        </li>
-                        <li class="handelDetInfoItem">
-                            <div class="handelDetInfoItem_label">
-                                汇票到期日：
-                            </div>
-                            <div class="handelDetInfoItem_text">
-                                {{billInfo.billExpire}}
-                            </div>
-                        </li>
-                        <li class="handelDetInfoItem">
-                            <div class="handelDetInfoItem_label">
-                                背书次数：
-                            </div>
-                            <div class="handelDetInfoItem_text">
-                                {{billInfo.billEndorse}}
-                            </div>
-                        </li>
-                        <li class="handelDetInfoItem">
-                            <div class="handelDetInfoItem_label">
-                                汇票瑕疵：
-                            </div>
-                            <div class="handelDetInfoItem_text">
-                                {{billInfo.billImgHealth}}
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="handelDetInfoRight">
-                        <img v-if="billInfo.billImg!=null&&billInfo.billImg!=''&&billInfo.billImg.indexOf('http://')==-1&&billInfo.billImg.indexOf('https://')==-1" :src="'http://'+billInfo.billImg" />
-                        <img v-else :src="billInfo.billImg"  />
-                    </div>
-                </div>
-            </div> -->
-            <!--背书及附件-->
-            <!-- <div class="handelDetAttach">
-                <h3 class="handelDetAttachTitle">背书及附件</h3>
-                <div class="handelDetAttachInfo">
-                    <img v-if="billInfo.billEvidence!=null&&billInfo.billEvidence!=''&&billInfo.billEvidence.indexOf('http://')==-1&&billInfo.billEvidence.indexOf('https://')==-1" :src="'http://'+billInfo.billEvidence"/>
-                    <img v-else :src="billInfo.billEvidence"/>
-                </div>
-            </div> -->
-            <!--交易成功或失败-->
-            <!-- <div class="handelDetBtn" v-if="billInfo.billStatus=='validate_success'">
-                <a class="handelDetBtnRefer" @click="tradeSuccessBill('success')">交易成功</a>
-                <a class="handelDetBtnPass" @click="bidModal">交易失败</a>
-                
-                <Modal
-                    v-model="modal"
-                    title="交易失败原因(请输入交易失败原因)"
-                    class-name="vertical-center-modal">
-                    <div slot="header" class="bidPouupTop">
-                        <h2 class="bidPouupTopTitle">交易失败原因<span> (请输入交易失败原因)</span></h2>
-                    </div>
-                    <div class="bidPouupMain">
-                        <div class="bidPouupMain_label">
-                            交易失败原因：
-                        </div>
-                        <div class="bidPouupMain_text">
-                            <textarea name="" v-model="billFailReason" ></textarea>
-                        </div>
-                        <div class="bid_tip" ref="bid_tip">请输入交易失败原因</div>
-                    </div>
-                    <div slot="footer" class="bidPouupBtn">
-                        <a @click="tradeFailBill('failure')" class="bidPouupFail">交易失败</a>
-                    </div>
-                </Modal>
-            </div> -->
     </div>
 </template>
 
@@ -361,9 +247,9 @@ export default {
                 maskColor:'white',
                 maskOpacity:0.2
            },
-            visible0:false,
-            visible1:false,
-            visible2:false
+            visible:false,
+            imgSrc:'',
+            billEndorseImg:''
         }
     },
     created:function(){
@@ -378,7 +264,8 @@ export default {
                 billId:self.billId
             },{emulateJSON:true,credentials:true}).then(function(res){
                 self.billData = res.data.data;
-                console.log(self.billData)
+                self.billEndorseImg = (res.data.data.billEndorseImg).split(',');
+                // console.log(self.billData)
             })
         },
         // 交易成功 
@@ -532,14 +419,9 @@ export default {
         routerBack:function(){
             this.$router.go(-1);
         },
-        viewImgFront:function(){
-            this.visible0 = true;
-        },
-        viewImgBack:function(){
-            this.visible1 = true;
-        },
-        viewImgBack2:function(){
-            this.visible2 = true;
+        viewImgBack:function(imgSrc){
+            this.visible = true;
+            this.imgSrc = imgSrc;
         },
     }
 }
@@ -646,11 +528,12 @@ export default {
                             .handelDetBillImgBox{
                                 width: 652px;
                                 height: 208px;
-                                overflow: hidden;
-                                padding: 38px 44px;
+                                overflow-x: hidden;
+                                overflow-y: auto;
+                                padding: 20px 44px;
                                 dl{
                                     float: left;
-                                    margin-right: 69px;
+                                    margin-right: 60px;
                                     dt{
                                         margin-bottom: 14px;
                                         img{
@@ -664,7 +547,7 @@ export default {
                                         text-align: center;
                                     }
                                 }
-                                dl:last-child{
+                                dl:nth-child(3),dl:nth-child(6){
                                     margin: 0;
                                 }
                             }

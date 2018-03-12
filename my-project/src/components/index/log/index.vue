@@ -1,7 +1,7 @@
 <template>
     <div class="in">
         <div class="inContent">
-            <h2 class="inTitle">我要收票</h2>
+            <h2 class="inTitle">交易记录</h2>
             <!--汇票列表-->
             <FinishBillList></FinishBillList>
         </div>

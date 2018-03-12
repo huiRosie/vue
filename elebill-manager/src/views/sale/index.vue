@@ -29,7 +29,7 @@
                 <div v-else class="saleItemNav saleItemTerm">竞价</div>
                 <div class="saleItemNav saleItemIsti">{{billItem.billUserName}}</div>
                 <div v-if="billItem.billMoney<=10000" class="saleItemNav saleItemMoney">{{billItem.billMoney}}</div>
-                <div v-if="billItem.billMoney>10000" class="saleItemNav saleItemMoney">{{billItem.billMoney/10000}}万</div>
+                <div v-if="billItem.billMoney>10000" class="saleItemNav saleItemMoney">{{parseFloat((billItem.billMoney/10000).toFixed(6))}}万</div>
                 <div class="saleItemNav saleItemDeadilne">{{billItem.billExpire}}</div>
                 <div v-if="billItem.billQuoteType=='fixed'" class="saleItemNav saleItemNum">一口价</div>
                 <div v-else class="saleItemNav saleItemNum">{{billItem.billQuoteCount}}</div>
@@ -61,9 +61,9 @@
                 <div v-else class="preItemNav preItemTerm">竞价</div>
                 <div class="preItemNav preItemIsti">{{billItem.billUserName}}</div>
                 <div v-if="billItem.billMoney<=10000" class="preItemNav preItemMoney">{{billItem.billMoney}}</div>
-                <div v-if="billItem.billMoney>10000" class="preItemNav preItemMoney">{{billItem.billMoney/10000}}万</div>
+                <div v-if="billItem.billMoney>10000" class="preItemNav preItemMoney">{{parseFloat((billItem.billMoney/10000).toFixed(6))}}万</div>
                 <div class="preItemNav preItemDeadilne">{{billItem.billExpire}}</div>
-                <div v-if="billItem.billQuoteType=='fixed'" class="preItemNav preItemNum">{{(billItem.billMoney-(billItem.billMoney/100000)*billItem.billFixedPrice)/10000}}万</div>
+                <div v-if="billItem.billQuoteType=='fixed'" class="preItemNav preItemNum">{{parseFloat(((billItem.billMoney-(billItem.billMoney/100000)*billItem.billFixedPrice)/10000).toFixed(6))}}万</div>
                 <div v-else class="preItemNav preItemNum">{{billItem.quoteAmount}}</div>
                 <div v-if="billItem.billStatus=='publishing'" class="preItemNav preItemNum">待交易</div>
                 <div v-if="billItem.billStatus=='ording'" class="preItemNav preItemNum">已下单</div>
@@ -84,9 +84,9 @@
         ref="pages"
         class="pageBox" 
         :total="total" 
-        v-if="total>8"
+        v-if="total>9"
         :current="current"
-        :pageSize="8"
+        :pageSize="9"
         @on-change="getBillList"
         ></Page>
     </div>
@@ -126,7 +126,7 @@ export default {
             fetchOutBillList({
                 billStatus:billStatus,
                 currentPage:current,
-                pageSize:8
+                pageSize:9
             },{emulateJSON:true,credentials:true}).then(function(res){
                 console.log(res)
                 if(res.data.code==200){

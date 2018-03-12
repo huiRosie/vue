@@ -119,10 +119,6 @@ export default {
                 return
             }
             if ((/^[1][3578][0-9]{9}$/).test(this.phone)&&(/^[a-zA-Z0-9]{6,18}$/).test(this.password)&&(/^[0-9]{6}$/).test(this.msgcode)) {
-                // console.log(this.phone)
-                // console.log(this.password)
-                // console.log(this.msgcode)
-                // console.log(this.msgId)
                 var self = this;
                 self.$refs.regPhone_tip.style.display = 'none'   
                 self.$refs.regPassword_tip.style.display = 'none'   

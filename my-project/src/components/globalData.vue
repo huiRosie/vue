@@ -3,7 +3,8 @@
         name:'globalData',
         data:{
             // Ip:'http:/'+'/192.168.11.26',
-            // Ip:'http:/'+'/www.elebill.com',
+            // Ip:'https:/'+'/www.elebill.com',
+            // Ip:'https://www.elebill.com',
             // Ip:'http://192.168.11.26',
             Ip:'.',
             loginStatus:'登录',

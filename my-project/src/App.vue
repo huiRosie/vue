@@ -33,7 +33,44 @@
                     <router-link class="topBNav_out topBNav_item" to="/bill/out">我要出票</router-link>
                     <router-link class="topBNav_in topBNav_item" to="/bill/in">我要收票</router-link>
                     <router-link class="topBNav_in topBNav_item" to="/bill/log">交易记录</router-link>
+                    <a class="topBNav_in topBNav_item" :class="{activeSecurity:currentUrl=='/bill/security'}" @click="security">风控中心</a>
+                    <a class="topBNav_in topBNav_item" href="http://www.chuasi.com" target="blank">百万理财</a>
                     <router-link class="topBNav_us topBNav_item" to="/us">联系我们</router-link>
+                    <!-- 点击出现弹框 -->
+                    <Modal
+                        v-model="modal"
+                        title="邀请码(请输入您的邀请码)"
+                        footer=''
+                        class-name="vertical-center-modal">
+                        <div slot="header" class="bidPouupTop">
+                            <h2 class="bidPouupTopTitle">邀请码</h2>
+                        </div>
+                        <div class="bidPouupMain">
+                            <div class="bidPouupInterest">
+                                <div class="bidPouupInterest_label">
+                                    手机号:
+                                </div>
+                                <div class="bidPouupInterest_text" ref="interestMoney" >
+                                    <input autofocus placeholder="" v-model="userPhone" @keyup.enter="gotoScan()"  value="" />
+                                </div>
+                                <div class="getCode" @click="getCode()">获取邀请码</div>
+                                <div class="bidAdd_tip" ref="phone_tip">请正确输入手机号</div>
+                            </div>
+                            <div class="bidPouupInterest">
+                                <div class="bidPouupInterest_label">
+                                    邀请码:
+                                </div>
+                                <div class="bidPouupInterest_text" ref="interestMoney" >
+                                    <input autofocus placeholder="" v-model="inviteCode" @keyup.enter="gotoScan()"  value="" />
+                                </div>
+                                <!-- <div class="getCode" @click="getCode()">获取邀请码</div> -->
+                                <div class="bidAdd_tip" ref="code_tip">请正确输入邀请码</div>
+                            </div>
+                        </div>
+                        <div slot="footer" class="bidPouupBtn">
+                            <a @click="gotoScan()" class="bidPouupOffer">立即查看</a>
+                        </div>
+                    </Modal>
                 </div>
             </div>
         </div>
@@ -79,6 +116,12 @@ export default {
     return {
       loginStatus: "登录",
       loginOutStatus: "退出登录",
+      modal:false,
+      inviteCode:'',
+      currentUrl:'/',
+      msgId:'',
+      userPhone:''
+      
     };
   },
   created:function(){
@@ -101,8 +144,65 @@ export default {
         }
       })
     },
+    security: function() {
+      // 判断的登录与否
+      var data = localStorage.getItem('loginStatus');
+      var dataObj = JSON.parse(data);
+      if(data==null){
+          this.$router.push('/login');
+          return;
+      }
+      var dataObiTime = ((new Date().getTime() - dataObj.time)/1000/60).toFixed(2);//分钟
+      if (dataObiTime>60) {
+          this.$router.push('/login');
+          return;
+      }else{
+        this.modal = true
+      }
+    },
+    getCode: function() {
+      var  self = this;
+      if((/^[1][3,4,5,6,7,8][0-9]{9}$/).test(self.userPhone)){
+          self.$refs.phone_tip.style.display = 'none';   
+          self.$http.post(globalData.data.Ip+'/common/sms',
+            {userPhone:self.userPhone},{emulateJSON:true}).then((res) => {
+            if(res.data.code == 200) {
+                // console.log(res);
+                self.msgId = res.data.data.msgId;
+                self.$Message.success({
+                      content: '请输入验证码！',
+                      duration: 10,
+                      closable: true
+                  });
+            } else {
+                console.log(res);
+            }
+          })
+      }else{
+        self.$refs.phone_tip.style.display = 'block';   
+        return false;
+      }
+      
+    },
+    gotoScan: function() {
+      var self = this;
+      // 验证短信验证码
+      self.$http.post(globalData.data.Ip+'/common/sms/validate',{
+          smsCode:self.inviteCode,
+          smsId:self.msgId,
+        },{emulateJSON:true}).then((res) => {
+          if(res.data.code == 200) {
+              self.modal = false;
+              self.$refs.code_tip.style.display = 'none';  
+              self.$router.push('/bill/security/endorse');  
+              self.inviteCode = '';
+          } else {
+              self.$refs.code_tip.style.display = 'block';   
+              return;
+          }
+      })
+    },
     getData:function(){
-      this.getUserInfo();
       // 判断的登录与否
       var data = localStorage.getItem('loginStatus');
       var dataObj = JSON.parse(data);
@@ -111,7 +211,7 @@ export default {
           return;
       }
       var dataObiTime = ((new Date().getTime() - dataObj.time)/1000/60).toFixed(2);//分钟
-      if (dataObiTime>120) {
+      if (dataObiTime>60) {
           this.loginStatus = '登录';
           return;
       }else{
@@ -122,7 +222,7 @@ export default {
     getUserInfo:function(){
         var self = this;
         self.$http.get(globalData.data.Ip+'/user/info',{credentials:true}).then(function(res){ 
-            // console.log(res);   
+            console.log(res);   
             self.userName = res.data.data.userName;                          
             self.userPhone = res.data.data.userPhone;                          
             self.userEmail = res.data.data.userEmail;                          
@@ -250,7 +350,8 @@ export default {
   color: #f71327;
 }
 
-.wrap .top .topB .topBBox .topBNav .router-link-active {
+.wrap .top .topB .topBBox .topBNav .router-link-active, 
+.wrap .top .topB .topBBox .topBNav .activeSecurity {
   color: #f71327;
 }
 
@@ -332,16 +433,116 @@ export default {
   line-height: 36px;
 }
 
-.mark {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 99;
-  background: rgba(0, 0, 0, 0.3);
-  display: none;
-}
+ /* 弹框内容 */
+    .vertical-center-modal{
+        /* display: flex; */
+        /* align-items: center; */
+        /* justify-content: center; */
+    }
+
+    .bidPouupTop {
+        width: 488px;
+        height:18px;
+        margin-bottom: 1px;
+        background: white;
+    }
+
+    .bidPouupTop .bidPouupTopTitle {
+        width: 380px;
+        height: 18px;
+        float: left;
+        color: #f71327;
+        font-size: 16px;
+    }
+
+    .bidPouupTop .bidPouupTopTitle span {
+        color: #878787;
+        font-size: 12px;
+    }
+    .bidPouupTop .bidPouupTopTitle span b{
+        color: #000;
+        font-weight: 600;
+    }
+
+    .bidPouupMain {
+        width: 424px;
+        height:160px;
+        padding: 20px 0;
+        background: white;
+    }
+
+    .bidPouupMain .bidPouupInterest {
+        width: 100%;
+        height: 46px;
+        line-height: 46px;
+        margin-bottom: 24px;
+    }
+
+    .bidPouupMain .bidPouupInterest .bidPouupInterest_label {
+        width: 105px;
+        height: 46px;
+        text-align: right;
+        float: left;
+        margin-right: 19px;
+    }
+
+    .bidPouupMain .bidPouupInterest .bidPouupInterest_text {
+        width: 208px;
+        height: 46px;
+        float: left;
+        border: 1px solid #878787;
+        border-radius: 4px;
+    }
+
+    .bidPouupMain .bidPouupInterest .bidPouupInterest_text input{
+        width: 206px;
+        height: 44px;
+        float: left;
+        border-radius: 4px;
+        text-indent: 14px;
+    }
+
+    .bidPouupMain .bidPouupInterest .getCode{
+        width: 90px;
+        height: 46px;
+        float: left;
+        color: #f71327;
+        text-align: center;
+        cursor: pointer;
+    }
+    
+    .bidPouupMain .bidAdd_tip {
+        width: 298px;
+        height: 24px;
+        color: red;
+        line-height: 24px;
+        display: none;
+        margin-left: 124px;
+    }
+
+    .ivu-modal-footer{
+        border: 0;
+        padding: 10px 0 40px;
+    }
+
+    .bidPouupBtn {
+        width: 240px;
+        height: 46px;
+        color: white;
+        line-height: 46px;
+        text-align: center;
+        border-radius: 4px;
+        margin: 0 auto;
+        background-color: #f71327;
+    }
+
+    .bidPouupBtn .bidPouupOffer {
+        display: block;
+        width: 240px;
+        height: 46px;
+        color: white;
+    }
+
 
 body,
 div,

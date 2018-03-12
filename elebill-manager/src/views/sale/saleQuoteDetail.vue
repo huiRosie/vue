@@ -40,7 +40,7 @@
                                     票面金额(元)：
                                 </div>
                                 <div class="saleQDetInfoItem_text">
-                                    {{billInfo.billMoney}}
+                                    {{parseFloat((billData.billMoney/10000).toFixed(6))}}万
                                 </div>
                             </li>
                             <li class="saleQDetInfoItem">

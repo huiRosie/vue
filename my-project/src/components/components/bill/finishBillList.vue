@@ -40,26 +40,48 @@
                 </div>
             </div>
             <ul class="billList">
+                <li class="billTitle billItem">
+                    <div class="billItemPub billItem_sub billItem_tit">
+                        发布时间
+                    </div>
+                    <div class="billItemType billItem_sub billItem_tit">
+                        票据类型
+                    </div>
+                    <div class="billItemPrice billItem_sub billItem_tit">
+                        票面金额（万元）
+                    </div>
+                    <div class="billItemExp billItem_sub billItem_tit">
+                        到期时间
+                    </div>
+                    <div class="billItemOrg billItem_sub billItem_tit">
+                        承兑机构
+                    </div>
+                    <div class="billItemBidmoney billItem_sub billItem_tit">
+                        一口价/竞价
+                    </div>
+                    <div class="billItemBack billItem_sub billItem_tit">
+                        瑕疵
+                    </div>
+                    <div class="billItemOperate billItem_sub billItem_tit" >操作</div>                    
+                </li>
                 <li v-if="total>0" class="billItem" v-for="bill in billLists" :key="bill.billId">
-                    <div class="billItemPrice billItem_sub" v-if="bill.billMoney<=10000">
-                        <div class="billItem_text"><span>{{bill.billMoney}}</span>元</div>
-                        <p class="billItem_label">票面金额</p>
-                    </div>
-                    <div class="billItemPrice billItem_sub" v-if="bill.billMoney>10000">
-                        <div class="billItem_text"><span>{{bill.billMoney/10000}}</span>万元</div>
-                        <p class="billItem_label">票面金额</p>
-                    </div>
                     <div class="billItemPub billItem_sub">
                         <div class="billItem_text">{{bill.publishDate}}</div>
-                        <p class="billItem_label">发布时间</p>
+                    </div>
+                    <div class="billItemType billItem_sub">
+                        <div class="billItem_text">{{bill.billClassify}}</div>
+                    </div>
+                    <div class="billItemPrice billItem_sub">
+                        <div class="billItem_text" >
+                            <span v-if="(String(bill.billMoney/10000).indexOf('.') + 1)>0">{{parseFloat((bill.billMoney/10000).toFixed(6))}}</span>
+                            <span v-else>{{(bill.billMoney/10000)}}</span>
+                        </div>
                     </div>
                     <div class="billItemExp billItem_sub">
                         <div class="billItem_text">{{bill.billExpire}}</div>
-                        <p class="billItem_label">到期日期</p>
                     </div>
                     <div class="billItemOrg billItem_sub">
                         <div class="billItem_text">{{bill.billUserName}}</div>
-                        <p class="billItem_label">承兑人</p>
                     </div>
                     <div class="billItemBidmoney billItem_sub">
                         <div v-if="bill.billQuoteType=='fixed'" class="billItem_text">
@@ -68,12 +90,11 @@
                         <div v-else class="billItem_text">
                             竞价
                         </div>
-                        <p class="billItem_label">交易方式</p>
                     </div>
-                    <div v-if="bill.billClassify=='商票'" class="billItemType billItem_sub billItemTypeS">{{bill.billClassify}}</div>
-                    <div v-if="bill.billClassify=='银票'" class="billItemType billItem_sub billItemTypeY">{{bill.billClassify}}</div>
-                    <div v-if="bill.billReturn=='有回头'" class="billItemBack billItemBackY billItem_sub">有回头</div>
-                    <div v-if="bill.billReturn=='无回头'||bill.billReturn==null" class="billItemBack billItemBackW billItem_sub">无回头</div>
+                    <div class="billItemBack billItem_sub">
+                        <div class="billItem_text" v-if="bill.billReturn==null||bill.billReturn==''">无</div>
+                        <div class="billItem_text" v-else>{{bill.billReturn}}</div>
+                    </div>
                     <a v-if="bill.billStatus=='publishing'" class="billItemBid billItem_sub"  @click="bidBill(bill.billId)">立即买票</a>
                     <div v-if="bill.billStatus=='ording'" class="billItemBiding billItem_sub" >交易中</div>
                     <div v-if="bill.billStatus=='paymenting'" class="billItemBiding billItem_sub" >交易中</div>
@@ -104,6 +125,7 @@
 
 <script>
     import globalData from '../../globalData'
+    import {fetchInBillList} from '../../../assets/js/billApi'
 
     export default {
         name: 'FinishBillList',
@@ -243,11 +265,25 @@
         methods:{
             getBillList:function(current){
                 var self = this;
-                var billMoney = this.picked1;
-                var billLimit = this.picked2;
-                var billAcceptOrg = this.picked3;
-                var billClassify = this.picked4;
-                var billStatus = this.picked5;
+                var billMoney = self.picked1;
+                var billLimit = self.picked2;
+                var billAcceptOrg = self.picked3;
+                var billClassify = self.picked4;
+                var billStatus = self.picked5;
+                // fetchInBillList({
+                //     currentPage: current,
+                //     billMoney: billMoney,
+                //     billLimit: billLimit,
+                //     billAcceptOrg: billAcceptOrg,
+                //     billClassify: billClassify,
+                //     billStatus: billStatus,
+                //     isCurrentUser: false
+                // },{emulateJSON:true}).then(function(res){
+                //     self.billLists = res.data.data.recordList;
+                //     self.total = res.data.data.totalCount;
+                // },function(error){
+                //     console.log(error)
+                // })
                 self.$http.post(
                     globalData.data.Ip + "/bill/page",{
                         currentPage: current,
@@ -352,40 +388,34 @@
                 overflow: hidden;
                 .billItem {
                     width: 100%;
-                    height: 120px;
+                    height: 70px;
                     overflow: hidden;
-                    padding: 25px 0;
                     border-bottom: 1px solid #eee;
                     .billItem_sub {
                         width: 100px;
                         height: 70px;
                         float: left;
+                        padding: 20px 0;
                         text-align: center;
-                        margin-right: 48px;
-                        padding: 12px 0;
+                        margin-right: 28px;
                         .billItem_text{
                             font-size: 16px;
-                            height: 24px;
-                            line-height: 24px;
-                        }
-                        .billItem_label{
-                            font-size: 12px;
-                            height: 16px;
-                            line-height: 16px; 
-                            color: #878787;
+                            height: 30px;
+                            line-height: 30px;
                         }
                     }
+                    .billItem_tit{
+                        font-weight: 600;
+                    }
                     .billItemPrice{
-                        width: 112px;
-                        padding: 10px 0;
+                        width: 160px;
                         .billItem_text{
                             font-size: 24px;
                             color: #f71327;
-                            margin-bottom: 8px;
                         }
                     }
                     .billItemOrg{
-                        width: 198px;
+                        width: 200px;
                         .billItem_text{
                             overflow: hidden;
                             text-overflow: ellipsis;
@@ -393,33 +423,19 @@
                         }
                     }
                     .billItemBidmoney{
-                        width: 140px;
+                        width:160px;
                         .billItem_text{
                             span{
                                 color: #f71327;
                             }
                         }
                     }
-                    .billItemType,.billItemBack{
-                        height: 68px;
-                        width: 68px;
-                        line-height: 68px;
-                        text-align: center;
-                        border-radius: 34px;
-                        color: #fff;
+                    .billItemOperate{
+                        width: 158px;
+                        height: 44px;
+                        line-height: 44px;
+                        margin: 12px 0;
                         padding: 0;
-                    }
-                    .billItemTypeS{
-                        background: #f87b29;
-                    }
-                    .billItemTypeY{
-                        background: #ddd;
-                    }
-                    .billItemBackY{
-                        background: #f71327;
-                    }
-                    .billItemBackW{
-                        background: #ddd;
                     }
                     .billItemBid{
                         width: 158px;

@@ -17,7 +17,7 @@
                 <div v-else class="accAnnItemNav accAnnItemTerm">竞价</div>
                 <div class="accAnnItemNav accAnnItemIsti">{{billItem.billUserName}}</div>
                 <div v-if="billItem.billMoney<=10000" class="accAnnItemNav accAnnItemMoney">{{billItem.billMoney}}</div>
-                <div v-if="billItem.billMoney>10000" class="accAnnItemNav accAnnItemMoney">{{billItem.billMoney/10000}}万</div>
+                <div v-if="billItem.billMoney>10000" class="accAnnItemNav accAnnItemMoney">{{parseFloat((billItem.billMoney/10000).toFixed(6))}}万</div>
                 <div class="accAnnItemNav accAnnItemPub">{{billItem.publishDate}}</div>
                 <div class="accAnnItemNav accAnnItemDeadline">{{billItem.billExpire}}</div>
                 <div v-if="billItem.billStatus=='validating'" class="accAnnItemNav accAnnItemStatus">待审核</div>

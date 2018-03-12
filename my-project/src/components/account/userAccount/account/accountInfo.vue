@@ -118,7 +118,7 @@
 </template>
 
 <script>
-import globalData from '../globalData'
+import globalData from '../../../globalData'
 
 
 export default {

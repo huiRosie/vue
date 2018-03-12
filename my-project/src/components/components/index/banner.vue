@@ -3,7 +3,7 @@
     <div class="banner">
         <div class="bannerList" id="bannerList">
             <Carousel
-                :height='460' 
+                :height='400' 
                 v-model="value3"
                 :autoplay="setting.autoplay"
                 :autoplay-speed="setting.autoplaySpeed"
@@ -54,13 +54,13 @@
 <style scoped>
     .banner {
         min-width: 1280px;
-        height: 460px;
+        height: 400px;
     }
 
     .banner img {
         display: block;
         width: 100%;
-        height: 460px;
+        height: 400px;
     }
 
     .banner .swiper-pagination-bullets {

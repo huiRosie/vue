@@ -46,9 +46,9 @@
         ref="pages"
         class="pageBox" 
         :total="total" 
-        v-if="total>8"
+        v-if="total>9"
         :current="current"
-        :pageSize="8"
+        :pageSize="9"
         @on-change="getPerList"
         ></Page>
     </div>
@@ -99,7 +99,7 @@ export default {
             identPerList({
                 authStatus:authStatus,
                 currentPage:current,
-                pageSize:8
+                pageSize:9
             },{emulateJSON:true,credentials:true}).then(function(res){
                 console.log(res)
                 if(res.data.code==200){
